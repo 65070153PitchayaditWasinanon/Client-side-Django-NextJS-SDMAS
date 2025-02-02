@@ -211,46 +211,70 @@ nav .col {
     margin: 5%;
 }
 
-#card {
-    width: 50%;
-    border-style: none;
-    background-color: #F2F3F4;
-    border-radius: 16px;
-}
-
-#remark-bg {
-    background-color: #FFFFFF;
-    border-radius: 32px;
-    margin: 3%;
-}
-
-#remark-status-bg {
-    background-color: #FFFFFF;
-    border-radius: 32px;
-    margin: 3%;
-}
-
-#remark-text {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-    font-size: 120%;
-    padding: 2% 5% 2% 5%;
-}
-
-#remark-status-text {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-    font-size: 120%;
-    padding: 2% 5% 2% 5%;
-}
-
-#buttonframe {
+#cardtask {
+    margin: 2%;
     width: 75%;
+    overflow: hidden;
 }
 
-#buttonstudentviewreport {
-    color: white;
+#technicianreport {
+    padding: 3%;
+}
+
+#roompara {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    text-align: left;
+}
+
+#floorpara {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    text-align: left;
+}
+
+#taskrowinfo {
+    padding: 2%;
+}
+
+#clickfordetailsarea {
+    background-color: #f2f3f4;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#linktodetails {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#clickforaccepttaskmodalbutton {
     font-family: 'Mitr-Light', sans-serif;
     font-weight: 200;
-    
+    font-size: 200%;
+}
+
+#modaltitletter {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 120%;
+}
+
+#modalfooterbutton {
+    justify-content: center;
+}
+
+#buttoninmodalletter {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 100%;
+}
+
+.taskarea {
+    height: calc(100vh - 200px); /* Adjust height dynamically */
+    overflow-y: auto;
+    overflow-x: hidden;
 }
