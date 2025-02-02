@@ -1,0 +1,256 @@
+@font-face {
+    font-family: 'Nunito';
+    src: url('/fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito';
+    src: url('/fonts/Nunito-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mitr-Bold';
+    src: url('/fonts/Mitr-Bold.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mitr-ExtraLight';
+    src: url('/fonts/Mitr-ExtraLight.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mitr-Light';
+    src: url('/fonts/Mitr-Light.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mitr-Medium';
+    src: url('/fonts/Mitr-Medium.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mitr-Regular';
+    src: url('/fonts/Mitr-Regular.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mitr-SemiBold';
+    src: url('/fonts/Mitr-SemiBold.ttf') format('truetype');
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#pagecon {
+    padding: 2% 2% 0% 2%;
+}
+
+html:lang(th) {
+    font-family: "Mitr", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+nav {
+    background-color: #2E86C1;
+    color: white;
+    padding: 20px;
+}
+
+nav .col {
+    color: white;
+    text-decoration: none;
+}
+
+#content {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.badge bg-white text-dark {
+    background-color: white !important;
+}
+
+#sidebarbg {
+    background-color: #f2f3f4 !important;
+    flex-shrink: 0;
+    min-height: 100vh;
+    overflow-y: auto;
+    width: 400px;
+}
+
+.sidebartitlefont {
+    font-size: 250%;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#sidebartitleout {
+    padding: 5%;
+    border-radius: 30px;
+}
+
+#sidebarselected {
+    padding: 10%;
+}
+
+.itemcolor {
+    background-color: #f2f3f4 !important;
+    padding: 5%;
+    border-radius: 30px;
+}
+
+#pcolor {
+    background-color: white !important;
+    font-size: 150%;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    padding-top: 2%;
+    padding-bottom: 2%;
+
+    border-radius: 30px;
+}
+
+#pcolorsp {
+    background-color: white !important;
+    font-size: 150%;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    padding-top: 2%;
+    margin: 2%;
+
+    border-radius: 30px;
+}
+
+#rowpadding {
+    padding: 2%;
+    justify-content: center !important;
+    text-align: center;
+
+}
+
+#deletestatus {
+    text-decoration: none !important;
+    color: white !important;
+}
+
+#pandapatting {
+    padding: 2%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    padding: 20%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(13, 13, 13, 0.349);
+    border-radius: 60px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(13, 13, 13, 0.725);
+}
+
+#roompara {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+}
+
+#seereportspan {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 120%;
+}
+
+#sidebarlinkmenu {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 160%;
+}
+
+#navlinksidebar {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 32px;
+    padding: 4% 10% 4% 10%;
+}
+
+#linavlink {
+    margin: 5%;
+}
+
+#card {
+    width: 50%;
+    border-style: none;
+    background-color: #F2F3F4;
+    border-radius: 16px;
+}
+
+#remark-bg {
+    background-color: #FFFFFF;
+    border-radius: 32px;
+    margin: 3%;
+}
+
+#remark-status-bg {
+    background-color: #FFFFFF;
+    border-radius: 32px;
+    margin: 3%;
+}
+
+#remark-text {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 120%;
+    padding: 2% 5% 2% 5%;
+}
+
+#remark-status-text {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 120%;
+    padding: 2% 5% 2% 5%;
+}
+
+#buttonframe {
+    width: 75%;
+}
+
+#buttonstudentviewreport {
+    color: white;
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    
+}
