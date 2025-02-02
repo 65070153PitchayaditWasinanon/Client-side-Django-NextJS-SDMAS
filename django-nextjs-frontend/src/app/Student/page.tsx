@@ -4,6 +4,7 @@ import RootLayout from '../layout';
 import '../student/studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 export default function StudentIndexPage() {
     return (
         <>

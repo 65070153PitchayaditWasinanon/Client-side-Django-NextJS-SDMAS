@@ -2,8 +2,42 @@
 'use client'
 import '../report/studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from "react";
 
 export default function StudentReportPage() {
+
+    //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
+    const [formData, setFormData] = useState({
+        student: 1,
+        description: "",
+        urgency: "",
+        repair_appointment_time: "",
+    });
+
+    // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
+    // ดึงค่าและ อัพเดทค่า
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
+    const handleSubmit = async (e: React.FormEvent) => {
+        // ป้องกันหน้าเว็บโหลดซ้ำ
+        e.preventDefault();
+
+        const response = await fetch("http://localhost:8080/api/repair-requests/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            alert("ส่งคำร้องขอซ่อมแล้ว!");
+        } else {
+            alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+        }
+    };
+
     return (
         <>
             <div id="nav">
@@ -53,18 +87,20 @@ export default function StudentReportPage() {
                 </div>
                 <div className="container" id="pagecon">
                     <div className="emp-form-box">
-                        <form>
+                        {/* onSubmit handleSubmit = เมื่อ submit จะเข้า function นี้ */}
+                        <form onSubmit={handleSubmit} className="p-3 border rounded">
                             <div className="form-group mb-3">
                                 <label htmlFor="description" id="student1label">
                                     อธิบายสาเหตุ :
                                 </label>
                                 <div className="student1textarea">
-                                    <textarea
-                                        id="description"
-                                        // value="{description}"
-                                        // onChange={(e) => setDescription(e.target.value)}
+                                    {/* value={formData.description} → ดึงค่าจาก formData ,onChange={handleChange} → อัปเดตค่าเมื่อผู้ใช้พิมพ์ */}
+                                    <input
+                                        type="text"
+                                        name="description"
                                         className="form-control"
-                                        placeholder="กรุณาอธิบาย..."
+                                        value={formData.description}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -76,10 +112,10 @@ export default function StudentReportPage() {
                                 </label>
                                 <div id='student1urgencyselect'>
                                     <select
-                                        id="urgency"
-                                        // onChange={(e) => setUrgency(e.target.value)}
+                                        name="urgency"
                                         className="form-select"
-                                        required
+                                        value={formData.urgency}
+                                        onChange={handleChange}
                                     >
                                         <option value="" id='optionletter'>กรุณาเลือก</option>
                                         <option value="low" id='optionletter'>น้อย</option>
@@ -94,12 +130,20 @@ export default function StudentReportPage() {
                                     วันเวลาที่นัดหมาย
                                 </label>
                                 <div className="d-flex justify-content-around" id="repair_appointment_time_show">
-                                    <input
+                                    {/* <input
                                         type="datetime-local"
                                         id="repairAppointmentTime"
                                         // onChange={(e) => setRepairAppointmentTime(e.target.value)}
                                         onFocus={(e) => e.target.showPicker()}
                                         className="form-control"
+                                        required
+                                    /> */}
+                                    <input
+                                        type="datetime-local"
+                                        name="repair_appointment_time"
+                                        className="form-control"
+                                        value={formData.repair_appointment_time}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
