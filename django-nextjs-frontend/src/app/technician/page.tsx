@@ -22,7 +22,7 @@ export default function TechnicianIndexPage() {
                 <div className="d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
                     <span className="badge bg-white text-dark" id="sidebartitleout">
                         <div className="sidebartitlefont">
-                            <span id='seereportspan'>ปัญหาที่ส่ง</span>
+                            <span id='seereportspan'>งานที่ได้รับ</span>
                         </div>
                     </span>
                     <ul className="nav nav-pills flex-column mb-auto" id="sidebarselected">
@@ -86,7 +86,7 @@ export default function TechnicianIndexPage() {
                                         <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
                                             รับงาน
                                         </button>
-                                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div className="modal-dialog">
                                                 <div className="modal-content">
                                                     <div className="modal-header">
@@ -145,7 +145,7 @@ export default function TechnicianIndexPage() {
                                         <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
                                             รับงาน
                                         </button>
-                                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div className="modal-dialog">
                                                 <div className="modal-content">
                                                     <div className="modal-header">
@@ -204,7 +204,7 @@ export default function TechnicianIndexPage() {
                                         <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
                                             รับงาน
                                         </button>
-                                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div className="modal-dialog">
                                                 <div className="modal-content">
                                                     <div className="modal-header">
