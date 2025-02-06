@@ -4,8 +4,57 @@
 import { useEffect } from 'react';
 import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from "react";
 
 export default function TechnicianIndexPage() {
+
+    //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
+    const [formData, setFormData] = useState({
+        // student: 1,
+        // description: "",
+        // urgency: "",
+        // repair_appointment_time: "",
+
+        //ข้อมูลแบบ many to many ต้องใส่เป็น list
+        repair_request:12,
+        technician:[5],
+        status:"assigned",
+        // update_time:"",
+        remarks:"",
+
+        // repair_request: 12,
+        // technician: 5,
+        // // assigned_at = models.DateTimeField(auto_now_add=True) 
+        // status: "Assigned",
+    });
+
+    // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
+    // ดึงค่าและ อัพเดทค่า
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+    
+        console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
+    
+        const response = await fetch("http://localhost:8080/api/technician-requests/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
+    
+        if (response.ok) {
+            alert("ส่งคำร้องขอซ่อมแล้ว!");
+        } else {
+            const errorData = await response.json();
+            console.error("API error:", errorData);
+            alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+        }
+    };
+
     useEffect(() => {
         require('bootstrap/dist/js/bootstrap.bundle.min.js'); //required อันที่ต้องใช้ bundle + Popper.js มาให้แล้ว เพื่อให้ฝั่ง client ใช้ได้ (ปล. อันทำเพื่อให้ใช้ modal ได้)
     }, []);
@@ -56,49 +105,66 @@ export default function TechnicianIndexPage() {
                         </ol>
                     </nav>
                     <div id='taskdetailarea'>
-                        <div id='formshow'>
-                            <div>
-                                <p id='remarkletter'>หมายเหตุ :</p>
+                        <form onSubmit={handleSubmit}>
+                            <div id='formshow'>
+                                <div>
+                                    <p id='remarkletter'>หมายเหตุ :</p>
+                                </div>
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="remarks"
+                                        className="form-control"
+                                        value={formData.remarks}
+                                        onChange={handleChange}
+                                        required>
+                                    </input>
+                                </div>
                             </div>
-                            <div>
-                                <textarea className="form-control" aria-label="With textarea" id='textarearemark'></textarea>
+                            <div id='formshow'>
+                                <div>
+                                    <p id='remarkletter'>สถานะ :</p>
+                                </div>
+                                <div>
+                                    <input
+                                        readOnly
+                                        type="text"
+                                        name="status"
+                                        className="form-control"
+                                        value={formData.status}
+                                        onChange={handleChange}
+                                        required>
+                                    </input>
+                                </div>
                             </div>
-                        </div>
-                        <div id='formshow'>
-                            <div>
-                                <p id='remarkletter'>สถานะ :</p>
-                            </div>
-                            <div>
-                                <input type="text" className="form-control" aria-label="status" id='statusshow'></input>
-                            </div>
-                        </div>
-                        <div id='formbuttonsubmittask'>
-                            <center>
-                                <button type="button" className="btn btn-warning" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    รับงาน
-                                </button>
-                                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div className="modal-dialog">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h1>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div id='footermodal'>
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <button type="button" className="btn btn-success" id='modalbuttonletter'>รับงาน</button>
-                                                    </div>
-                                                    <div className='col'>
-                                                        <button type="button" className="btn btn-danger" data-bs-dismiss="modal" id='modalbuttonletter'>ยกเลิก</button>
+                            <div id='formbuttonsubmittask'>
+                                <center>
+                                    <button type="button" className="btn btn-warning" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        รับงาน
+                                    </button>
+                                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h1>
+                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div id='footermodal'>
+                                                    <div className='row'>
+                                                        <div className='col'>
+                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter'>รับงาน</button>
+                                                        </div>
+                                                        <div className='col'>
+                                                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" id='modalbuttonletter'>ยกเลิก</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </center>
-                        </div>
+                                </center>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
