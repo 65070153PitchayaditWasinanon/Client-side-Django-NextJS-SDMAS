@@ -63,7 +63,7 @@ body {
 }
 
 #pagecon {
-    padding: 2% 2% 0% 2%;
+    padding: 0% 2% 0% 2%;
 }
 
 html:lang(th) {
@@ -215,70 +215,69 @@ nav .col {
     margin: 5%;
 }
 
-#cardtask {
-    margin: 2%;
-    width: 75%;
-    overflow: hidden;
+#breadcrumb {
+    background: transparent;
+    text-decoration: none;
+    color: black;
 }
 
-#technicianreport {
-    padding: 3%;
-}
-
-#roompara {
-    font-family: 'Mitr-Medium', sans-serif;
-    font-weight: 200;
-    font-size: 200%;
-    text-align: left;
-}
-
-#floorpara {
-    font-family: 'Mitr-Medium', sans-serif;
-    font-weight: 200;
-    font-size: 200%;
-    text-align: left;
-}
-
-#taskrowinfo {
-    padding: 2%;
-}
-
-#clickfordetailsarea {
-    background-color: #f2f3f4;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-#linktodetails {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#clickforaccepttaskmodalbutton {
+#breadcrumb-link {
+    text-decoration: none;
+    color: black;
     font-family: 'Mitr-Light', sans-serif;
     font-weight: 200;
     font-size: 200%;
 }
 
-#modaltitletter {
+#taskdetailarea {
+    background-color: #E3E3E3;
+    border-radius: 32px;
+    padding: 3% 4% 3% 4%;
+}
+
+#remarkletter {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+}
+
+#textarearemark {
+    resize: none;
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 150%;
+    padding: 2% 3% 2% 3%;
+}
+
+#statusshow {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 150%;
+    padding: 2% 3% 2% 3%;
+}
+
+#formshow {
+    padding: 0% 0% 2% 0%;
+}
+
+#formbuttonsubmittask {
+    padding: 1% 0% 0% 0%;
+}
+
+#buttonforsubmittask {
+    padding: 1% 2% 1% 2%;
+    color: white;
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 180%;
+}
+
+#footermodal {
+    padding: 5% 2% 5% 2%;
+}
+
+#modalbuttonletter {
     font-family: 'Mitr-Light', sans-serif;
     font-weight: 200;
     font-size: 120%;
-}
-
-#modalfooterbutton {
-    justify-content: center;
-}
-
-#buttoninmodalletter {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-    font-size: 100%;
-}
-
-.taskarea {
-    height: calc(100vh - 200px); /* Adjust height dynamically */
-    overflow-y: auto;
-    overflow-x: hidden;
 }
