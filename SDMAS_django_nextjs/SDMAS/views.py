@@ -16,7 +16,7 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
-from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, TechnicianRequestSerializer
 
 from rest_framework.views import APIView
 
@@ -33,6 +33,31 @@ class RepairRequestCreateView(CreateAPIView):
         status = "Reported"
         # บันทึกข้อมูลจาก form data
         serializer.save(status=status)  # จะมีการบันทึกข้อมูลลงฐานข้อมูลพร้อม student ที่เกี่ยวข้อง
+
+    def create(self, request, *args, **kwargs):
+        # ใช้ `serializer` เพื่อแปลงข้อมูล JSON ที่มาจาก request.data
+        serializer = self.get_serializer(data=request.data)
+
+        # ตรวจสอบความถูกต้องของข้อมูล
+        if serializer.is_valid():
+            # เรียกใช้ perform_create เพื่อบันทึกข้อมูลลงฐานข้อมูล
+            self.perform_create(serializer)
+            # ส่งข้อมูลกลับไป
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class TechnicianRequestCreateView(CreateAPIView):
+    queryset = RepairRequest.objects.all()  # กำหนด queryset ที่จะใช้
+    # ใช้เพื่อระบุว่าเราจะใช้ serializer อะไรในการแปลงข้อมูลจาก JSON ที่ส่งมาจาก client (ในที่นี้คือ React หรือ Postman) ให้เป็น Python object หรือจะใช้ในการแปลง Python object ไปเป็น JSON ที่จะตอบกลับ
+    serializer_class = TechnicianRequestSerializer  # ใช้ serializer ที่เราสร้างขึ้น
+
+    def perform_create(self, serializer):
+        # ดึง student ที่เชื่อมโยงกับ user ที่ทำการ request
+        
+        # บันทึกข้อมูลจาก form data
+        serializer.save()  # จะมีการบันทึกข้อมูลลงฐานข้อมูลพร้อม student ที่เกี่ยวข้อง
 
     def create(self, request, *args, **kwargs):
         # ใช้ `serializer` เพื่อแปลงข้อมูล JSON ที่มาจาก request.data
