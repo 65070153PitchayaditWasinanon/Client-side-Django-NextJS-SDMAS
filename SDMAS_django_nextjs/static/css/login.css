@@ -1,0 +1,119 @@
+html:lang(th) {
+    font-family: "Mitr", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#bgblackround {
+    background-color: rgba(0, 0, 0, 0.371);
+    border-radius: 60px;
+    padding: 2%;
+    margin-top: 2% !important;
+    margin-bottom: 2% !important;
+}
+
+#gradiabg {
+    min-height: 100vh;
+    background: linear-gradient(45deg, #133349, #3395d6);
+}
+
+#logintitle {
+    font-family: "Mitr", system-ui;
+    font-weight: 400;
+    font-size: 300%;
+    color: white;
+}
+
+#loginlabel {
+    font-family: "Mitr", system-ui; 
+    font-weight: 300;
+    font-style: normal;
+    font-size: 200%;
+    color: white;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    transition: background-color 5000s;
+    -webkit-text-fill-color: rgb(255, 255, 255) !important;
+    font-size: 100%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+    padding-left: 3%;
+}
+
+#username, #password {
+    background-color: rgba(0, 0, 0, 0.162);
+    border: transparent;
+    border-bottom: white 1px;
+    border-bottom: white;
+    width: 100%;
+    border-radius: 60px;
+    padding: 2%;
+    color: white;
+    font-size: 100%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+    padding-left: 3%;
+    &:focus-visible{
+        outline: none;
+    }
+}
+
+#persona {
+    stroke: white;
+    border: transparent;
+    color: white;
+    border-radius: 60px;
+    padding: 2%;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+#persona:hover{
+    stroke: white;
+}
+
+#donthaveaccount{
+    color: white;
+    font-size: 100%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    text-align: center;
+}
+
+#linktoregister {
+    color: white;
+}
+
+#linktoregister:hover {
+    color: #5cb85c;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    padding: 20%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(13, 13, 13, 0.349); 
+    border-radius: 60px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(13, 13, 13, 0.725);
+}

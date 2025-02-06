@@ -1,0 +1,222 @@
+{% extends "layout.html" %}
+{% load humanize %}
+{% load static %}
+{% block title %}อัพเดตสถานะ{% endblock %}
+{% block favicon %}{% static '/images/icons8-technician-32.png'%}{% endblock %}
+
+{% block importlink %}
+<link rel="stylesheet" href="{% static 'css/staff.css' %}">
+{% endblock %}
+
+{% block nav %}
+
+<div class="row">
+    <div class="col-5">
+      <div class="topleftnav"> 
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+          <div class="offcanvas-header" id="header1">
+             <div class="container">
+              <div class="row">
+                <div class="col">
+ 
+                </div>
+                <div class="col">
+                  
+                </div>
+                <div class="col">
+                  
+                </div>
+              </div>
+            </div>
+            
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="close1"></button>
+          </div>
+
+          <div class="offcanvas-body">
+            <div>
+
+              <div class="container" id="containerimg111">
+                <div class="row">
+                  <div class="col">
+                    
+                  </div>
+                  <div class="col" id="gridimg">
+                    <img src="https://comicvine.gamespot.com/a/uploads/scale_medium/6/62058/1225416-1369424_picture_1.png" width="48" height="48" id="imageprofile2">
+
+                    <h3 id="username1">{{user.username}}</h3>
+                  </div>
+                  <div class="col">
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="paddingbody">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel2">Name</h5>
+                <h5 class="offcanvas-title2" id="offcanvasExampleLabel3">{{user.first_name}} {{user.last_name}}</h5>
+              </div>
+
+              <div class="paddingbody">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel2">Email</h5>
+                <h5 class="offcanvas-title2" id="offcanvasExampleLabel3">{{user.email}}</h5>
+              </div>
+
+              <div class="paddingbody">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel2">Technician ID</h5>
+                <h5 class="offcanvas-title2" id="offcanvasExampleLabel3">{{technician_target.technician_id}}</h5>
+              </div>
+
+              <div class="paddingbody">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel2">Expertise</h5>
+                <h5 class="offcanvas-title2" id="offcanvasExampleLabel3">{{technician_target.expertise}}</h5>
+              </div>
+              
+            </div>
+            <br>
+              <center>
+                <div>
+                  <button type="button" class="btn btn-warning" >
+                    <a href="{% url 'change-password'%}" style="text-decoration: none; color: white;">Change Password</a>
+                  </button>
+                </div>
+              </center>
+          </div>
+        </div>
+
+        Technician ID : {{technician_target.technician_id}}
+        
+      </div>
+    </div>
+    <div class="col-2">
+
+    </div>
+    <div class="col-5 text-end toprightnav">
+      <div class="row">
+        <div class="col" id="usernamepro">
+              <img src="https://comicvine.gamespot.com/a/uploads/scale_medium/6/62058/1225416-1369424_picture_1.png" width="48" height="48" id="imageprofile" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+              {{user.first_name}} {{user.last_name}}
+              <a class="btn btn-danger" href="{% url 'logout' %}" id="logoutbutton"><b>Logout</b></a>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebartitle %}
+อัพเดตสถานะ
+{% endblock %}
+
+{% block sidebar %}
+<li id="sidebarsubtitle">
+    <a href="{% url 'technician' %}" class="nav-link link-dark">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M44 12C44 9.8 42.2 8 40 8H8C5.8 8 4 9.8 4 12M44 12V36C44 38.2 42.2 40 40 40H8C5.8 40 4 38.2 4 36V12M44 12L24 26L4 12"
+                stroke="#1E1E1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        งานที่ยังไม่ได้รับ
+    </a>
+</li>
+<li id="sidebarsubtitle">
+    <a href="{% url 'technicianedit' %}" class="nav-link link-dark">
+        <svg width="50" height="51" viewBox="0 0 50 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M25 19.125V27.625M25 36.125H25.0208M21.4375 8.20249L3.79165 38.25C3.42783 38.8926 3.23533 39.6213 3.23329 40.3633C3.23126 41.1054 3.41975 41.8351 3.78004 42.4799C4.14032 43.1246 4.65983 43.6618 5.28687 44.0382C5.91392 44.4145 6.62665 44.6168 7.35415 44.625H42.6458C43.3733 44.6168 44.086 44.4145 44.7131 44.0382C45.3401 43.6618 45.8596 43.1246 46.2199 42.4799C46.5802 41.8351 46.7687 41.1054 46.7667 40.3633C46.7646 39.6213 46.5721 38.8926 46.2083 38.25L28.5625 8.20249C28.1911 7.57797 27.6682 7.06162 27.0441 6.70327C26.4201 6.34492 25.7161 6.15666 25 6.15666C24.2839 6.15666 23.5798 6.34492 22.9558 6.70327C22.3318 7.06162 21.8089 7.57797 21.4375 8.20249Z"
+                stroke="#1E1E1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        งานที่รับแล้ว
+    </a>
+</li>
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <body>
+      <div class="emp-form-box"></div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="{{ form.description.id_for_label }}" id="student1label">หมายเหตุ :</label>
+                    </div>
+                    <div class="col text-end" id="room_number_staff">
+                        ห้อง : {{ requestupdate.repair_request.student.room_id.room_number}}
+                    </div>
+                </div>
+                <br>
+                <div class="student1textarea">
+                    <textarea class="form-control" id="floatingTextarea" rows="5" readonly>{{requestupdate.repair_request.description}}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mb-3">
+                        <label for="{{ form.urgency.id_for_label }}" id="student1label">ความเร่งด่วน</label>
+                        <div>
+                            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" value="{{requestupdate.repair_request.urgency}}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group mb-3">
+                        <label for="{{ form.status.id_for_label }}" id="student1label">สถานะ</label>
+                        <div>
+                            {{form.status}}
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div>
+                <div class="row">
+                    <div class="col">
+                        
+                        
+                    </div>
+                    <div class="col">
+
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            อัพเดตสถานะ
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">ยืนยันอะพเดต</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ยืนยันการอัพเดตสถานะ
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                            
+                                            <button class="btn btn-success" type="submit" >
+                                                อัพเดต
+                                            </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <button type="submit" class="btn btn-danger"
+                            onclick="deleteProject('{{i.id}}', '{{csrf_token}}')" class="delete">ยกเลิก</button> -->
+                    </div>
+                </div>
+            </div>
+        </form>
+      </div>
+    </body>
+</div>
+
+{% endblock %}
+
+</html>

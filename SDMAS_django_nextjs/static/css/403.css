@@ -1,0 +1,25 @@
+
+#forbackground {
+    background-image: url("../images/you_shall_not_pass.png");
+    background-size: cover;  /* Ensures the image covers the entire container */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat;  /* Prevents tiling the image */
+    width: 100vw;  /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+#titlenotpassed {
+    color: white;
+    font-size: 500%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+
+    position: absolute;            /* Allow positioning */
+    top: 50%;                     /* Center vertically */
+    left: 0;                      /* Align to the left */
+    transform: translateY(-50%);
+    padding: 3%;
+}
