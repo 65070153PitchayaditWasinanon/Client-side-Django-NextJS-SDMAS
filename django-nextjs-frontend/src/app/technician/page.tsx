@@ -16,12 +16,14 @@ export default function TechnicianIndexPage() {
 
     useEffect(() => {
       const fetchRepairRequest = async () => {
-        const response = await axios.get('http://localhost:8080/api/repair-requests-views');
+        const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
         setRepairRequest(response.data);
+        console.log(response.data);
       };
   
       fetchRepairRequest();
     }, []);
+
 
     return (
         <>
@@ -59,8 +61,7 @@ export default function TechnicianIndexPage() {
                 <div className="container" id="pagecon">
                     <div className='taskarea'>
                         <center>
-                            {
-                            RepairRequestView.map((RepairRequestView) => (
+                            {RepairRequestView.map((RepairRequestView) => (
                             <div className='card' id='cardtask'>
                                 <div className='row'>
                                     <div className='col-6' id='technicianreport'>
@@ -73,7 +74,7 @@ export default function TechnicianIndexPage() {
                                                         </svg>
                                                     </div>
                                                     <div className='col-10'>
-                                                        <p id='roompara'>{RepairRequestView.id}</p>
+                                                        <p id='roompara'>{RepairRequestView.student.room_id.room_number}</p>
                                                     </div>
                                                 </div>
                                                 <div className='row' id='taskrowinfo'>
@@ -83,7 +84,7 @@ export default function TechnicianIndexPage() {
                                                         </svg>
                                                     </div>
                                                     <div className='col-10'>
-                                                        <p id='floorpara'>ชั้น 2</p>
+                                                        <p id='floorpara'>ชั้น {RepairRequestView.student.room_id.floor}</p>
                                                     </div>
                                                 </div>
                                             </div>

@@ -16,12 +16,9 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
-from .serializers import RepairRequestSerializer
-
-
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer
 
 from rest_framework.views import APIView
-from .serializers import RepairRequestDjangotoNextJSSerializer
 
 
 
@@ -696,10 +693,8 @@ class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
             else:
                 return render(request, 'roomadd.html', {"form":form})
 
-
-
 class RepairRequestListView(APIView):
     def get(self, request):
         students = RepairRequest.objects.all()
         serializer = RepairRequestDjangotoNextJSSerializer(students, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data) #ส่งข้อมูลไปเป็น json
