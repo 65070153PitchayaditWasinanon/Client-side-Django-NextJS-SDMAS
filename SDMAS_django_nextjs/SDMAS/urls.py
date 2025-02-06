@@ -54,6 +54,8 @@ urlpatterns = [
     path("technician/update/<int:pk>/", views.TechnicainUpdateView.as_view(), name="technician-update"),
 
     path('api/repair-requests/', views.RepairRequestCreateView.as_view(), name='repair-request-create'),
+
+    path('api/technician-requests/', views.TechnicianRequestCreateView.as_view(), name='technician-request-create'),
     # # /employee/position/
     # path("position/", views.PositionView.as_view(), name="position"),
     # # /employee/project
