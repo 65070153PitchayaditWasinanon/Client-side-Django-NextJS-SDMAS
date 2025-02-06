@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'SDMAS',
-    # 'authen',
+    'authen',
     'corsheaders',
     'rest_framework',
 ]

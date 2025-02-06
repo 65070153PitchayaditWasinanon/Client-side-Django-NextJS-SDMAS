@@ -1,0 +1,184 @@
+.container {
+    padding: 2%;
+}
+
+.topleftnav {
+    font-size: 200%;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.toprightnav {
+    font-size: 200%;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    justify-content: end;
+}
+
+#usernamepro {
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    justify-content: end;
+}
+
+#logoutbutton {
+    padding: 1%;
+}
+
+#imageprofile {
+    border-radius: 30px;
+}
+
+#imageprofile2 {
+    border-radius: 100px;
+    width: 80px;
+    height: auto;
+    
+}
+
+#gridimg{
+    width: 80px;
+    height: 150px;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+
+#sidebarsubtitle {
+    font-size: 200%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    justify-content: center;
+}
+
+#student1label {
+    font-size: 300%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    justify-content: center;
+}
+
+.student1textarea {
+    width: 100%;
+}
+
+#id_description {
+    width: 100%;
+    padding: 2%;
+    border-radius: 30px;
+}
+
+#id_urgency {
+    width: 50%;
+    text-align: center;
+
+    font-size: 150%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    justify-content: center;
+}
+
+#student1button {
+    width: 50%;
+    text-align: center;
+    border-radius: 30px;
+
+    font-size: 150%;
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    justify-content: center;
+}
+
+#studentdenybutton {
+    text-decoration: none;
+    color: white;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+#id_repair_appointment_time_0 {
+    border-radius: 30px;
+    padding: 2%;
+    width: 25%;
+    text-align: center;
+}
+
+#id_repair_appointment_time_1 {
+    border-radius: 30px;
+    padding: 2%;
+    width: 25%;
+    text-align: center;
+}
+
+#linkstudentdeny {
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+
+    text-decoration: none;
+    color: white;
+}
+
+.offcanvas-title {
+    color:black;
+    
+    border-radius: 30px;
+    margin-bottom: 1rem;
+
+}
+
+
+
+/* #offcanvasExample{
+    
+} */
+
+.offcanvas-body{
+    font-size: 80%;
+    
+}
+
+#offcanvasExampleLabel2{
+    color: gray;
+}
+
+#offcanvasExampleLabel3{
+    color: black;
+    background: #F2F3F4;
+    padding: 1rem;
+}
+
+.paddingbody{
+    padding: 1rem;
+}
+
+#header1{
+    background: #3395d6;
+}
+
+#close1{
+    color: white;
+}
+
+#username1{
+    color: #3395d6;
+    padding-top: 1rem;
+}
+
+#titletechedit {
+    font-family: "Mitr", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
