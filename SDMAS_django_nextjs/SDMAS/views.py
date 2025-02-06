@@ -18,14 +18,13 @@ from rest_framework.response import Response
 from .models import RepairRequest
 from .serializers import RepairRequestSerializer
 
-<<<<<<< HEAD
+
+
 from rest_framework.views import APIView
 from .serializers import RepairRequestDjangotoNextJSSerializer
 
 
 
-=======
->>>>>>> 551337cd61209477b09c347cb1d4e6151aea2d9e
 class RepairRequestCreateView(CreateAPIView):
     queryset = RepairRequest.objects.all()  # กำหนด queryset ที่จะใช้
     # ใช้เพื่อระบุว่าเราจะใช้ serializer อะไรในการแปลงข้อมูลจาก JSON ที่ส่งมาจาก client (ในที่นี้คือ React หรือ Postman) ให้เป็น Python object หรือจะใช้ในการแปลง Python object ไปเป็น JSON ที่จะตอบกลับ
@@ -695,7 +694,6 @@ class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
                 return redirect("room-add")
             else:
-<<<<<<< HEAD
                 return render(request, 'roomadd.html', {"form":form})
 
 
@@ -705,6 +703,3 @@ class RepairRequestListView(APIView):
         students = RepairRequest.objects.all()
         serializer = RepairRequestDjangotoNextJSSerializer(students, many=True)
         return Response(serializer.data)
-=======
-                return render(request, 'roomadd.html', {"form":form})
->>>>>>> 551337cd61209477b09c347cb1d4e6151aea2d9e
