@@ -1,13 +1,13 @@
 // app/nontakorn/page.tsx
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 export default function TechnicianIndexPage() {
-
+    const router = useRouter();
     //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
         // student: 1,
@@ -16,17 +16,37 @@ export default function TechnicianIndexPage() {
         // repair_appointment_time: "",
 
         //ข้อมูลแบบ many to many ต้องใส่เป็น list
-        repair_request:12,
-        technician:[5],
-        status:"assigned",
+        repair_request: "",
+        technician: [1],
+        status: "assigned",
         // update_time:"",
-        remarks:"",
+        remarks: "",
 
         // repair_request: 12,
         // technician: 5,
         // // assigned_at = models.DateTimeField(auto_now_add=True) 
         // status: "Assigned",
     });
+
+    useEffect(() => {
+        if (router.isReady) {
+            const { id } = router.query;
+
+            // ตรวจสอบว่า id เป็น string หรือไม่
+            if (typeof id === "string") {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    repair_request: id, // ตั้งค่า repair_request เป็น string จาก query
+                }));
+            } else {
+                // ถ้าเป็น array หรือไม่ใช่ string อาจจะต้องจัดการกรณีอื่น (เช่น set เป็นค่าคงที่)
+                setFormData((prevData) => ({
+                    ...prevData,
+                    repair_request: "", // หรือเลือกค่าอื่นๆ ตามต้องการ
+                }));
+            }
+        }
+    }, [router.isReady, router.query]);
 
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
     // ดึงค่าและ อัพเดทค่า
@@ -37,15 +57,15 @@ export default function TechnicianIndexPage() {
     //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+
         console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
-    
+
         const response = await fetch("http://localhost:8080/api/technician-requests/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
-    
+
         if (response.ok) {
             alert("ส่งคำร้องขอซ่อมแล้ว!");
         } else {
