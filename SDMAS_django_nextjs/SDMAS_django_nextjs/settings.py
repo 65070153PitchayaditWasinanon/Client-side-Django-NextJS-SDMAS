@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'SDMAS',
-    'authen',
+    # 'authen',
     'corsheaders',
     'rest_framework',
 ]
@@ -87,7 +87,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "SDMAS",
         "USER": "postgres",
-        "PASSWORD": "xI3vcksuno",
+        "PASSWORD": "0930038864",
         "HOST": "localhost",
         "PORT": "8000",
     }

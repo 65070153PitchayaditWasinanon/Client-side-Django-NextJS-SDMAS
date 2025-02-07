@@ -17,6 +17,11 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
 from .serializers import RepairRequestSerializer, TechnicianRequestSerializer
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer
+
+from rest_framework.views import APIView
+
+
 
 class RepairRequestCreateView(CreateAPIView):
     queryset = RepairRequest.objects.all()  # กำหนด queryset ที่จะใช้
@@ -713,3 +718,9 @@ class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 return redirect("room-add")
             else:
                 return render(request, 'roomadd.html', {"form":form})
+
+class RepairRequestListView(APIView):
+    def get(self, request):
+        students = RepairRequest.objects.all()
+        serializer = RepairRequestDjangotoNextJSSerializer(students, many=True)
+        return Response(serializer.data) #ส่งข้อมูลไปเป็น json
