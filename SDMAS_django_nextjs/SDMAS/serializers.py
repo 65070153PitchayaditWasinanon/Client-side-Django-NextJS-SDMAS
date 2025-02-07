@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import RepairRequest, RepairStatusUpdate
 from .models import RepairRequest, Room, Student, RepairStatusUpdate
 
 class RepairRequestSerializer(serializers.ModelSerializer):
