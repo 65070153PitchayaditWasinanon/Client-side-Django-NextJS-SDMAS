@@ -3,16 +3,41 @@
 import RootLayout from '../layout';
 import '../student/studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getProfile } from "@/utils/auth";
+import { useState, useEffect } from "react";
 
 
 export default function StudentIndexPage() {
+    const [profile, setProfile] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        // 
+        async function fetchProfile() {
+            try {
+                // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                const data = await getProfile();
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                setProfile(data);
+
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+            }
+        }
+        fetchProfile();
+    }, []);
     return (
         <>
             <div id="nav">
                 <header>
-                    <nav>
-                        <span id='roompara'>Room:</span>
-                    </nav>
+                    {profile ? (
+                        <div>
+                            <nav>
+                                <span id='roompara'>Room:{profile.room}</span>
+                            </nav>
+                        </div>
+                    ) : (
+                        <p>Loading...</p>
+                    )}
                 </header>
             </div>
             <div id="content">

@@ -2,17 +2,54 @@
 'use client'
 import '../report/studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
 
 export default function StudentReportPage() {
 
+    //สร้างตัวแปล Profile เก็บ ข้อมูล user setProfile คือตัวใส่ค่าเก็นใน profile
+    const [profile, setProfile] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
     //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
-        student: 1,
+        student: 0,
         description: "",
         urgency: "",
         repair_appointment_time: "",
     });
+    // useEffect(() => {
+    //         async function fetchProfile() {
+    //             try {
+    //                 const data = await getProfile();
+    //                 setProfile(data);
+    //             } catch (err) {
+    //                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+    //             }
+    //         }
+    //         fetchProfile();
+    //     }, []);
+
+    // useEffect คือ การกระทำที่เกิดขึ้นนอกเหนือจากการแสดงผลของ UI เช่น การดึงข้อมูลจาก API, การสมัคร listener สำหรับ events, การตั้งค่าหรือปรับปรุงค่าของ state ที่อาจมีผลต่อการ render ของคอมโพเนนต์
+    useEffect(() => {
+        // 
+        async function fetchProfile() {
+            try {
+                // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                const data = await getProfile();
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                setProfile(data);
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    student: data.student_id || "",  // ตั้งค่า student_id เมื่อข้อมูลโปรไฟล์โหลดแล้ว
+                }));
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+            }
+        }
+        fetchProfile();
+    }, []);
+
+
 
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
     // ดึงค่าและ อัพเดทค่า
@@ -40,11 +77,19 @@ export default function StudentReportPage() {
 
     return (
         <>
+
             <div id="nav">
                 <header>
-                    <nav>
-                        <span id='roompara'>Room:</span>
-                    </nav>
+                    {profile ? (
+                        <div>                        
+                            <nav>
+                                <span id='roompara'>Room:{profile.room}</span>
+                            </nav>
+                        </div>
+                    ) : (
+                        <p>Loading...</p>
+                    )}
+
                 </header>
             </div>
             <div id="content">
