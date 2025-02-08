@@ -16,6 +16,67 @@ from django.shortcuts import redirect
 from django.contrib.auth import login
 from .forms import RegisterForm, RegisterForm2
 from SDMAS.models import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from SDMAS.models import Student
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
+
+
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            refresh = RefreshToken.for_user(user)
+
+            # ✅ ตรวจสอบว่าผู้ใช้เป็น Student หรือ Technician
+            # getattr(user, 'student', None): ถ้า user มี student ซึ่งหมายถึงว่า user นี้มีความสัมพันธ์กับ Student model, เช่น User นี้เชื่อมต่อกับโมเดล Student ผ่าน OneToOneField
+            student = getattr(user, 'student', None)  # ดึง Student ถ้ามี
+            technician = getattr(user, 'technician', None)  # ดึง Technician ถ้ามี
+
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "role": user.groups.first().name if user.groups.exists() else "User"
+                },
+                "student_id": student.id if student else None,  # ✅ ส่ง student_id ถ้าเป็น Student
+                "technician_id": technician.id if technician else None  # ✅ ส่ง technician_id ถ้าเป็น Technician
+            })
+        return Response({"error": "Invalid credentials"}, status=400)
+
+
+# class LoginView2(APIView):
+#     permission_classes = [AllowAny]
+
+#     def post(self, request):
+#         username = request.data.get("username")
+#         password = request.data.get("password")
+
+#         user = authenticate(username=username, password=password)
+#         if user:
+#             login(request, user)  # Django login session
+#             student = Student.objects.get(user=user)
+#             return Response({"message": "Login successful", "student_id": student.id}, status=200)
+
+#         return Response({"error": "Invalid credentials"}, status=400)
 
 
 class LoginView(View):

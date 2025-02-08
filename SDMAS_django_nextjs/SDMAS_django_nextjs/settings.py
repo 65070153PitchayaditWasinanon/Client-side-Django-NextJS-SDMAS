@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'SDMAS',
-    # 'authen',
+    'authen',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -61,7 +61,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
 
 CORS_ALLOW_ALL_ORIGINS = True  # อนุญาตให้ทุกโดเมนเรียก API (ใช้เฉพาะตอน Dev)
 
@@ -94,7 +93,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "SDMAS",
         "USER": "postgres",
-        "PASSWORD": "0930038864",
+        "PASSWORD": "xI3vcksuno",
         "HOST": "localhost",
         "PORT": "8000",
     }
