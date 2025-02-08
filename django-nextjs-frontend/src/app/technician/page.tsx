@@ -62,7 +62,7 @@ export default function TechnicianIndexPage() {
                     <div className='taskarea'>
                         <center>
                             {RepairRequestView.map((RepairRequestView) => (
-                            <div className='card' id='cardtask'>
+                            <div className='card' id='cardtask' key={RepairRequestView.id}>
                                 <div className='row'>
                                     <div className='col-6' id='technicianreport'>
                                         <div className='row'>
@@ -74,7 +74,7 @@ export default function TechnicianIndexPage() {
                                                         </svg>
                                                     </div>
                                                     <div className='col-10'>
-                                                        <p id='roompara'>{RepairRequestView.student.room_id.room_number}</p>
+                                                        <p id='roompara' key={RepairRequestView.student.room_id.room_number}>{RepairRequestView.student.room_id.room_number}</p>
                                                     </div>
                                                 </div>
                                                 <div className='row' id='taskrowinfo'>
@@ -84,14 +84,14 @@ export default function TechnicianIndexPage() {
                                                         </svg>
                                                     </div>
                                                     <div className='col-10'>
-                                                        <p id='floorpara'>ชั้น {RepairRequestView.student.room_id.floor}</p>
+                                                        <p id='floorpara' key={RepairRequestView.student.room_id.floor}>ชั้น {RepairRequestView.student.room_id.floor}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div className='col-3' id='linktodetails'>
-                                        <a href="">
+                                        <a href={`technician/${RepairRequestView.id}/taskdetails`}>
                                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M24 32V24M24 16H24.02M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>

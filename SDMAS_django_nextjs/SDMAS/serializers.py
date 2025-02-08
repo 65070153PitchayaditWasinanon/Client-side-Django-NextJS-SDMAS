@@ -9,6 +9,11 @@ class RepairRequestSerializer(serializers.ModelSerializer):
         model = RepairRequest
         fields = '__all__'  # หรือเลือกเฉพาะฟิลด์ที่ต้องการ เช่น ['description', 'urgency', 'repair_appointment_time']
 
+class TechnicianRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RepairStatusUpdate
+        fields = '__all__'  # หรือเลือกเฉพาะฟิลด์ที่ต้องการ เช่น ['description', 'urgency', 'repair_appointment_time']
+
 class RoomDjangotoNextJSSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -26,12 +31,6 @@ class RepairRequestDjangotoNextJSSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairRequest
         fields = '__all__'
-
-
-class TechnicianRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RepairStatusUpdate
-        fields = '__all__'  # หรือเลือกเฉพาะฟิลด์ที่ต้องการ เช่น ['description', 'urgency', 'repair_appointment_time']
 
 # class UserSerializer(serializers.ModelSerializer):
 #     class Meta:

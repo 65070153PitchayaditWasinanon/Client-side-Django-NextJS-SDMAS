@@ -1,13 +1,17 @@
 // app/nontakorn/page.tsx
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from "react";
+import { useParams } from 'next/navigation';
+import axios from 'axios';
+
 
 export default function TechnicianIndexPage() {
+    const { id } = useParams();
 
+    const [repairRequest, setRepairRequest] = useState(null);
     //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
         // student: 1,
@@ -16,17 +20,52 @@ export default function TechnicianIndexPage() {
         // repair_appointment_time: "",
 
         //ข้อมูลแบบ many to many ต้องใส่เป็น list
-        repair_request:12,
-        technician:[5],
-        status:"assigned",
+        repair_request: "",
+        technician: [1],
+        status: "assigned",
         // update_time:"",
-        remarks:"",
+        remarks: "",
 
         // repair_request: 12,
         // technician: 5,
         // // assigned_at = models.DateTimeField(auto_now_add=True) 
         // status: "Assigned",
     });
+
+    useEffect(() => {
+        // เช็คว่า id มีค่าอยู่หรือไม่
+        if (id) {
+            setFormData((prevData) => ({
+                ...prevData,
+                repair_request: id, // ตั้งค่า repair_request เป็น string จาก query params
+            }));
+        }
+    }, [id]);  // คอยตรวจสอบการเปลี่ยนแปลงของ id
+
+    useEffect(() => {
+        if (repairRequest) {
+            setFormData((prevData) => ({
+                ...prevData,
+                remarks: repairRequest?.description || prevData.remarks,
+            }));
+        }
+    }, [repairRequest]);
+
+    useEffect(() => {
+        if (id) {
+            const fetchRepairRequest = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/repair-requests/${id}/`);
+                    setRepairRequest(response.data);
+                    console.log(response.data);
+                } catch (error) {
+                    console.error('Error fetching repair request:', error);
+                }
+            };
+
+            fetchRepairRequest();
+        }
+    }, [id]);
 
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
     // ดึงค่าและ อัพเดทค่า
@@ -37,15 +76,15 @@ export default function TechnicianIndexPage() {
     //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+
         console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
-    
+
         const response = await fetch("http://localhost:8080/api/technician-requests/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
-    
+
         if (response.ok) {
             alert("ส่งคำร้องขอซ่อมแล้ว!");
         } else {
@@ -117,6 +156,8 @@ export default function TechnicianIndexPage() {
                                         className="form-control"
                                         value={formData.remarks}
                                         onChange={handleChange}
+                                        id='remarks-show'
+                                        readOnly
                                         required>
                                     </input>
                                 </div>
@@ -131,8 +172,9 @@ export default function TechnicianIndexPage() {
                                         type="text"
                                         name="status"
                                         className="form-control"
-                                        value={formData.status}
+                                        value={formData.status.charAt(0).toUpperCase() + formData.status.slice(1).toLowerCase()}
                                         onChange={handleChange}
+                                        id='status-show'
                                         required>
                                     </input>
                                 </div>

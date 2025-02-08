@@ -57,6 +57,8 @@ urlpatterns = [
     path('api/repair-requests/', views.RepairRequestCreateView.as_view(), name='repair-request-create'),
 
     path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
+
+    path('api/repair-requests/<int:id>/', views.RepairRequestFilteredbyIDView.as_view(), name='repair_request_detail'),
     
     path('api/technician-requests/', views.TechnicianRequestCreateView.as_view(), name='technician-request-create'),
 
