@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import RepairRequest, RepairStatusUpdate
 from .models import RepairRequest, Room, Student, RepairStatusUpdate
+from django.contrib.auth.models import User
+from rest_framework import serializers
 
 class RepairRequestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +32,13 @@ class TechnicianRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairStatusUpdate
         fields = '__all__'  # หรือเลือกเฉพาะฟิลด์ที่ต้องการ เช่น ['description', 'urgency', 'repair_appointment_time']
+
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username']
+
+# class StudentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Student
+#         fields = ['id', 'user', 'room_id']

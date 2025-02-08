@@ -21,6 +21,37 @@ from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSer
 
 from rest_framework.views import APIView
 
+# ใน views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.contrib.auth.models import User  # หรือโมเดลผู้ใช้ที่คุณใช้
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]  # ต้องผ่านการยืนยันตัวตน (authentication)
+
+    def get(self, request):
+        # ดึงข้อมูลของผู้ใช้จาก request.user ซึ่งจะเป็นผู้ที่ล็อกอินอยู่
+        user = request.user
+        student = getattr(user, 'student', None)  # ดึง Student ถ้ามี
+        technician = getattr(user, 'technician', None)  # ดึง Technician ถ้ามี
+        room = student.room_id if student else None  # ดึง room_id ถ้าเป็น Student
+        # ตัวอย่างข้อมูลที่อาจจะส่งกลับไป
+        profile_data = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "student_id": student.id if student else None,  # ✅ ส่ง student_id ถ้าเป็น Student
+            "technician_id": technician.id if technician else None, # ✅ ส่ง technician_id ถ้าเป็น Technician
+            "room": room.room_number,
+        }
+
+        return Response(profile_data, status=status.HTTP_200_OK)
+
+
 
 
 class RepairRequestCreateView(CreateAPIView):

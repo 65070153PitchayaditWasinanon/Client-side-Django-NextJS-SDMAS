@@ -1,4 +1,5 @@
 from django.urls import path
+# from .views import RegisterView, LoginView
 
 from . import views
 
@@ -58,6 +59,12 @@ urlpatterns = [
     path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
     
     path('api/technician-requests/', views.TechnicianRequestCreateView.as_view(), name='technician-request-create'),
+
+    path('api/profile/', views.ProfileView.as_view(), name='profile'),
+
+    # path('api/register/', views.RegisterView.as_view(), name='register'),
+
+    # path('api/login/', views.LoginView.as_view(), name='login'),
     # # /employee/position/
     # path("position/", views.PositionView.as_view(), name="position"),
     # # /employee/project
