@@ -4,10 +4,14 @@
 import { useEffect, useState } from 'react';
 import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import axios from 'axios';
+
 
 export default function TechnicianIndexPage() {
-    const router = useRouter();
+    const { id } = useParams();
+
+    const [repairRequest, setRepairRequest] = useState(null);
     //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
         // student: 1,
@@ -29,24 +33,39 @@ export default function TechnicianIndexPage() {
     });
 
     useEffect(() => {
-        if (router.isReady) {
-            const { id } = router.query;
-
-            // ตรวจสอบว่า id เป็น string หรือไม่
-            if (typeof id === "string") {
-                setFormData((prevData) => ({
-                    ...prevData,
-                    repair_request: id, // ตั้งค่า repair_request เป็น string จาก query
-                }));
-            } else {
-                // ถ้าเป็น array หรือไม่ใช่ string อาจจะต้องจัดการกรณีอื่น (เช่น set เป็นค่าคงที่)
-                setFormData((prevData) => ({
-                    ...prevData,
-                    repair_request: "", // หรือเลือกค่าอื่นๆ ตามต้องการ
-                }));
-            }
+        // เช็คว่า id มีค่าอยู่หรือไม่
+        if (id) {
+            setFormData((prevData) => ({
+                ...prevData,
+                repair_request: id, // ตั้งค่า repair_request เป็น string จาก query params
+            }));
         }
-    }, [router.isReady, router.query]);
+    }, [id]);  // คอยตรวจสอบการเปลี่ยนแปลงของ id
+
+    useEffect(() => {
+        if (repairRequest) {
+            setFormData((prevData) => ({
+                ...prevData,
+                remarks: repairRequest?.description || prevData.remarks,
+            }));
+        }
+    }, [repairRequest]);
+
+    useEffect(() => {
+        if (id) {
+            const fetchRepairRequest = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/repair-requests/${id}/`);
+                    setRepairRequest(response.data);
+                    console.log(response.data);
+                } catch (error) {
+                    console.error('Error fetching repair request:', error);
+                }
+            };
+
+            fetchRepairRequest();
+        }
+    }, [id]);
 
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
     // ดึงค่าและ อัพเดทค่า
@@ -137,6 +156,8 @@ export default function TechnicianIndexPage() {
                                         className="form-control"
                                         value={formData.remarks}
                                         onChange={handleChange}
+                                        id='remarks-show'
+                                        readOnly
                                         required>
                                     </input>
                                 </div>
@@ -151,8 +172,9 @@ export default function TechnicianIndexPage() {
                                         type="text"
                                         name="status"
                                         className="form-control"
-                                        value={formData.status}
+                                        value={formData.status.charAt(0).toUpperCase() + formData.status.slice(1).toLowerCase()}
                                         onChange={handleChange}
+                                        id='status-show'
                                         required>
                                     </input>
                                 </div>

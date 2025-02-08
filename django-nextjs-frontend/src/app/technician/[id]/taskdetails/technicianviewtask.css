@@ -281,3 +281,16 @@ nav .col {
     font-weight: 200;
     font-size: 120%;
 }
+
+#status-show {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    text-align: center;
+}
+
+#remarks-show {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+}
