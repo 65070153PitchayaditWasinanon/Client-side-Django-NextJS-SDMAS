@@ -724,3 +724,13 @@ class RepairRequestListView(APIView):
         students = RepairRequest.objects.all()
         serializer = RepairRequestDjangotoNextJSSerializer(students, many=True)
         return Response(serializer.data) #ส่งข้อมูลไปเป็น json
+
+
+class RepairRequestFilteredbyIDView(APIView):
+    def get(self, request, id):
+        try:
+            repair_request = RepairRequest.objects.get(id=id)
+            serializer = RepairRequestDjangotoNextJSSerializer(repair_request)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except RepairRequest.DoesNotExist:
+            return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)

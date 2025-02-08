@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # 'authen',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 
 CORS_ALLOW_ALL_ORIGINS = True  # อนุญาตให้ทุกโดเมนเรียก API (ใช้เฉพาะตอน Dev)
