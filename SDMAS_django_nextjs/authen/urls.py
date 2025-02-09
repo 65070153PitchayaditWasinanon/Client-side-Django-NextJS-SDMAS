@@ -1,6 +1,6 @@
 from django.urls import path
 
-from authen.views import LoginView, LogoutView, RegisterView, RegisterTechnicianView, ChangePasswordView,LoginAPIView
+from authen.views import LoginView, LogoutView, RegisterView, RegisterTechnicianView, ChangePasswordView,LoginAPIView, RegisterStudentAPIView, RegisterTechnicianAPIView
 
 
 urlpatterns = [
@@ -12,4 +12,9 @@ urlpatterns = [
 
     # path('api/login/', LoginView2.as_view(), name='login2'),
     path("api/login/", LoginAPIView.as_view(), name="login2"),
+    
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("api/register/", RegisterStudentAPIView.as_view(), name="resigter"),
+    path("api/register/technician/", RegisterTechnicianAPIView.as_view(), name="resigter"),
+
 ]

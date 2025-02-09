@@ -4,6 +4,7 @@ import '../report/studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from "react";
 import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
+import { login } from "@/utils/auth";
 
 export default function StudentReportPage() {
 
@@ -44,11 +45,22 @@ export default function StudentReportPage() {
                 }));
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+                window.location.href = '/login';
             }
         }
         fetchProfile();
     }, []);
 
+    const logout = () => {
+        // ลบ JWT จาก localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+
+        // Redirect ไปยังหน้า login
+        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+    };
 
 
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
@@ -62,16 +74,17 @@ export default function StudentReportPage() {
         // ป้องกันหน้าเว็บโหลดซ้ำ
         e.preventDefault();
 
+
         const response = await fetch("http://localhost:8080/api/repair-requests/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
-
         if (response.ok) {
             alert("ส่งคำร้องขอซ่อมแล้ว!");
         } else {
             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+
         }
     };
 
@@ -81,9 +94,14 @@ export default function StudentReportPage() {
             <div id="nav">
                 <header>
                     {profile ? (
-                        <div>                        
-                            <nav>
+                        <div>
+                            <nav className='navroom'>
                                 <span id='roompara'>Room:{profile.room}</span>
+                                <div>
+                                    <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
+                                    <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                </div>
+
                             </nav>
                         </div>
                     ) : (
@@ -115,7 +133,7 @@ export default function StudentReportPage() {
                             </a>
                         </li>
                         <li id='linavlink'>
-                            <a href="/student/report" className="nav-link link-dark" id='navlinksidebar'>
+                            <a href="/Student/report" className="nav-link link-dark" id='navlinksidebar'>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <svg width="50" height="51" viewBox="0 0 50 51" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -198,7 +216,9 @@ export default function StudentReportPage() {
                                 <div className="col">
                                     <center>
                                         <button type="submit" className="btn btn-success" id="student1button">
-                                            เสร็จสิ้น
+                                            <a href="/Student" id="studentdenybutton" style={{ color: "white", textDecoration: "none" }}>
+                                                เสร็จสิ้น
+                                            </a>
                                         </button>
                                     </center>
                                 </div>
