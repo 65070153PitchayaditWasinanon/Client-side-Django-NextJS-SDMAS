@@ -1,6 +1,5 @@
 // app/nontakorn/page.tsx
 'use client'
-import RootLayout from '../layout';
 import '../student/studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getProfile } from "@/utils/auth";
