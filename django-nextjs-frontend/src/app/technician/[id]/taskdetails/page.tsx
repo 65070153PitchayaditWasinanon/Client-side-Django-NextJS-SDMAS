@@ -6,6 +6,7 @@ import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
+import { login} from "@/utils/auth";
 
 
 export default function TechnicianIndexPage() {
@@ -78,6 +79,14 @@ export default function TechnicianIndexPage() {
         e.preventDefault();
 
         console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
+        let token = localStorage.getItem("accessToken");
+                        if (!token) {
+                            token = await refreshToken();
+                            if (!token) {
+                                alert("Token หมดอายุ กรุณาเข้าสู่ระบบใหม่");
+                                return;
+                            }
+                        }
 
         const response = await fetch("http://localhost:8080/api/technician-requests/", {
             method: "POST",

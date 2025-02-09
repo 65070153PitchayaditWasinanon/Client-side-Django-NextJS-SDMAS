@@ -29,8 +29,77 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import make_password
 
+from django.shortcuts import get_object_or_404
 
+class RegisterTechnicianAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        first_name = request.data.get('firstName')
+        last_name = request.data.get('lastName')
+        
+        technician_id = request.data.get('technician_id')
+        expertise = request.data.get('expertise')
+
+        if not username or not password:
+            return Response({"error": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not technician_id or not expertise:  # ✅ เพิ่มเงื่อนไขกัน error
+            return Response({"error": "Technician ID and expertise are required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        # สร้างผู้ใช้ใหม่
+        user = User.objects.create(
+            username=username,
+            password=make_password(password),
+            first_name=first_name,
+            last_name=last_name,
+        )
+        # ValueRoom = Room.objects.get(room_number = room_number)
+        # room = get_object_or_404(Room, room_number=room_number)
+
+        # เช็คว่าเป็นผู้ใช้ประเภทไหน (Student หรือ Technician)
+        
+        # student = Student.objects.create(user=user, room_id=room)
+        # student.save()
+        
+        technician = Technician.objects.create(user=user, technician_id=technician_id, expertise=expertise)
+        technician.save()
+
+        return Response({"message": "Registration successful"}, status=status.HTTP_201_CREATED)
+
+class RegisterStudentAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        first_name = request.data.get('firstName')
+        last_name = request.data.get('lastName')
+        room_number = request.data.get('room_number')
+
+        if not username or not password:
+            return Response({"error": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # สร้างผู้ใช้ใหม่
+        user = User.objects.create(
+            username=username,
+            password=make_password(password),
+            first_name=first_name,
+            last_name=last_name,
+        )
+        # ValueRoom = Room.objects.get(room_number = room_number)
+        room = get_object_or_404(Room, room_number=room_number)
+
+        # เช็คว่าเป็นผู้ใช้ประเภทไหน (Student หรือ Technician)
+        
+        student = Student.objects.create(user=user, room_id=room)
+        student.save()
+        
+        # Technician.objects.create(user=user, technician_id="T" + str(user.id), expertise="General")  # ปรับได้ตามต้องการ
+
+        return Response({"message": "Registration successful"}, status=status.HTTP_201_CREATED)
 
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]

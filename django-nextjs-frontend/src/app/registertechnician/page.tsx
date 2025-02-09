@@ -12,7 +12,8 @@ const RegisterPage = () => {
         password: '',
         firstName: '',
         lastName: '',
-        room_number: '',
+        technician_id: '',
+        expertise: '',
     });
 
     // useEffect(() => {
@@ -29,7 +30,7 @@ const RegisterPage = () => {
         
         try {
             // ส่งข้อมูลไปยัง Django backend สำหรับการลงทะเบียน
-            const response = await axios.post('http://localhost:8080/auth/api/register/', formData);
+            const response = await axios.post('http://localhost:8080/auth/api/register/technician/', formData);
             console.log('Register success:', response.data);
             router.push('/login'); // หลังจากลงทะเบียนเสร็จให้ไปที่หน้า login
         } catch (error) {
@@ -77,9 +78,18 @@ const RegisterPage = () => {
                 
                 <input
                     type="text"
-                    name="room_number"
-                    placeholder="room_number"
-                    value={formData.room_number}
+                    name="technician_id"
+                    placeholder="technician_id"
+                    value={formData.technician_id}
+                    onChange={handleChange}
+                    required
+                />
+
+                <input
+                    type="text"
+                    name="expertise"
+                    placeholder="expertise"
+                    value={formData.expertise}
                     onChange={handleChange}
                     required
                 />

@@ -20,18 +20,34 @@ export default function StudentIndexPage() {
 
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+                window.location.href = '/login';
             }
         }
         fetchProfile();
     }, []);
+    const logout = () => {
+        // ลบ JWT จาก localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+
+        // Redirect ไปยังหน้า login
+        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+    };
     return (
         <>
             <div id="nav">
                 <header>
-                    {profile ? (
+                {profile ? (
                         <div>
-                            <nav>
+                            <nav className='navroom'>
                                 <span id='roompara'>Room:{profile.room}</span>
+
+                                <div>
+                                    <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
+                                    <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                </div>
                             </nav>
                         </div>
                     ) : (
@@ -62,7 +78,7 @@ export default function StudentIndexPage() {
                             </a>
                         </li>
                         <li id='linavlink'>
-                            <a href="/student/report" className="nav-link link-dark" id='navlinksidebar'>
+                            <a href="/Student/report" className="nav-link link-dark" id='navlinksidebar'>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,6 +86,8 @@ export default function StudentIndexPage() {
                                         </svg>
                                     </div>
                                     <div className='col-10' >
+                                        {/* <a href=""></a> */}
+                                        
                                         <center id='sidebarlinkmenu'>รายงานปัญหา</center>
                                     </div>
                                 </div>
