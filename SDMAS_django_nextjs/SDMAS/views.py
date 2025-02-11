@@ -765,3 +765,6 @@ class RepairRequestFilteredbyIDView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except RepairRequest.DoesNotExist:
             return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class RepairAssignmentListView(APIView):
+    pass

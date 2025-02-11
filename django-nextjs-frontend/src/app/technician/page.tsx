@@ -5,6 +5,7 @@ import '../technician/technicianindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useEffect, useState } from 'react';
+import { getProfile } from "@/utils/auth";
 import axios from 'axios';
 
 export default function TechnicianIndexPage() {
@@ -14,16 +15,44 @@ export default function TechnicianIndexPage() {
 
     const [RepairRequestView, setRepairRequest] = useState([]);
 
-    useEffect(() => {
-      const fetchRepairRequest = async () => {
-        const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
-        setRepairRequest(response.data);
-        console.log(response.data);
-      };
-  
-      fetchRepairRequest();
-    }, []);
+    // const [profile, setProfile] = useState<any>(null);
+    // const [error, setError] = useState<string | null>(null);
+    // useEffect(() => {
+    //     // 
+    //     async function fetchProfile() {
+    //         try {
+    //             // getProfile ดึงข้อมูลมาจาก django ใส่ data
+    //             const data = await getProfile();
+    //             //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+    //             setProfile(data);
 
+    //         } catch (err) {
+    //             setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+    //             window.location.href = '/login';
+    //         }
+    //     }
+    //     fetchProfile();
+    // }, []);
+    // const logout = () => {
+    //     // ลบ JWT จาก localStorage
+    //     localStorage.removeItem("accessToken");
+    //     localStorage.removeItem("refreshToken");
+    //     localStorage.removeItem("student_id");
+    //     localStorage.removeItem("technician_id");
+
+    //     // Redirect ไปยังหน้า login
+    //     window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+    // };
+
+    useEffect(() => {
+        const fetchRepairRequest = async () => {
+            const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
+            setRepairRequest(response.data);
+            console.log(response.data);
+        };
+
+        fetchRepairRequest();
+    }, []);
 
     return (
         <>
@@ -32,6 +61,20 @@ export default function TechnicianIndexPage() {
                     <nav>
                         <span id='roompara'>Room:</span>
                     </nav>
+                    {/* {profile ? (
+                        <div>
+                            <nav className='navroom'>
+                                <span id='roompara'>Room:{profile.room}</span>
+
+                                <div>
+                                    <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
+                                    <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                </div>
+                            </nav>
+                        </div>
+                    ) : (
+                        <p>Loading...</p>
+                    )} */}
                 </header>
             </div>
             <div id="content">
@@ -62,63 +105,63 @@ export default function TechnicianIndexPage() {
                     <div className='taskarea'>
                         <center>
                             {RepairRequestView.map((RepairRequestView) => (
-                            <div className='card' id='cardtask' key={RepairRequestView.id}>
-                                <div className='row'>
-                                    <div className='col-6' id='technicianreport'>
-                                        <div className='row'>
-                                            <div>
-                                                <div className='row' id='taskrowinfo'>
-                                                    <div className='col-2'>
-                                                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
+                                <div className='card' id='cardtask' key={RepairRequestView.id}>
+                                    <div className='row'>
+                                        <div className='col-6' id='technicianreport'>
+                                            <div className='row'>
+                                                <div>
+                                                    <div className='row' id='taskrowinfo'>
+                                                        <div className='col-2'>
+                                                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                        </div>
+                                                        <div className='col-10'>
+                                                            <p id='roompara' key={RepairRequestView.student.room_id.room_number}>{RepairRequestView.student.room_id.room_number}</p>
+                                                        </div>
                                                     </div>
-                                                    <div className='col-10'>
-                                                        <p id='roompara' key={RepairRequestView.student.room_id.room_number}>{RepairRequestView.student.room_id.room_number}</p>
-                                                    </div>
-                                                </div>
-                                                <div className='row' id='taskrowinfo'>
-                                                    <div className='col-2'>
-                                                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M24 4L38 42L24 34L10 42L24 4Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </div>
-                                                    <div className='col-10'>
-                                                        <p id='floorpara' key={RepairRequestView.student.room_id.floor}>ชั้น {RepairRequestView.student.room_id.floor}</p>
+                                                    <div className='row' id='taskrowinfo'>
+                                                        <div className='col-2'>
+                                                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M24 4L38 42L24 34L10 42L24 4Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                        </div>
+                                                        <div className='col-10'>
+                                                            <p id='floorpara' key={RepairRequestView.student.room_id.floor}>ชั้น {RepairRequestView.student.room_id.floor}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className='col-3' id='linktodetails'>
-                                        <a href={`technician/${RepairRequestView.id}/taskdetails`}>
-                                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M24 32V24M24 16H24.02M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                    <div className='col-3' id='clickfordetailsarea'>
-                                        <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
-                                            รับงาน
-                                        </button>
-                                        <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h1 className="modal-title fs-5" id="modaltitletter">คุณแน่ใจที่จะรับงานนี้หรือไม่?</h1>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-footer" id='modalfooterbutton'>
-                                                        <center>
-                                                            <button type="button" className="btn btn-success w-100" id='buttoninmodalletter'>รับงาน</button>
-                                                        </center>
+                                        <div className='col-3' id='linktodetails'>
+                                            <a href={`technician/${RepairRequestView.id}/taskdetails`}>
+                                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M24 32V24M24 16H24.02M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div className='col-3' id='clickfordetailsarea'>
+                                            <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
+                                                รับงาน
+                                            </button>
+                                            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div className="modal-dialog">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h1 className="modal-title fs-5" id="modaltitletter">คุณแน่ใจที่จะรับงานนี้หรือไม่?</h1>
+                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div className="modal-footer" id='modalfooterbutton'>
+                                                            <center>
+                                                                <button type="button" className="btn btn-success w-100" id='buttoninmodalletter'>รับงาน</button>
+                                                            </center>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             ))}
                         </center>
                     </div>

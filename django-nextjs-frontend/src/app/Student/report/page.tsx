@@ -133,7 +133,7 @@ export default function StudentReportPage() {
                             </a>
                         </li>
                         <li id='linavlink'>
-                            <a href="/Student/report" className="nav-link link-dark" id='navlinksidebar'>
+                            <a href="/student/report" className="nav-link link-dark" id='navlinksidebar'>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <svg width="50" height="51" viewBox="0 0 50 51" fill="none" xmlns="http://www.w3.org/2000/svg">

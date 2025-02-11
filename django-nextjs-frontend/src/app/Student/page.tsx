@@ -78,7 +78,7 @@ export default function StudentIndexPage() {
                             </a>
                         </li>
                         <li id='linavlink'>
-                            <a href="/Student/report" className="nav-link link-dark" id='navlinksidebar'>
+                            <a href="/student/report" className="nav-link link-dark" id='navlinksidebar'>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">

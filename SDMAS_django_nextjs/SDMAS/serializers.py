@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import RepairRequest, RepairStatusUpdate
-from .models import RepairRequest, Room, Student, RepairStatusUpdate
+from .models import RepairRequest, Room, Student, RepairStatusUpdate, RepairAssignment
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -30,6 +30,12 @@ class RepairRequestDjangotoNextJSSerializer(serializers.ModelSerializer):
     student = StudentDjangotoNextJSSerializer() # เอาข้อมูลของตาราง Student มาใส่ในข้อมูลของ student_id เพราะถ้าส่ง API ไปจะเป็น json ทำให้ใช้การอ้างอิงโดยความสัมพันธ์ไม่ได้
     class Meta:
         model = RepairRequest
+        fields = '__all__'
+
+class RepairAssignmentDjangotoNextJSSerailizer(serializers.ModelSerializer):
+    repair_request = RepairRequestDjangotoNextJSSerializer()
+    class Meta:
+        model = RepairAssignment
         fields = '__all__'
 
 # class UserSerializer(serializers.ModelSerializer):

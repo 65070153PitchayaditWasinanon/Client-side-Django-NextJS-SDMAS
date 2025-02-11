@@ -58,7 +58,7 @@ export default function StaffIndexPage() {
                     )} */}
                     <div>
                         <nav>
-                            <span id='roompara'>Admin Site</span>
+                            <span id='roompara'>Staff Site</span>
                         </nav>
                     </div>
                 </header>
