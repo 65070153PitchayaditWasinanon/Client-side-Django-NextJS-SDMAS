@@ -1,6 +1,6 @@
 // app/nontakorn/page.tsx
 'use client'
-import '../report/studentreport.css';
+import './studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from "react";
 import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
@@ -162,8 +162,8 @@ export default function StudentReportPage() {
                                         type="text"
                                         name="description"
                                         className="form-control"
-                                        value={formData.description}
-                                        onChange={handleChange}
+                                        value={formData.description} // ⬅️ กำหนดค่าของ input ให้ตรงกับค่าใน formData
+                                        onChange={handleChange}// ⬅️ อัปเดตค่าใน formData เมื่อผู้ใช้พิมพ์
                                         required
                                     />
                                 </div>

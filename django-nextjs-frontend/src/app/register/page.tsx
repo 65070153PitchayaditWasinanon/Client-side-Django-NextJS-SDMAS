@@ -14,6 +14,18 @@ const RegisterPage = () => {
         lastName: '',
         room_number: '',
     });
+    const [RoomView, setRoom] = useState([]);
+
+    useEffect(() => {
+        const fetchRoom = async () => {
+            const response = await axios.get('http://localhost:8080/api/room/');
+            setRoom(response.data);
+            console.log(response.data);
+        };
+
+        fetchRoom();
+    }, []);
+
 
     // useEffect(() => {
     //     // Check if the router is ready
@@ -26,7 +38,7 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         try {
             // ส่งข้อมูลไปยัง Django backend สำหรับการลงทะเบียน
             const response = await axios.post('http://localhost:8080/auth/api/register/', formData);
@@ -74,15 +86,28 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     required
                 />
-                
-                <input
-                    type="text"
+                <select
                     name="room_number"
-                    placeholder="room_number"
+                    className="form-select"
                     value={formData.room_number}
                     onChange={handleChange}
-                    required
-                />
+                >
+                    <option value="">-- เลือกห้อง --</option> {/* ตัวเลือกเริ่มต้น */}
+                    {RoomView.map((room) => (
+                        <option key={room.room_number} value={room.room_number}>
+                            {room.room_number}
+                        </option>
+                    ))}
+                </select>
+                {/* // <input
+                //     type="text"
+                //     name="room_number"
+                //     placeholder="room_number"
+                //     value={formData.room_number.RoomView.room_number}
+                //     onChange={handleChange}
+                //     required
+                // /> */}
+                
                 <button type="submit">ลงทะเบียน</button>
             </form>
         </div>
