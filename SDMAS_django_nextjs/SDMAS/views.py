@@ -47,7 +47,7 @@ class ProfileView(APIView):
             "last_name": user.last_name,
             "student_id": student.id if student else None,  # ✅ ส่ง student_id ถ้าเป็น Student
             "technician_id": technician.id if technician else None, # ✅ ส่ง technician_id ถ้าเป็น Technician
-            "room": room.room_number,
+            "room": room.room_number if student else None,
         }
 
         return Response(profile_data, status=status.HTTP_200_OK)

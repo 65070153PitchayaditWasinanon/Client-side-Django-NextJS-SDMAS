@@ -23,7 +23,7 @@ export default function DashboardPage() {
                 setProfile(data);
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-                window.location.href = '/login'; 
+                // window.location.href = '/login'; 
             }
         }
         fetchProfile();
