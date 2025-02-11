@@ -31,17 +31,18 @@ class RepairRequestDjangotoNextJSSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairRequest
         fields = '__all__'
-#fam
-class RoomDjangotoNextJSSerializer(serializers.ModelSerializer):
-    # student = StudentDjangotoNextJSSerializer() # เอาข้อมูลของตาราง Student มาใส่ในข้อมูลของ student_id เพราะถ้าส่ง API ไปจะเป็น json ทำให้ใช้การอ้างอิงโดยความสัมพันธ์ไม่ได้
-    class Meta:
-        model = Room
-        fields = '__all__'
 
 class RepairAssignmentDjangotoNextJSSerailizer(serializers.ModelSerializer):
     repair_request = RepairRequestDjangotoNextJSSerializer()
     class Meta:
         model = RepairAssignment
+        fields = '__all__'
+
+#fam
+class RoomDjangotoNextJSSerializer(serializers.ModelSerializer):
+    # student = StudentDjangotoNextJSSerializer() # เอาข้อมูลของตาราง Student มาใส่ในข้อมูลของ student_id เพราะถ้าส่ง API ไปจะเป็น json ทำให้ใช้การอ้างอิงโดยความสัมพันธ์ไม่ได้
+    class Meta:
+        model = Room
         fields = '__all__'
 
 # class UserSerializer(serializers.ModelSerializer):

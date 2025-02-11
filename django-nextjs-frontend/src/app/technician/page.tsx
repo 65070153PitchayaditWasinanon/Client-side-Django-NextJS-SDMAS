@@ -13,7 +13,7 @@ export default function TechnicianIndexPage() {
         require('bootstrap/dist/js/bootstrap.bundle.min.js'); //required อันที่ต้องใช้ bundle + Popper.js มาให้แล้ว เพื่อให้ฝั่ง client ใช้ได้ (ปล. อันทำเพื่อให้ใช้ modal ได้)
     }, []);
 
-    const [RepairRequestView, setRepairRequest] = useState([]);
+    const [RepairAssignmentView, setRepairAssignment] = useState([]);
 
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
@@ -23,6 +23,7 @@ export default function TechnicianIndexPage() {
             try {
                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
+                console.log("Profile : ", data);
                 //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
 
@@ -33,6 +34,7 @@ export default function TechnicianIndexPage() {
         }
         fetchProfile();
     }, []);
+
     const logout = () => {
         // ลบ JWT จาก localStorage
         localStorage.removeItem("accessToken");
@@ -45,35 +47,54 @@ export default function TechnicianIndexPage() {
     };
 
     useEffect(() => {
-        const fetchRepairRequest = async () => {
-            const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
-            setRepairRequest(response.data);
-            console.log(response.data);
-        };
-
-        fetchRepairRequest();
-    }, []);
+        if (profile && profile.technician_id) {
+            const fetchRepairAssignments = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/repair-assignment-filter/${profile.technician_id}/`);
+                    setRepairAssignment(response.data);  // ถ้ามีข้อมูล จะใส่ใน array
+                    console.log("Repair Assignments:", response.data);
+                } catch (error) {
+                    console.error("Error fetching repair assignments:", error);
+                }
+            };
+            fetchRepairAssignments();
+        }
+    }, [profile]);
 
     return (
         <>
             <div id="nav">
                 <header>
-                    {/* <nav>
-                        <span id='roompara'>Room:</span>
-                    </nav> */}
                     {profile ? (
                         <div>
                             <nav className='navroom'>
-                                <span id='roompara'>tec:{profile.technician_id}</span>
-
-                                <div>
-                                    <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
-                                    <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                <div className='row'>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
+                                    </div>
+                                    <div className='col-4'></div>
+                                    <div className='col-4'>
+                                        <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
+                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                    </div>
                                 </div>
                             </nav>
                         </div>
                     ) : (
-                        <p>Loading...</p>
+                        <div>
+                            <nav className='navroom'>
+                                <div className='row'>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Technician ID : No Data</span>
+                                    </div>
+                                    <div className='col-4'></div>
+                                    <div className='col-4'>
+                                        <span id='roompara'>No Data</span>
+                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
                     )}
                 </header>
             </div>
@@ -104,8 +125,8 @@ export default function TechnicianIndexPage() {
                 <div className="container" id="pagecon">
                     <div className='taskarea'>
                         <center>
-                            {RepairRequestView.map((RepairRequestView) => (
-                                <div className='card' id='cardtask' key={RepairRequestView.id}>
+                            {RepairAssignmentView.map((RepairAssignmentView) => (
+                                <div className='card' id='cardtask' key={RepairAssignmentView.repair_request.id}>
                                     <div className='row'>
                                         <div className='col-6' id='technicianreport'>
                                             <div className='row'>
@@ -117,7 +138,7 @@ export default function TechnicianIndexPage() {
                                                             </svg>
                                                         </div>
                                                         <div className='col-10'>
-                                                            <p id='roompara' key={RepairRequestView.student.room_id.room_number}>{RepairRequestView.student.room_id.room_number}</p>
+                                                            <p id='roompara' key={RepairAssignmentView.repair_request.student.room_id.room_number}>{RepairAssignmentView.repair_request.student.room_id.room_number}</p>
                                                         </div>
                                                     </div>
                                                     <div className='row' id='taskrowinfo'>
@@ -127,14 +148,14 @@ export default function TechnicianIndexPage() {
                                                             </svg>
                                                         </div>
                                                         <div className='col-10'>
-                                                            <p id='floorpara' key={RepairRequestView.student.room_id.floor}>ชั้น {RepairRequestView.student.room_id.floor}</p>
+                                                            <p id='floorpara' key={RepairAssignmentView.repair_request.student.room_id.floor}>ชั้น {RepairAssignmentView.repair_request.student.room_id.floor}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className='col-3' id='linktodetails'>
-                                            <a href={`technician/${RepairRequestView.id}/taskdetails`}>
+                                            <a href={`technician/${RepairAssignmentView.repair_request.id}/taskdetails`}>
                                                 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M24 32V24M24 16H24.02M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
