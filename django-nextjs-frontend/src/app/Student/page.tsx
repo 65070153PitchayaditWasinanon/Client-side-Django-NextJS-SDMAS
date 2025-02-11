@@ -1,6 +1,6 @@
 // app/nontakorn/page.tsx
 'use client'
-import '../student/studentindex.css';
+import './studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";

@@ -17,7 +17,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
 from .serializers import RepairRequestSerializer, TechnicianRequestSerializer
-from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer
 
 from rest_framework.views import APIView
 
@@ -28,6 +28,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.contrib.auth.models import User  # หรือโมเดลผู้ใช้ที่คุณใช้
 
+# fam
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]  # ต้องผ่านการยืนยันตัวตน (authentication)
 
@@ -50,8 +51,6 @@ class ProfileView(APIView):
         }
 
         return Response(profile_data, status=status.HTTP_200_OK)
-
-
 
 
 class RepairRequestCreateView(CreateAPIView):
@@ -79,7 +78,8 @@ class RepairRequestCreateView(CreateAPIView):
 
         # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+  
 class TechnicianRequestCreateView(CreateAPIView):
     queryset = RepairRequest.objects.all()  # กำหนด queryset ที่จะใช้
     # ใช้เพื่อระบุว่าเราจะใช้ serializer อะไรในการแปลงข้อมูลจาก JSON ที่ส่งมาจาก client (ในที่นี้คือ React หรือ Postman) ให้เป็น Python object หรือจะใช้ในการแปลง Python object ไปเป็น JSON ที่จะตอบกลับ
@@ -768,3 +768,9 @@ class RepairRequestFilteredbyIDView(APIView):
 
 class RepairAssignmentListView(APIView):
     pass
+# fam
+class RoomView(APIView):
+    def get(self, request):
+        room = Room.objects.all()
+        serializer = RoomDjangotoNextJSSerializer(room, many=True)
+        return Response(serializer.data) #ส่งข้อมูลไปเป็น json

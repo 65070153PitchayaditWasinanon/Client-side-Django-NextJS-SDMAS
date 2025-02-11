@@ -64,6 +64,9 @@ urlpatterns = [
 
     path('api/profile/', views.ProfileView.as_view(), name='profile'),
 
+    # fam
+    path('api/room/', views.RoomView.as_view(), name='room-view'),
+
     # path('api/register/', views.RegisterView.as_view(), name='register'),
 
     # path('api/login/', views.LoginView.as_view(), name='login'),
