@@ -750,11 +750,38 @@ class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
             else:
                 return render(request, 'roomadd.html', {"form":form})
 
+# class RepairRequestListView(APIView):
+#     # def get(self, request):
+#     #     students = RepairRequest.objects.all()
+#     #     serializer = RepairRequestDjangotoNextJSSerializer(students, many=True)
+#     #     return Response(serializer.data) #ส่งข้อมูลไปเป็น json
+#     # permission_classes = [IsAuthenticated]  # ต้องล็อกอินก่อนใช้ API
+
+#     def get(self, request):
+#         try:
+#             student = request.user.student  # ดึง student ของ user ที่ล็อกอิน
+#             repair_requests = RepairRequest.objects.filter(student=student)  # ดึงเฉพาะของ student นี้
+#             serializer = RepairRequestDjangotoNextJSSerializer(repair_requests, many=True)
+#             return Response(serializer.data)
+#         except Student.DoesNotExist:
+#             return Response({"error": "Student not found"}, status=404)
+        
 class RepairRequestListView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
-        students = RepairRequest.objects.all()
-        serializer = RepairRequestDjangotoNextJSSerializer(students, many=True)
-        return Response(serializer.data) #ส่งข้อมูลไปเป็น json
+        student_id = request.query_params.get("student_id", None)
+        
+        if not student_id:
+            return Response({"error": "Missing student_id"}, status=400)
+        
+        try:
+            student = Student.objects.get(id=student_id, user=request.user)
+            repair_requests = RepairRequest.objects.filter(student=student)
+            serializer = RepairRequestDjangotoNextJSSerializer(repair_requests, many=True)
+            return Response(serializer.data)
+        except Student.DoesNotExist:
+            return Response({"error": "Student not found"}, status=404)
 
 
 class RepairRequestFilteredbyIDView(APIView):

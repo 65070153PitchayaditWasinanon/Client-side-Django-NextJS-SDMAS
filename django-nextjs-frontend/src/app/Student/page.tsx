@@ -4,11 +4,43 @@ import './studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";
-
+import axios from 'axios';
 
 export default function StudentIndexPage() {
+    const [RepairRequestView, setRepairRequest] = useState([]);
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
+
+    // useEffect(() => {
+    //     const fetchRepairRequest = async () => {
+    //         const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
+    //         setRepairRequest(response.data);
+    //         console.log(response.data);
+    //     };
+
+    //     fetchRepairRequest();
+    // }, []);
+    const fetchRepairRequest = async (student_id: string) => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            console.log("Token ที่ใช้:", token); // ตรวจสอบ token
+    
+            if (!token) throw new Error("No token found");
+    
+            const response = await axios.get(
+                `http://localhost:8080/api/repair-requests-views/?student_id=${student_id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // ส่ง JWT Token
+                    }
+                }
+            );
+            setRepairRequest(response.data);
+        } catch (err) {
+            console.error("Error fetching repair requests:", err);
+        }
+    };
+    
     useEffect(() => {
         // 
         async function fetchProfile() {
@@ -17,6 +49,10 @@ export default function StudentIndexPage() {
                 const data = await getProfile();
                 //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
+
+                if (data?.student_id) {
+                    fetchRepairRequest(data.student_id); // เรียก API ด้วย student_id
+                }
 
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
@@ -35,6 +71,48 @@ export default function StudentIndexPage() {
         // Redirect ไปยังหน้า login
         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
     };
+// export default function StudentIndexPage() {
+//     const [RepairRequestView, setRepairRequest] = useState([]);
+//     const [profile, setProfile] = useState<any>(null);
+//     const [error, setError] = useState<string | null>(null);
+
+//     useEffect(() => {
+//         const fetchRepairRequest = async () => {
+//             const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
+//             setRepairRequest(response.data);
+//             console.log(response.data);
+//         };
+
+//         fetchRepairRequest();
+//     }, []);
+    
+//     useEffect(() => {
+//         // 
+//         async function fetchProfile() {
+//             try {
+//                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
+//                 const data = await getProfile();
+//                 //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+//                 setProfile(data);
+                
+
+//             } catch (err) {
+//                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+//                 window.location.href = '/login';
+//             }
+//         }
+//         fetchProfile();
+//     }, []);
+//     const logout = () => {
+//         // ลบ JWT จาก localStorage
+//         localStorage.removeItem("accessToken");
+//         localStorage.removeItem("refreshToken");
+//         localStorage.removeItem("student_id");
+//         localStorage.removeItem("technician_id");
+
+//         // Redirect ไปยังหน้า login
+//         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+//     };
     return (
         <>
             <div id="nav">
@@ -98,16 +176,17 @@ export default function StudentIndexPage() {
                 <div className="container" id="pagecon">
                     <div>
                         <center>
-                            <div className="card" id='card'>
+                        {RepairRequestView.map((request) => (
+                            <div className="card" id='card' key={request.id}>
                                 <div className="card-body">
                                     <div className='remark-bg' id='remark-bg'>
-                                        <p className="card-text" id='remark-text'>หมายเหตุ : หลอดไฟขาด</p>
+                                        <p className="card-text" id='remark-text'>หมายเหตุ : {request.description}</p>
                                     </div>
                                     <div className='remark-status-bg' id='remark-status-bg'>
-                                        <p className="card-text" id='remark-status-text'>สถานะ : In Progress</p>
+                                        <p className="card-text" id='remark-status-text'>สถานะ : {request.status}</p>
                                     </div>
                                     <div className='row' id='buttonframe'>
-                                        <div className='col'>
+                                        <div className='col' key={request.id}>
                                             <button type="button" className="btn btn-warning" id='buttonstudentviewreport'>
                                                 แก้ไข
                                             </button>
@@ -120,6 +199,7 @@ export default function StudentIndexPage() {
                                     </div>
                                 </div>
                             </div>
+                            ))}
                         </center>
                     </div>
                 </div>
