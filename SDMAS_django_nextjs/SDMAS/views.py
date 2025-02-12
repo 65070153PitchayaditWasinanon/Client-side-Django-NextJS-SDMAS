@@ -17,7 +17,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
 from .serializers import RepairRequestSerializer, TechnicianRequestSerializer
-from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer
 
 from rest_framework.views import APIView
 
@@ -793,8 +793,15 @@ class RepairRequestFilteredbyIDView(APIView):
         except RepairRequest.DoesNotExist:
             return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class RepairAssignmentListView(APIView):
-    pass
+class RepairASsignmentFilterbyIDTechnicianView(APIView):
+    def get(self, request, id):
+        try:
+            repair_assignment = RepairAssignment.objects.filter(technician=id)
+            serializer = RepairAssignmentDjangotoNextJSSerailizer(repair_assignment, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except RepairAssignment.DoesNotExist:
+            return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
+
 # fam
 class RoomView(APIView):
     def get(self, request):

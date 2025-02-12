@@ -1,5 +1,9 @@
 // pages/register.tsx
 "use client";
+
+import '../registertechnician/registertechnician.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -27,7 +31,7 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         try {
             // ส่งข้อมูลไปยัง Django backend สำหรับการลงทะเบียน
             const response = await axios.post('http://localhost:8080/auth/api/register/technician/', formData);
@@ -40,61 +44,89 @@ const RegisterPage = () => {
     };
 
     return (
-        <div>
-            <h2>ลงทะเบียน</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                />
-                
-                <input
-                    type="text"
-                    name="technician_id"
-                    placeholder="technician_id"
-                    value={formData.technician_id}
-                    onChange={handleChange}
-                    required
-                />
-
-                <input
-                    type="text"
-                    name="expertise"
-                    placeholder="expertise"
-                    value={formData.expertise}
-                    onChange={handleChange}
-                    required
-                />
-                <button type="submit">ลงทะเบียน</button>
-            </form>
+        <div id='content'>
+            <div className='container' id='pagecon'>
+                <div className='card' id='registerarea'>
+                    <div id='register-title-area'>
+                        <center>
+                            <p id='register-title'>ลงทะเบียน</p>
+                        </center>
+                    </div>
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="username"
+                                    placeholder="Username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    placeholder="First Name"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="technician_id"
+                                    placeholder="Technician ID"
+                                    value={formData.technician_id}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="expertise"
+                                    placeholder="Expertise"
+                                    value={formData.expertise}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='button-area'>
+                                <button className='btn btn-success' type="submit" id='register-button'>ลงทะเบียน</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

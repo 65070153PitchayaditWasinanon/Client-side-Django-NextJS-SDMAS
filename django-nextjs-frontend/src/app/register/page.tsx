@@ -1,5 +1,9 @@
 // pages/register.tsx
 "use client";
+
+import '../register/register.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -51,65 +55,85 @@ const RegisterPage = () => {
     };
 
     return (
-        <div>
-            <h2>ลงทะเบียน</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                />
-                <select
-                    name="room_number"
-                    className="form-select"
-                    value={formData.room_number}
-                    onChange={handleChange}
-                >
-                    <option value="">-- เลือกห้อง --</option> {/* ตัวเลือกเริ่มต้น */}
-                    {RoomView.map((room) => (
-                        <option key={room.room_number} value={room.room_number}>
-                            {room.room_number}
-                        </option>
-                    ))}
-                </select>
-                {/* // <input
-                //     type="text"
-                //     name="room_number"
-                //     placeholder="room_number"
-                //     value={formData.room_number.RoomView.room_number}
-                //     onChange={handleChange}
-                //     required
-                // /> */}
-                
-                <button type="submit">ลงทะเบียน</button>
-            </form>
+        <div id='content'>
+            <div className='container' id='pagecon'>
+                <div className='card' id='registerarea'>
+                    <div id='register-title-area'>
+                        <center>
+                            <p id='register-title'>ลงทะเบียน</p>
+                        </center>
+                    </div>
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="username"
+                                    placeholder="Username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    placeholder="First Name"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    required
+                                    id='input-text'
+                                />
+                            </div>
+                            <div id='input-area'>
+                                <select
+                                    name="room_number"
+                                    className="form-select"
+                                    value={formData.room_number}
+                                    onChange={handleChange}
+                                    id='input-text'
+                                >
+                                    <option value="" id='option-text-area'>-- เลือกห้อง --</option> {/* ตัวเลือกเริ่มต้น */}
+                                    {RoomView.map((room) => (
+                                        <option id='option-text-area' key={room.room_number} value={room.room_number}>
+                                            {room.room_number}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div id='button-area'>
+                                <button className='btn btn-success' type="submit" id='register-button'>ลงทะเบียน</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
