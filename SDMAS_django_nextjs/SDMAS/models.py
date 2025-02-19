@@ -31,6 +31,7 @@ class Technician(models.Model):
     def __str__(self): 
         return (self.user.first_name+" "+self.user.last_name)
 
+# คำขอจากนศ
 class RepairRequest(models.Model): 
     STATUS_CHOICES = [
         ('reported', 'Reported'),
@@ -53,12 +54,14 @@ class RepairRequest(models.Model):
     def __str__(self): 
         return f"RepairRequest {self.id} by {self.student.user.username}"
 
+# มอบหมายงานให้ technician
 class RepairAssignment(models.Model):
     repair_request = models.OneToOneField(RepairRequest, on_delete=models.CASCADE)
     technician = models.ManyToManyField(Technician)
     assigned_at = models.DateTimeField(auto_now_add=True) 
     status = models.CharField(max_length=20, choices=RepairRequest.STATUS_CHOICES, default='assigned')
 
+# เมื่อรับงานแล้วจะสร้างตัวนี้
 class RepairStatusUpdate(models.Model):
     repair_request = models.ForeignKey(RepairRequest, on_delete=models.CASCADE)
     technician = models.ManyToManyField(Technician)

@@ -11,22 +11,13 @@ export default function StudentIndexPage() {
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // useEffect(() => {
-    //     const fetchRepairRequest = async () => {
-    //         const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
-    //         setRepairRequest(response.data);
-    //         console.log(response.data);
-    //     };
-
-    //     fetchRepairRequest();
-    // }, []);
     const fetchRepairRequest = async (student_id: string) => {
         try {
             const token = localStorage.getItem("accessToken");
             console.log("Token ที่ใช้:", token); // ตรวจสอบ token
-    
+
             if (!token) throw new Error("No token found");
-    
+
             const response = await axios.get(
                 `http://localhost:8080/api/repair-requests-views/?student_id=${student_id}`,
                 {
@@ -35,12 +26,14 @@ export default function StudentIndexPage() {
                     }
                 }
             );
-            setRepairRequest(response.data);
+            // กำหนดว่าต้องเป็น Reported เท่านั้น
+            const filteredData = response.data.filter((request: any) => request.status === "Reported"); // กรองเฉพาะ status = "reported"
+            setRepairRequest(filteredData);
         } catch (err) {
             console.error("Error fetching repair requests:", err);
         }
     };
-    
+
     useEffect(() => {
         // 
         async function fetchProfile() {
@@ -71,53 +64,35 @@ export default function StudentIndexPage() {
         // Redirect ไปยังหน้า login
         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
     };
-// export default function StudentIndexPage() {
-//     const [RepairRequestView, setRepairRequest] = useState([]);
-//     const [profile, setProfile] = useState<any>(null);
-//     const [error, setError] = useState<string | null>(null);
 
-//     useEffect(() => {
-//         const fetchRepairRequest = async () => {
-//             const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
-//             setRepairRequest(response.data);
-//             console.log(response.data);
-//         };
+    const handleDelete = async (repairRequestId: number) => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) throw new Error("No token found");
 
-//         fetchRepairRequest();
-//     }, []);
-    
-//     useEffect(() => {
-//         // 
-//         async function fetchProfile() {
-//             try {
-//                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
-//                 const data = await getProfile();
-//                 //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
-//                 setProfile(data);
-                
+            const response = await axios.delete(
+                `http://localhost:8080/api/repair-requests-views/${repairRequestId}/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-//             } catch (err) {
-//                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-//                 window.location.href = '/login';
-//             }
-//         }
-//         fetchProfile();
-//     }, []);
-//     const logout = () => {
-//         // ลบ JWT จาก localStorage
-//         localStorage.removeItem("accessToken");
-//         localStorage.removeItem("refreshToken");
-//         localStorage.removeItem("student_id");
-//         localStorage.removeItem("technician_id");
+            if (response.status === 204) {
+                alert("ลบข้อมูลสำเร็จ!");
+                setRepairRequest((prev) => prev.filter((item) => item.id !== repairRequestId));
+            }
+        } catch (err) {
+            console.error("Error deleting repair request:", err);
+        }
+    };
 
-//         // Redirect ไปยังหน้า login
-//         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
-//     };
     return (
         <>
             <div id="nav">
                 <header>
-                {profile ? (
+                    {profile ? (
                         <div>
                             <nav className='navroom'>
                                 <span id='roompara'>Room:{profile.room}</span>
@@ -165,7 +140,7 @@ export default function StudentIndexPage() {
                                     </div>
                                     <div className='col-10' >
                                         {/* <a href=""></a> */}
-                                        
+
                                         <center id='sidebarlinkmenu'>รายงานปัญหา</center>
                                     </div>
                                 </div>
@@ -176,29 +151,35 @@ export default function StudentIndexPage() {
                 <div className="container" id="pagecon">
                     <div>
                         <center>
-                        {RepairRequestView.map((request) => (
-                            <div className="card" id='card' key={request.id}>
-                                <div className="card-body">
-                                    <div className='remark-bg' id='remark-bg'>
-                                        <p className="card-text" id='remark-text'>หมายเหตุ : {request.description}</p>
-                                    </div>
-                                    <div className='remark-status-bg' id='remark-status-bg'>
-                                        <p className="card-text" id='remark-status-text'>สถานะ : {request.status}</p>
-                                    </div>
-                                    <div className='row' id='buttonframe'>
-                                        <div className='col' key={request.id}>
-                                            <button type="button" className="btn btn-warning" id='buttonstudentviewreport'>
-                                                แก้ไข
-                                            </button>
+                            {RepairRequestView.map((request) => (
+                                <div className="card" id='card' key={request.id}>
+                                    <div className="card-body">
+                                        <div className='remark-bg' id='remark-bg'>
+                                            <p className="card-text" id='remark-text'>หมายเหตุ : {request.description}</p>
                                         </div>
-                                        <div className='col'>
-                                            <button type="button" className="btn btn-danger" id='buttonstudentviewreport'>
-                                                ลบ
-                                            </button>
+                                        <div className='remark-status-bg' id='remark-status-bg'>
+                                            <p className="card-text" id='remark-status-text'>สถานะ : {request.status}</p>
+                                        </div>
+                                        <div className='row' id='buttonframe'>
+                                            <div className='col' key={request.id}>
+                                                <a href={`student/${request.id}/taskdetails`}>
+                                                    {/* <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M24 32V24M24 16H24.02M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg> */}
+                                                    <button type="button" className="btn btn-warning" id='buttonstudentviewreport'>
+                                                        แก้ไข
+                                                    </button>
+                                                </a>
+
+                                            </div>
+                                            <div className='col'>
+                                                <button type="button" className="btn btn-danger" id='buttonstudentviewreport' onClick={() => handleDelete(request.id)}>
+                                                    ลบ
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             ))}
                         </center>
                     </div>

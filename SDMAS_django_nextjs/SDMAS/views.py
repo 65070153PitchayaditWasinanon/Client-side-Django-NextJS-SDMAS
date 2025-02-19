@@ -17,7 +17,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
 from .serializers import RepairRequestSerializer, TechnicianRequestSerializer
-from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer, RequestUpdateDjangotoNextJSSerializer
 
 from rest_framework.views import APIView
 
@@ -782,6 +782,40 @@ class RepairRequestListView(APIView):
             return Response(serializer.data)
         except Student.DoesNotExist:
             return Response({"error": "Student not found"}, status=404)
+        
+    def delete(self, request, repair_request_id):
+        """
+        ลบ RepairRequest โดยต้องเป็นเจ้าของเท่านั้น
+        """
+        repair_request = get_object_or_404(RepairRequest, id=repair_request_id)
+
+        # ตรวจสอบว่า repair_request เป็นของ student นี้หรือไม่
+        if repair_request.student.user != request.user:
+            return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+
+        repair_request.delete()
+        return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+# fam
+class StudentTrackstatusView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        student_id = request.query_params.get("student_id", None)
+        
+        if not student_id:
+            return Response({"error": "Missing student_id"}, status=400)
+        
+        try:
+            student = Student.objects.get(id=student_id, user=request.user)
+            repair_requests = RepairRequest.objects.filter(student=student)
+            #  ทำให้ Django ค้นหาทุก RepairStatusUpdate ที่ repair_request อยู่ในรายการ repair_requests
+            requests_update = RepairStatusUpdate.objects.filter(repair_request__in=repair_requests)
+            serializer = RequestUpdateDjangotoNextJSSerializer(requests_update, many=True)
+            return Response(serializer.data)
+        except Student.DoesNotExist:
+            return Response({"error": "Student not found"}, status=404)
+        
 
 
 class RepairRequestFilteredbyIDView(APIView):
@@ -792,6 +826,40 @@ class RepairRequestFilteredbyIDView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except RepairRequest.DoesNotExist:
             return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class RepairRequestEditFilteredbyIDView(APIView):
+    def post(self, request):
+        repair_request_id = request.data.get('repair_request_id')
+        student = request.data.get('student')
+        description = request.data.get('description')
+        urgency = request.data.get('urgency')
+        repair_appointment_time = request.data.get('repair_appointment_time')
+
+        print(f"Received repair_request_id: {repair_request_id}")
+        print(f"Received student: {student}")
+
+        if not all([repair_request_id, student, description, urgency, repair_appointment_time]):
+            return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
+
+        repair_request = get_object_or_404(RepairRequest, id=repair_request_id)
+
+        try:
+            repair_request.student_id = int(student) if student else None
+            repair_request.description = description
+            repair_request.urgency = urgency
+            repair_request.repair_appointment_time = repair_appointment_time
+            repair_request.save()
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({
+            "message": "Repair request updated successfully",
+            "id": repair_request_id,
+            "student": student,
+            "description": description,
+            "urgency": urgency,
+            "repair_appointment_time": repair_appointment_time,
+        }, status=status.HTTP_200_OK)
 
 class RepairASsignmentFilterbyIDTechnicianView(APIView):
     def get(self, request, id):

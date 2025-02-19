@@ -58,7 +58,15 @@ urlpatterns = [
 
     path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
 
+    path('api/student-trackstatus-views/', views.StudentTrackstatusView.as_view(), name='student-trackstatus-view'),
+
+    path('api/repair-requests-views/<int:repair_request_id>/', views.RepairRequestListView.as_view(), name='delete-repair-request'),
+
+    # path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
+
     path('api/repair-requests/<int:id>/', views.RepairRequestFilteredbyIDView.as_view(), name='repair_request_detail'),
+
+    path('api/repair-requests-edit/', views.RepairRequestEditFilteredbyIDView.as_view(), name='repair_request_edit_detail'),
 
     path('api/repair-assignment-filter/<int:id>/', views.RepairASsignmentFilterbyIDTechnicianView.as_view(), name='repair_assignment_filter_by_techinician_id'),
     

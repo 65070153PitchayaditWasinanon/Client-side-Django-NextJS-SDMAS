@@ -3,26 +3,69 @@
 import './studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
 import { login } from "@/utils/auth";
+import axios from 'axios';
+import { useParams } from 'next/navigation';
 
 export default function StudentReportPage() {
 
     //สร้างตัวแปล Profile เก็บ ข้อมูล user setProfile คือตัวใส่ค่าเก็นใน profile
     const [profile, setProfile] = useState<any>(null);
+    const [repairRequest, setRepairRequest] = useState(null);
     const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
     //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
+    const { id } = useParams();
+
     const [formData, setFormData] = useState({
+        repair_request_id: '',
         student: 0,
         description: "",
         urgency: "",
         repair_appointment_time: "",
+
     });
 
-    // useEffect คือ การกระทำที่เกิดขึ้นนอกเหนือจากการแสดงผลของ UI เช่น การดึงข้อมูลจาก API, การสมัคร listener สำหรับ events, การตั้งค่าหรือปรับปรุงค่าของ state ที่อาจมีผลต่อการ render ของคอมโพเนนต์
     useEffect(() => {
+        // เช็คว่า id มีค่าอยู่หรือไม่
+        if (id) {
+            setFormData((prevData) => ({
+                ...prevData,
+                repair_request_id: id, // ตั้งค่า repair_request เป็น string จาก query params
+            }));
+        }
+    }, [id]);
+
+    const fetchRepairRequest = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/repair-requests/${id}/`);
+            setRepairRequest(response.data); // ✅ ตั้งค่า repairRequest แล้วให้ useEffect ดึงไปใช้
+            console.log("Fetched repair request:", response.data);
+        } catch (error) {
+            console.error("Error fetching repair request:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (repairRequest) {
+            setFormData((prevData) => ({
+                ...prevData,
+                description: repairRequest.description || prevData.description,
+                urgency: repairRequest.urgency || prevData.urgency,
+                repair_appointment_time: repairRequest.repair_appointment_time || prevData.repair_appointment_time,
+            }));
+        }
+    }, [repairRequest]);
+
+    useEffect(() => {
+        if (id) {
+            fetchRepairRequest();
+        }
+    }, [id]);
+    
+
+    useEffect(() => {
+        // 
         async function fetchProfile() {
             try {
                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
@@ -56,28 +99,42 @@ export default function StudentReportPage() {
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
     // ดึงค่าและ อัพเดทค่า
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
     };
 
     //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
     const handleSubmit = async (e: React.FormEvent) => {
-        // ป้องกันหน้าเว็บโหลดซ้ำ
         e.preventDefault();
-
-
-        const response = await fetch("http://localhost:8080/api/repair-requests/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-        });
-        if (response.ok) {
-            alert("ส่งคำร้องขอซ่อมแล้ว!");
-            router.push("/student");
-        } else {
+        
+        console.log("Form Data before submit:", formData); // ✅ ตรวจสอบค่าก่อนส่ง
+    
+        try {
+            const response = await fetch("http://localhost:8080/api/repair-requests-edit/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+    
+            if (response.ok) {
+                alert("ส่งคำร้องขอแก้ไขการซ่อมแล้ว!");
+                await fetchRepairRequest(); // ✅ ดึงข้อมูลใหม่ให้แน่ใจว่า UI อัปเดต
+            } else {
+                alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+            }
+        } catch (error) {
+            console.error("Error submitting form:", error);
             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
-
         }
     };
+    
+    // ✅ ตรวจสอบ formData ว่าอัปเดตถูกต้องหรือไม่
+    useEffect(() => {
+        console.log("Updated formData:", formData);
+    }, [formData]);
 
     return (
         <>
@@ -206,11 +263,7 @@ export default function StudentReportPage() {
                             <div className="row mt-4">
                                 <div className="col">
                                     <center>
-                                        <button type="submit" className="btn btn-success" id="student1button">
-                                            {/* <a href="/student" id="studentdenybutton" style={{ color: "white", textDecoration: "none" }}> */}
-                                                เสร็จสิ้น
-                                            {/* </a> */}
-                                        </button>
+                                    <button type="submit" className="btn btn-success">เสร็จสิ้น</button>
                                     </center>
                                 </div>
                                 <div className="col">
