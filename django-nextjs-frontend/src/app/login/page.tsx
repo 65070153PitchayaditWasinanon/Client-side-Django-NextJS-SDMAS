@@ -62,7 +62,7 @@ export default function LoginPage() {
         e.preventDefault();
         try {
             const data = await login(formData.username, formData.password);
-            console.log(data); // ✅ ตรวจสอบค่าที่ได้จาก API
+            // console.log(data); // ✅ ตรวจสอบค่าที่ได้จาก API
 
             const studentId = data.student_id;
             const technicianId = data.technician_id;
@@ -83,7 +83,7 @@ export default function LoginPage() {
             }
             if (technicianId) {
                 // localStorage.setItem("technician_id", technicianId);
-                router.push("/dashboard");
+                router.push("/technician");
             }
             // router.push("/dashboard"); // นำทางไปหน้า Dashboard
         } catch (error: unknown) {
