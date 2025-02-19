@@ -65,6 +65,8 @@ export default function StudentIndexPage() {
         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
     };
 
+    
+
     const handleDelete = async (repairRequestId: number) => {
         try {
             const token = localStorage.getItem("accessToken");

@@ -83,7 +83,7 @@ export default function LoginPage() {
             }
             if (technicianId) {
                 // localStorage.setItem("technician_id", technicianId);
-                router.push("/dashboard");
+                router.push("/technician");
             }
             // router.push("/dashboard"); // นำทางไปหน้า Dashboard
         } catch (error: unknown) {

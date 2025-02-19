@@ -58,9 +58,13 @@ urlpatterns = [
 
     path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
 
-    path('api/student-trackstatus-views/', views.StudentTrackstatusView.as_view(), name='student-trackstatus-view'),
-
     path('api/repair-requests-views/<int:repair_request_id>/', views.RepairRequestListView.as_view(), name='delete-repair-request'),
+    
+    path('api/student-trackstatus-views/', views.StudentTrackstatusView.as_view(), name='student-trackstatus-view'),
+    
+    path('api/requests-asignment-views/', views.RepairAssignmentView.as_view(), name='requests-asignment-views'),
+
+    
 
     # path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
 

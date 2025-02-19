@@ -17,7 +17,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
 from .serializers import RepairRequestSerializer, TechnicianRequestSerializer
-from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer, RequestUpdateDjangotoNextJSSerializer
+from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer, RequestUpdateDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerializer
 
 from rest_framework.views import APIView
 
@@ -815,8 +815,37 @@ class StudentTrackstatusView(APIView):
             return Response(serializer.data)
         except Student.DoesNotExist:
             return Response({"error": "Student not found"}, status=404)
-        
 
+#fam     
+class RepairAssignmentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        technician_id = request.query_params.get("technician_id", None)
+        
+        if not technician_id:
+            return Response({"error": "Missing student_id"}, status=400)
+        
+        try:
+            technician = Technician.objects.get(id=technician_id, user=request.user)
+            repair_assignmen = RepairAssignment.objects.filter(technician=technician)
+            serializer = RepairAssignmentDjangotoNextJSSerializer(repair_assignmen, many=True)
+            return Response(serializer.data)
+        except Student.DoesNotExist:
+            return Response({"error": "Student not found"}, status=404)
+        
+    # def delete(self, request, repair_request_id):
+    #     """
+    #     ลบ RepairRequest โดยต้องเป็นเจ้าของเท่านั้น
+    #     """
+    #     repair_request = get_object_or_404(RepairRequest, id=repair_request_id)
+
+    #     # ตรวจสอบว่า repair_request เป็นของ student นี้หรือไม่
+    #     if repair_request.student.user != request.user:
+    #         return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+
+    #     repair_request.delete()
+    #     return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 class RepairRequestFilteredbyIDView(APIView):
     def get(self, request, id):

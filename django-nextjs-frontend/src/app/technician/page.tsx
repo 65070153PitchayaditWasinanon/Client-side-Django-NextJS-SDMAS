@@ -9,27 +9,50 @@ import { getProfile } from "@/utils/auth";
 import axios from 'axios';
 
 export default function TechnicianIndexPage() {
-    useEffect(() => {
-        require('bootstrap/dist/js/bootstrap.bundle.min.js'); //required อันที่ต้องใช้ bundle + Popper.js มาให้แล้ว เพื่อให้ฝั่ง client ใช้ได้ (ปล. อันทำเพื่อให้ใช้ modal ได้)
-    }, []);
-
-    const [RepairAssignmentView, setRepairAssignment] = useState([]);
-
+    const [RepairAssignmentView, setRepairRepairAssignment] = useState([]);
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const fetchRepairAssignment = async (technician_id: string) => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            console.log("Token ที่ใช้:", token); // ตรวจสอบ token
+
+            if (!token) throw new Error("No token found");
+
+            const response = await axios.get(
+                `http://localhost:8080/api/requests-asignment-views/?technician_id=${technician_id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // ส่ง JWT Token
+                    }
+                }
+            );
+            // กำหนดว่าต้องเป็น Reported เท่านั้น
+            // const filteredData = response.data.filter((request: any) => request.status === "Reported"); // กรองเฉพาะ status = "reported"
+            // setRepairRequest(filteredData);
+            setRepairRepairAssignment(response.data);
+        } catch (err) {
+            console.error("Error fetching repair requests:", err);
+        }
+    };
+
     useEffect(() => {
         // 
         async function fetchProfile() {
             try {
                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
-                console.log("Profile : ", data);
                 //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
 
+                if (data?.technician_id) {
+                    fetchRepairAssignment(data.technician_id); // เรียก API ด้วย student_id
+                }
+
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-                // window.location.href = '/login';
+                window.location.href = '/login';
             }
         }
         fetchProfile();
@@ -46,20 +69,20 @@ export default function TechnicianIndexPage() {
         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
     };
 
-    useEffect(() => {
-        if (profile && profile.technician_id) {
-            const fetchRepairAssignments = async () => {
-                try {
-                    const response = await axios.get(`http://localhost:8080/api/repair-assignment-filter/${profile.technician_id}/`);
-                    setRepairAssignment(response.data);  // ถ้ามีข้อมูล จะใส่ใน array
-                    console.log("Repair Assignments:", response.data);
-                } catch (error) {
-                    console.error("Error fetching repair assignments:", error);
-                }
-            };
-            fetchRepairAssignments();
-        }
-    }, [profile]);
+    // useEffect(() => {
+    //     if (profile && profile.technician_id) {
+    //         const fetchRepairAssignments = async () => {
+    //             try {
+    //                 const response = await axios.get(`http://localhost:8080/api/repair-assignment-filter/${profile.technician_id}/`);
+    //                 setRepairAssignment(response.data);  // ถ้ามีข้อมูล จะใส่ใน array
+    //                 console.log("Repair Assignments:", response.data);
+    //             } catch (error) {
+    //                 console.error("Error fetching repair assignments:", error);
+    //             }
+    //         };
+    //         fetchRepairAssignments();
+    //     }
+    // }, [profile]);
 
     return (
         <>
