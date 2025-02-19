@@ -73,7 +73,7 @@ export default function TechnicianIndexPage() {
                                         <span id='roompara'>Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
                                     </div>
                                     <div className='col-4'></div>
-                                    <div className='col-4'>
+                                    <div className='col-4' id='float-right-logout'>
                                         <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
                                         <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
                                     </div>
@@ -88,7 +88,7 @@ export default function TechnicianIndexPage() {
                                         <span id='roompara'>Technician ID : No Data</span>
                                     </div>
                                     <div className='col-4'></div>
-                                    <div className='col-4'>
+                                    <div className='col-4' id='float-right-logout'>
                                         <span id='roompara'>No Data</span>
                                         <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
                                     </div>

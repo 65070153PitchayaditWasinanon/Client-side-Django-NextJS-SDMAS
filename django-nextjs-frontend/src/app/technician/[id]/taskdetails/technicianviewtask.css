@@ -294,3 +294,8 @@ nav .col {
     font-weight: 200;
     font-size: 200%;
 }
+
+#float-right-logout {
+    display: flex;
+    justify-content: flex-end;
+}

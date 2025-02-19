@@ -96,16 +96,33 @@ export default function StudentReportPage() {
                     {profile ? (
                         <div>
                             <nav className='navroom'>
-                                <span id='roompara'>Room:{profile.room}</span>
-                                <div>
-                                    <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
-                                    <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                <div className='row'>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Room:{profile.room}</span>
+                                    </div>
+                                    <div className='col-4'></div>
+                                    <div className='col-4'>
+                                        <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
+                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                    </div>
                                 </div>
-
                             </nav>
                         </div>
                     ) : (
-                        <p>Loading...</p>
+                        <div>
+                            <nav className='navroom'>
+                                <div className='row'>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Room: Loading</span>
+                                    </div>
+                                    <div className='col-4'></div>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Loading... &nbsp;</span>
+                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
                     )}
 
                 </header>
@@ -216,7 +233,7 @@ export default function StudentReportPage() {
                                 <div className="col">
                                     <center>
                                         <button type="submit" className="btn btn-success" id="student1button">
-                                            <a href="/Student" id="studentdenybutton" style={{ color: "white", textDecoration: "none" }}>
+                                            <a href="/student" id="studentdenybutton" style={{ color: "white", textDecoration: "none" }}>
                                                 เสร็จสิ้น
                                             </a>
                                         </button>

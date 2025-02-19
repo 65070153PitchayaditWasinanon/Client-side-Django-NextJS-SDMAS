@@ -6,7 +6,8 @@ import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import { login} from "@/utils/auth";
+import { login } from "@/utils/auth";
+import { getProfile } from "@/utils/auth";
 
 
 export default function TechnicianIndexPage() {
@@ -95,6 +96,52 @@ export default function TechnicianIndexPage() {
         }
     };
 
+    const [profile, setProfile] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        // 
+        async function fetchProfile() {
+            try {
+                // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                const data = await getProfile();
+                console.log("Profile : ", data);
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                setProfile(data);
+
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+                // window.location.href = '/login';
+            }
+        }
+        fetchProfile();
+    }, []);
+
+    const logout = () => {
+        // ลบ JWT จาก localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+
+        // Redirect ไปยังหน้า login
+        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+    };
+
+    // useEffect(() => {
+    //     if (profile && profile.technician_id) {
+    //         const fetchRepairAssignments = async () => {
+    //             try {
+    //                 const response = await axios.get(`http://localhost:8080/api/repair-assignment-filter/${profile.technician_id}/`);
+    //                 setRepairAssignment(response.data);  // ถ้ามีข้อมูล จะใส่ใน array
+    //                 console.log("Repair Assignments:", response.data);
+    //             } catch (error) {
+    //                 console.error("Error fetching repair assignments:", error);
+    //             }
+    //         };
+    //         fetchRepairAssignments();
+    //     }
+    // }, [profile]);
+
     useEffect(() => {
         require('bootstrap/dist/js/bootstrap.bundle.min.js'); //required อันที่ต้องใช้ bundle + Popper.js มาให้แล้ว เพื่อให้ฝั่ง client ใช้ได้ (ปล. อันทำเพื่อให้ใช้ modal ได้)
     }, []);
@@ -102,9 +149,37 @@ export default function TechnicianIndexPage() {
         <>
             <div id="nav">
                 <header>
-                    <nav>
-                        <span id='roompara'>Room:</span>
-                    </nav>
+                    {profile ? (
+                        <div>
+                            <nav className='navroom'>
+                                <div className='row'>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
+                                    </div>
+                                    <div className='col-4'></div>
+                                    <div className='col-4' id='float-right-logout'>
+                                        <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
+                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    ) : (
+                        <div>
+                            <nav className='navroom'>
+                                <div className='row'>
+                                    <div className='col-4'>
+                                        <span id='roompara'>Technician ID : No Data</span>
+                                    </div>
+                                    <div className='col-4'></div>
+                                    <div className='col-4' id='float-right-logout'>
+                                        <span id='roompara'>No Data</span>
+                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    )}
                 </header>
             </div>
             <div id="content">

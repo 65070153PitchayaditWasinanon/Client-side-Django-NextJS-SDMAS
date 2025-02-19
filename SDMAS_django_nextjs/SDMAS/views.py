@@ -774,7 +774,7 @@ class RepairRequestListView(APIView):
         
         if not student_id:
             return Response({"error": "Missing student_id"}, status=400)
-        
+
         try:
             student = Student.objects.get(id=student_id, user=request.user)
             repair_requests = RepairRequest.objects.filter(student=student)
