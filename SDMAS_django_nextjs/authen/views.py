@@ -113,10 +113,13 @@ class LoginAPIView(APIView):
         if user:
             refresh = RefreshToken.for_user(user)
 
+            role = user.groups.first().name if user.groups.exists() else "User" #เพิ่มเข้ามา 19/2/2568 23:01 เนื่องจากต้องการให้ staff login แล้วผ่าน IsAuthenticated
+            
             # ✅ ตรวจสอบว่าผู้ใช้เป็น Student หรือ Technician
             # getattr(user, 'student', None): ถ้า user มี student ซึ่งหมายถึงว่า user นี้มีความสัมพันธ์กับ Student model, เช่น User นี้เชื่อมต่อกับโมเดล Student ผ่าน OneToOneField
             student = getattr(user, 'student', None)  # ดึง Student ถ้ามี
             technician = getattr(user, 'technician', None)  # ดึง Technician ถ้ามี
+            # staff = role == "staff"  # ตรวจสอบว่าผู้ใช้เป็น Staff หรือไม่ เพิ่มเข้ามา 19/2/2568 23:01 เนื่องจากต้องการให้ staff login แล้วผ่าน IsAuthenticated
 
             return Response({
                 "refresh": str(refresh),
@@ -127,7 +130,8 @@ class LoginAPIView(APIView):
                     "role": user.groups.first().name if user.groups.exists() else "User"
                 },
                 "student_id": student.id if student else None,  # ✅ ส่ง student_id ถ้าเป็น Student
-                "technician_id": technician.id if technician else None  # ✅ ส่ง technician_id ถ้าเป็น Technician
+                "technician_id": technician.id if technician else None,  # ✅ ส่ง technician_id ถ้าเป็น Technician
+                # "is_staff": staff.id if technician else None # ✅ ส่งค่า is_staff กลับไป เพิ่มเข้ามา 19/2/2568 23:01 เนื่องจากต้องการให้ staff login แล้วผ่าน IsAuthenticated
             })
         return Response({"error": "Invalid credentials"}, status=400)
 

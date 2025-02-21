@@ -30,7 +30,7 @@ export default function StaffIndexPage() {
 
     useEffect(() => {
         const fetchRepairRequest = async () => {
-            const response = await axios.get('http://localhost:8080/api/repair-requests-views/');
+            const response = await axios.get('http://localhost:8080/api/repair-requests-views-staff/');
             const sortedData = response.data.sort((a, b) => a.id - b.id);
             setRepairRequest(sortedData);
             console.log(sortedData);
@@ -124,9 +124,9 @@ export default function StaffIndexPage() {
                                         <div className='row' id='buttonframe'>
                                             <div className='col-6'>
                                                 <center>
-                                                    <button type="button" className="btn btn-success" id='buttonstudentviewreport'>
+                                                    <a href={`staff/assignjob/${RepairRequestView.id}`} className="btn btn-success" id='buttonstudentviewreport'>
                                                         มอบหมายงาน
-                                                    </button>
+                                                    </a>
                                                 </center>
                                             </div>
                                             <div className='col-6'>

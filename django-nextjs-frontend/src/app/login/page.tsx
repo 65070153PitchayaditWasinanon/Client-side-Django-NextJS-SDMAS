@@ -74,6 +74,9 @@ export default function LoginPage() {
             if (technicianId) {
                 localStorage.setItem("technician_id", technicianId);
             }
+            // if (role) {
+            //     localStorage.setItem("is_staff", role);
+            // }
 
             alert(`เข้าสู่ระบบสำเร็จ! Role: ${role} ${studentId ? "Student ID: " + studentId : ""} ${technicianId ? "Technician ID: " + technicianId : ""}`);
             // alert("เข้าสู่ระบบสำเร็จ! Student ID: " + data.student_id);
@@ -85,6 +88,9 @@ export default function LoginPage() {
                 // localStorage.setItem("technician_id", technicianId);
                 router.push("/technician");
             }
+            // if (role) {
+            //     router.push("/staff");
+            // }
             // router.push("/dashboard"); // นำทางไปหน้า Dashboard
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {

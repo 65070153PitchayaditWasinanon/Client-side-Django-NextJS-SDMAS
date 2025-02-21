@@ -21,7 +21,6 @@ class Student(models.Model):
     room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
     def __str__(self):
         return self.user.username
-    
 
 class Technician(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

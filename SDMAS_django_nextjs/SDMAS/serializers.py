@@ -1,37 +1,55 @@
 from rest_framework import serializers
 from .models import RepairRequest, RepairStatusUpdate
-from .models import RepairRequest, Room, Student, RepairStatusUpdate, RepairAssignment
+from .models import RepairRequest, Room, Student, RepairStatusUpdate, RepairAssignment,Technician
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+#สำหรับ format ของ RepairRequest
 class RepairRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairRequest
         fields = '__all__'  # หรือเลือกเฉพาะฟิลด์ที่ต้องการ เช่น ['description', 'urgency', 'repair_appointment_time']
 
+#สำหรับ format ของ RepairStatusUpdate
 class TechnicianRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairStatusUpdate
         fields = '__all__'  # หรือเลือกเฉพาะฟิลด์ที่ต้องการ เช่น ['description', 'urgency', 'repair_appointment_time']
 
+#สำหรับ format ของ Room
 class RoomDjangotoNextJSSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
         fields = '__all__'
 
+#สำหรับ format ของ Student
 class StudentDjangotoNextJSSerializer(serializers.ModelSerializer):
     room_id = RoomDjangotoNextJSSerializer() # เอาข้อมูลของตาราง Room มาใส่ในข้อมูลของ room_id เพราะถ้าส่ง API ไปจะเป็น json ทำให้ใช้การอ้างอิงโดยความสัมพันธ์ไม่ได้
     class Meta:
         model = Student
         fields = '__all__'
 
+
+#สำหรับ format ของ RepairRequest
 class RepairRequestDjangotoNextJSSerializer(serializers.ModelSerializer):
     
     student = StudentDjangotoNextJSSerializer() # เอาข้อมูลของตาราง Student มาใส่ในข้อมูลของ student_id เพราะถ้าส่ง API ไปจะเป็น json ทำให้ใช้การอ้างอิงโดยความสัมพันธ์ไม่ได้
     class Meta:
         model = RepairRequest
         fields = '__all__'
+
+class UserDjangotoNextJSSerializer(serializers.ModelSerializer): # สำหรับดึงข้อมูลของ User มาทุก fields
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+class TechnicianDjangotoNextJSSerializer(serializers.ModelSerializer): #สำหรับดึงข้อมูลของ Technician + User
+    user = UserDjangotoNextJSSerializer()
+    class Meta:
+        model = Technician
+        fields = '__all__'
+
 # Fam
 class RepairRequest2DjangotoNextJSSerializer(serializers.ModelSerializer):
     
@@ -45,6 +63,17 @@ class RepairAssignmentDjangotoNextJSSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairAssignment
         fields = '__all__'
+
+class RepairRequestCreateAssignSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RepairRequest
+        fields = "__all__"
+
+class RepairAssignmentCreateSerializer(serializers.ModelSerializer):
+    repair_request = RepairRequestCreateAssignSerializer()
+    class Meta:
+        model = RepairAssignment
+        fields = "__all__"
 
 # fam
 class RequestUpdateDjangotoNextJSSerializer(serializers.ModelSerializer):
