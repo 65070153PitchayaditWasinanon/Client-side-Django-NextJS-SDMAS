@@ -8,32 +8,47 @@ import { useState, useEffect } from "react";
 
 
 export default function StaffIndexPage() {
-    // const [profile, setProfile] = useState<any>(null);
-    // const [error, setError] = useState<string | null>(null);
-    // useEffect(() => {
-    //     // 
-    //     async function fetchProfile() {
-    //         try {
-    //             // getProfile ดึงข้อมูลมาจาก django ใส่ data
-    //             const data = await getProfile();
-    //             //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
-    //             setProfile(data);
+    const [profile, setProfile] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        // 
+        async function fetchProfile() {
+            try {
+                // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                const data = await getProfile();
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                setProfile(data);
 
-    //         } catch (err) {
-    //             setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-    //         }
-    //     }
-    //     fetchProfile();
-    // }, []);
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+            }
+        }
+        fetchProfile();
+    }, []);
 
     const [RepairRequestView, setRepairRequest] = useState([]);
 
     useEffect(() => {
         const fetchRepairRequest = async () => {
-            const response = await axios.get('http://localhost:8080/api/repair-requests-views-staff/');
-            const sortedData = response.data.sort((a, b) => a.id - b.id);
-            setRepairRequest(sortedData);
-            console.log(sortedData);
+            try {
+                const token = localStorage.getItem("accessToken");
+                console.log("Token ที่ใช้:", token); // ตรวจสอบ token
+
+                if (!token) throw new Error("No token found");
+
+                const response = await axios.get('http://localhost:8080/api/repair-requests-views-staff/',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // ส่ง JWT Token
+                        }
+                    }
+                );
+                const sortedData = response.data.sort((a, b) => a.id - b.id);
+                setRepairRequest(sortedData);
+                console.log(sortedData);
+            } catch (err) {
+                console.error("Error fetching repair requests:", err);
+            }
         };
 
         fetchRepairRequest();

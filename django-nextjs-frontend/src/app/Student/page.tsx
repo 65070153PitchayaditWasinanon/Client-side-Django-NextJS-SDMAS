@@ -54,6 +54,7 @@ export default function StudentIndexPage() {
         }
         fetchProfile();
     }, []);
+
     const logout = () => {
         // ลบ JWT จาก localStorage
         localStorage.removeItem("accessToken");

@@ -6,33 +6,67 @@ import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import { login } from "@/utils/auth";
+import { login} from "@/utils/auth";
 import { getProfile } from "@/utils/auth";
+import { useRouter } from "next/navigation";
+
 
 
 export default function TechnicianIndexPage() {
     const { id } = useParams();
 
     const [repairRequest, setRepairRequest] = useState(null);
+    const [error, setError] = useState<string | null>(null);
+    const [profile, setProfile] = useState<any>(null);
+    const router = useRouter();
     //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
-        // student: 1,
-        // description: "",
-        // urgency: "",
-        // repair_appointment_time: "",
-
-        //ข้อมูลแบบ many to many ต้องใส่เป็น list
+        
         repair_request: "",
-        technician: [1],
+        technician: [],
         status: "assigned",
-        // update_time:"",
         remarks: "",
-
-        // repair_request: 12,
-        // technician: 5,
-        // // assigned_at = models.DateTimeField(auto_now_add=True) 
-        // status: "Assigned",
     });
+
+    useEffect(() => {
+            // 
+            async function fetchProfile() {
+                try {
+                    // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                    const data = await getProfile();
+                    //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                    setProfile(data);
+                    // setFormData((prevFormData) => ({
+                    //     ...prevFormData,
+                    //     technician: data.technician_id ? [data.technician_id] : [],  // ตั้งค่า student_id เมื่อข้อมูลโปรไฟล์โหลดแล้ว
+                    // }));
+                    if (data?.technician_id) {
+                        setFormData((prevFormData) => ({
+                            ...prevFormData,
+                            technician: [data.technician_id],  // เซ็ตเป็น array ตาม Django
+                        }));
+                    }
+                    
+    
+                } catch (err) {
+                    setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+                    console.error("Error fetching profile:", err);
+                    window.location.href = '/login';
+                }
+            }
+            fetchProfile();
+        }, []);
+    
+        const logout = () => {
+            // ลบ JWT จาก localStorage
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("student_id");
+            localStorage.removeItem("technician_id");
+    
+            // Redirect ไปยังหน้า login
+            window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+        };
 
     useEffect(() => {
         // เช็คว่า id มีค่าอยู่หรือไม่
@@ -75,26 +109,73 @@ export default function TechnicianIndexPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
+    // //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
+    // const handleSubmit = async (e: React.FormEvent, technician_id: string) => {
+    //     e.preventDefault();
+
+    //     console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
+
+    //     const requestData = {
+    //         ...formData,
+    //         technician: [technician_id]  // แปลงให้เป็น array ตามที่ Django ต้องการ
+    //     };
+    
+    //     try {
+    //         const response = await fetch(`http://localhost:8080/api/technician-requests/?technician_id=${technician_id}`, {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify(requestData),
+    //         });
+    
+    //         if (response.ok) {
+    //             alert("ส่งคำร้องขอซ่อมแล้ว!");
+    //         } else {
+    //             const errorData = await response.json();
+    //             console.error("API error:", errorData);
+    //             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    //         }
+    //     } catch (error) {
+    //         console.error("Network error:", error);
+    //         alert("เกิดข้อผิดพลาด กรุณาตรวจสอบการเชื่อมต่อ");
+    //     }
+        
+    // };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
-
-        const response = await fetch("http://localhost:8080/api/technician-requests/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-        });
-
-        if (response.ok) {
-            alert("ส่งคำร้องขอซ่อมแล้ว!");
-        } else {
-            const errorData = await response.json();
-            console.error("API error:", errorData);
-            alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    
+        if (!profile?.technician_id) {
+            alert("ไม่พบ technician_id");
+            return;
+        }
+    
+        const requestData = {
+            ...formData,
+            technician: [profile.technician_id],  // ใช้ technician_id จาก profile
+        };
+    
+        console.log(" ส่งข้อมูล:", requestData); // Debug ดูค่าที่จะส่งจริงๆ
+    
+        try {
+            const response = await fetch("http://localhost:8080/api/technician-requests/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+            });
+    
+            if (response.ok) {
+                alert("ส่งคำร้องขอซ่อมแล้ว!");
+                router.push("/technician");
+            } else {
+                const errorData = await response.json();
+                console.error("API error:", errorData);
+                alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+            }
+        } catch (error) {
+            console.error("Network error:", error);
+            alert("เกิดข้อผิดพลาด กรุณาตรวจสอบการเชื่อมต่อ");
         }
     };
+    
 
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);

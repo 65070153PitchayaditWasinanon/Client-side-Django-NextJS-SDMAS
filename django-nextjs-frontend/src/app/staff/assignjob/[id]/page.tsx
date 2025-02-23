@@ -3,42 +3,46 @@
 import '../[id]/staffassignjob.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-// import { getProfile } from "@/utils/auth";
+import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";
 import { useParams } from 'next/navigation';
 
 
 export default function StaffAssignJobPage() {
     const { id } = useParams();
-    // const [profile, setProfile] = useState<any>(null);
-    // const [error, setError] = useState<string | null>(null);
-    // useEffect(() => {
-    //     // 
-    //     async function fetchProfile() {
-    //         try {
-    //             // getProfile ดึงข้อมูลมาจาก django ใส่ data
-    //             const data = await getProfile();
-    //             //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
-    //             setProfile(data);
 
-    //         } catch (err) {
-    //             setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-    //         }
-    //     }
-    //     fetchProfile();
-    // }, []);
+    const [profile, setProfile] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        // 
+        async function fetchProfile() {
+            try {
+                // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                const data = await getProfile();
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                setProfile(data);
+
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+            }
+        }
+        fetchProfile();
+    }, []);
 
     const [technicians, setTechnicians] = useState<{ id: number, name: string }[]>([]);
 
     useEffect(() => {
         const fetchTechnicians = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/staff/technician/');
-                // // , {
-                //     headers: {
-                //         Authorization: `Bearer ${localStorage.getItem("access_token")}` // ใส่ Token ด้วย
-                //     }
-                // });
+                const token = localStorage.getItem("accessToken");
+
+                if (!token) throw new Error("No token found");
+                const response = await axios.get('http://localhost:8080/api/staff/technician/'
+                    , {
+                        headers: {
+                            Authorization: `Bearer ${token}` // ใส่ Token ด้วย
+                        }
+                    });
                 setTechnicians(response.data);
             } catch (error) {
                 console.error("Error fetching technicians", error);
@@ -56,7 +60,7 @@ export default function StaffAssignJobPage() {
                 try {
                     const response = await axios.get(`http://localhost:8080/api/repair-requests-staff/${id}/`);
                     setRepairRequest(response.data);
-                    console.log(response.data);
+                    console.log("formData :", JSON.stringify(formData, null, 2));
                 } catch (error) {
                     console.error('Error fetching repair request:', error);
                 }
@@ -67,7 +71,7 @@ export default function StaffAssignJobPage() {
     }, [id]);
 
     const [formData, setFormData] = useState({
-        repair_request: "",
+        repair_request: null,
         technician: [],
         status: "assigned",
     });
@@ -80,11 +84,20 @@ export default function StaffAssignJobPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("ไม่พบ Token กรุณาเข้าสู่ระบบใหม่");
+            return;
+        }
 
-        const response = await fetch("http://localhost:8080/api/technician-requests/", {
+
+
+        const response = await fetch("http://localhost:8080/api/staff-create-repairassignment/", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token ? `Bearer ${token}` : ""
+            },
             body: JSON.stringify(formData),
         });
 
@@ -95,7 +108,19 @@ export default function StaffAssignJobPage() {
             console.error("API error:", errorData);
             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
         }
+
+        const responseData = await response.json();
+        console.log("Response data:", responseData);
     };
+
+    useEffect(() => {
+        if (repairRequest) {
+            setFormData((prevData) => ({
+                ...prevData,
+                repair_request: repairRequest.id, // ตั้งค่า ID ของ repair request
+            }));
+        }
+    }, [repairRequest]);
 
     return (
         <>
@@ -221,7 +246,19 @@ export default function StaffAssignJobPage() {
                             </div>
                             <div className='row'>
                                 <div className='col-8'>
-                                    <select className="form-control" id='select-letter'>
+                                    <select className="form-control"
+                                        id='select-letter'
+                                        name="technician"
+                                        value={formData.technician[0] || ""}
+                                        onChange={(e) => {
+                                            const selectedTechnicianId = Number(e.target.value);
+                                            setFormData((prevData) => ({
+                                                ...prevData,
+                                                technician: [selectedTechnicianId],  // ✅ ควรเป็นอาร์เรย์ของตัวเลข
+                                            }));
+                                        }}
+                                        required
+                                    >
                                         <option value="" id='option-letter'>-- เลือกช่าง --</option>
                                         {technicians.map((tech) => (
                                             <option key={tech.id} value={tech.id} id='option-letter'>
@@ -233,9 +270,9 @@ export default function StaffAssignJobPage() {
                                 <div className='col-4'>
                                     <div>
                                         <center>
-                                            <a href="" className="btn btn-success" id='assignjobbutton'>
+                                            <button type="submit" className="btn btn-success" id='assignjobbutton'>
                                                 มอบหมายงาน
-                                            </a>
+                                            </button>
                                         </center>
                                     </div>
                                 </div>

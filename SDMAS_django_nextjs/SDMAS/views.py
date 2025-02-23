@@ -27,6 +27,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.contrib.auth.models import User  # หรือโมเดลผู้ใช้ที่คุณใช้
+from rest_framework.exceptions import ValidationError
+
 
 # fam
 class ProfileView(APIView):
@@ -79,30 +81,41 @@ class RepairRequestCreateView(CreateAPIView):
         # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-  
+#famedit
 class TechnicianRequestCreateView(CreateAPIView):
-    queryset = RepairRequest.objects.all()  # กำหนด queryset ที่จะใช้
-    # ใช้เพื่อระบุว่าเราจะใช้ serializer อะไรในการแปลงข้อมูลจาก JSON ที่ส่งมาจาก client (ในที่นี้คือ React หรือ Postman) ให้เป็น Python object หรือจะใช้ในการแปลง Python object ไปเป็น JSON ที่จะตอบกลับ
-    serializer_class = TechnicianRequestSerializer  # ใช้ serializer ที่เราสร้างขึ้น
+    queryset = RepairRequest.objects.all()
+    serializer_class = TechnicianRequestSerializer
 
     def perform_create(self, serializer):
-        # ดึง student ที่เชื่อมโยงกับ user ที่ทำการ request
-        
-        # บันทึกข้อมูลจาก form data
-        serializer.save()  # จะมีการบันทึกข้อมูลลงฐานข้อมูลพร้อม student ที่เกี่ยวข้อง
+        # ดึง technician_id จาก request.data
+        repair_request = self.request.data.get("repair_request")
+        technician_id = self.request.data.get("technician")
+
+        if not repair_request:
+            raise ValidationError({"technician": "Technician ID is required"})
+
+        try:
+            technician = Technician.objects.get(technician_id=technician_id)
+        except Technician.DoesNotExist:
+            raise ValidationError({"technician": "Technician not found"})
+
+        # หาว่า technician นี้มี RepairAssignment อะไรที่ต้องถูกลบ
+        repair_assignment = RepairAssignment.objects.filter(repair_request__id=repair_request).first()
+        if repair_assignment:
+            repair_assignment.technician.remove(technician)
+
+        # RepairAssignment.objects.filter(repair_request__id=repair_request).delete()
+
+        # บันทึกข้อมูลการร้องขอใหม่
+        serializer.save()
 
     def create(self, request, *args, **kwargs):
-        # ใช้ `serializer` เพื่อแปลงข้อมูล JSON ที่มาจาก request.data
         serializer = self.get_serializer(data=request.data)
 
-        # ตรวจสอบความถูกต้องของข้อมูล
         if serializer.is_valid():
-            # เรียกใช้ perform_create เพื่อบันทึกข้อมูลลงฐานข้อมูล
             self.perform_create(serializer)
-            # ส่งข้อมูลกลับไป
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StaffAssignCreateView(CreateAPIView):
@@ -114,7 +127,9 @@ class StaffAssignCreateView(CreateAPIView):
         # ดึง student ที่เชื่อมโยงกับ user ที่ทำการ request
         
         # บันทึกข้อมูลจาก form data
-        serializer.save()  # จะมีการบันทึกข้อมูลลงฐานข้อมูลพร้อม student ที่เกี่ยวข้อง
+        # serializer.save()  # จะมีการบันทึกข้อมูลลงฐานข้อมูลพร้อม student ที่เกี่ยวข้อง
+        repair_assignment = serializer.save()
+        repair_assignment.technician.set(serializer.validated_data["technician"])
 
     def create(self, request, *args, **kwargs):
         # ใช้ `serializer` เพื่อแปลงข้อมูล JSON ที่มาจาก request.data
@@ -745,7 +760,9 @@ class StudentTrackStatusView(LoginRequiredMixin, PermissionRequiredMixin, View):
             return render(request, 'student-trackstatus.html', context)
         except (Technician.DoesNotExist or RepairAssignment.DoesNotExist or RepairRequest.DoesNotExist):
             return render(request, '500.html')
-        
+
+
+
 class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/auth/'
     permission_required = ["SDMAS.view_repairrequest", "SDMAS.add_repairrequest"]
@@ -790,7 +807,8 @@ class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
 #             return Response(serializer.data)
 #         except Student.DoesNotExist:
 #             return Response({"error": "Student not found"}, status=404)
-        
+
+
 class RepairRequestListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -824,7 +842,7 @@ class RepairRequestListView(APIView):
 #Staff - Index Page
 
 class RepairRequestListViewStaff(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         repair_requests = RepairRequest.objects.all()  # ดึงข้อมูลทั้งหมด
@@ -844,6 +862,7 @@ class RepairRequestFilteredbyIDViewStaff(APIView):
             return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class TechnicianViewStaffAssignJob(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:

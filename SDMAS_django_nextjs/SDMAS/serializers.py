@@ -64,13 +64,7 @@ class RepairAssignmentDjangotoNextJSSerializer(serializers.ModelSerializer):
         model = RepairAssignment
         fields = '__all__'
 
-class RepairRequestCreateAssignSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RepairRequest
-        fields = "__all__"
-
 class RepairAssignmentCreateSerializer(serializers.ModelSerializer):
-    repair_request = RepairRequestCreateAssignSerializer()
     class Meta:
         model = RepairAssignment
         fields = "__all__"
