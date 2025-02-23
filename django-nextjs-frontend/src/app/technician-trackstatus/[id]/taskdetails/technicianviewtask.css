@@ -58,8 +58,12 @@
     font-style: normal;
 }
 
+body {
+    overflow: hidden;
+}
+
 #pagecon {
-    padding: 2% 2% 0% 2%;
+    padding: 0% 2% 0% 2%;
 }
 
 html:lang(th) {
@@ -72,8 +76,6 @@ nav {
     background-color: #2E86C1;
     color: white;
     padding: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 nav .col {
@@ -185,43 +187,16 @@ nav .col {
     background-color: rgba(13, 13, 13, 0.725);
 }
 
-#student1label {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-    font-size: 200%;
-    padding: 0% 0% 1% 0%;
-}
-
 #roompara {
     font-family: 'Nunito', sans-serif;
     font-weight: 200;
     font-size: 200%;
 }
 
-#reportproblemspan {
+#seereportspan {
     font-family: 'Mitr-Medium', sans-serif;
     font-weight: 200;
     font-size: 120%;
-}
-
-.student1textarea {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-}
-
-#student1urgencyselect {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-}
-
-#repair_appointment_time_show {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-}
-
-#student1button, #studentdenybutton {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
 }
 
 #sidebarlinkmenu {
@@ -230,16 +205,94 @@ nav .col {
     font-size: 160%;
 }
 
-#sidebarlinkmenu2 {
-    font-family: 'Mitr-Medium', sans-serif;
-    font-weight: 200;
-    font-size: 80%;
-}
-
 #navlinksidebar {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 32px;
-    padding: 4% 10% 4% 10%
+    padding: 4% 10% 4% 10%;
+}
+
+#linavlink {
+    margin: 5%;
+}
+
+#breadcrumb {
+    background: transparent;
+    text-decoration: none;
+    color: black;
+}
+
+#breadcrumb-link {
+    text-decoration: none;
+    color: black;
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+}
+
+#taskdetailarea {
+    background-color: #E3E3E3;
+    border-radius: 32px;
+    padding: 3% 4% 3% 4%;
+}
+
+#remarkletter {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+}
+
+#textarearemark {
+    resize: none;
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 150%;
+    padding: 2% 3% 2% 3%;
+}
+
+#statusshow {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 150%;
+    padding: 2% 3% 2% 3%;
+}
+
+#formshow {
+    padding: 0% 0% 2% 0%;
+}
+
+#formbuttonsubmittask {
+    padding: 1% 0% 0% 0%;
+}
+
+#buttonforsubmittask {
+    padding: 1% 2% 1% 2%;
+    color: white;
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 180%;
+}
+
+#footermodal {
+    padding: 5% 2% 5% 2%;
+}
+
+#modalbuttonletter {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 120%;
+}
+
+#status-show {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    text-align: center;
+}
+
+#remarks-show {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
 }
 
 #navlinksidebar2 {
@@ -256,11 +309,8 @@ nav .col {
     padding: 2% 2% ;
 }
 
-#linavlink {
-    margin: 5%;
-}
-
-#optionletter {
-    font-family: 'Mitr-Light', sans-serif;
+#sidebarlinkmenu2 {
+    font-family: 'Mitr-Medium', sans-serif;
     font-weight: 200;
+    font-size: 80%;
 }

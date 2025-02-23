@@ -109,37 +109,7 @@ export default function TechnicianIndexPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
-    // const handleSubmit = async (e: React.FormEvent, technician_id: string) => {
-    //     e.preventDefault();
-
-    //     console.log(formData);  // ตรวจสอบข้อมูลที่ส่งไปให้แน่ใจว่าถูกต้อง
-
-    //     const requestData = {
-    //         ...formData,
-    //         technician: [technician_id]  // แปลงให้เป็น array ตามที่ Django ต้องการ
-    //     };
-    
-    //     try {
-    //         const response = await fetch(`http://localhost:8080/api/technician-requests/?technician_id=${technician_id}`, {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify(requestData),
-    //         });
-    
-    //         if (response.ok) {
-    //             alert("ส่งคำร้องขอซ่อมแล้ว!");
-    //         } else {
-    //             const errorData = await response.json();
-    //             console.error("API error:", errorData);
-    //             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
-    //         }
-    //     } catch (error) {
-    //         console.error("Network error:", error);
-    //         alert("เกิดข้อผิดพลาด กรุณาตรวจสอบการเชื่อมต่อ");
-    //     }
-        
-    // };
+   
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
     
@@ -228,20 +198,21 @@ export default function TechnicianIndexPage() {
     }, []);
     return (
         <>
-            <div id="nav">
+            {/* ธรรมดา */}
+            <div id="nav" className="d-none d-md-block">
                 <header>
                     {profile ? (
                         <div>
-                            <nav className='navroom'>
-                                <div className='row'>
-                                    <div className='col-4'>
-                                        <span id='roompara'>Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
-                                    </div>
-                                    <div className='col-4'></div>
-                                    <div className='col-4' id='float-right-logout'>
-                                        <span id='roompara'>{profile.first_name}  {profile.last_name}&nbsp;</span>
-                                        <button type="button" className="btn btn-danger" onClick={logout}>Logout</button>
-                                    </div>
+                            <nav className="navroom d-flex justify-content-between align-items-center">
+                                <span id="roompara">Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
+
+                                <div>
+                                    <span id="roompara">
+                                        {profile.first_name} {profile.last_name}&nbsp;
+                                    </span>
+                                    <button type="button" className="btn btn-danger" onClick={logout}>
+                                        Logout
+                                    </button>
                                 </div>
                             </nav>
                         </div>
@@ -263,8 +234,69 @@ export default function TechnicianIndexPage() {
                     )}
                 </header>
             </div>
+
+            {/* responsive */}
+            <div id="nav" className="d-block d-md-none">
+                <header>
+                    {profile ? (
+                        <div>
+                            <nav className="navroom d-flex justify-content-between align-items-center">
+                                <span className=''>Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
+
+                                <div>
+                                    <span >
+                                        {profile.first_name} {profile.last_name}&nbsp;
+                                    </span>
+                                    <button type="button" className="btn btn-danger btn-sm" onClick={logout}>
+                                        Logout
+                                    </button>
+                                </div>
+                            </nav>
+                        </div>
+                    ) : (
+                        <p>Loading...</p>
+                    )}
+                </header>
+            </div>
+
+
+            {/* responsive */}
+            <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
+                <div className="container-fluid">
+                    <div className="navbar-nav d-flex flex-row gap-3 w-100 justify-content-center">
+                        <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician"><div className='row'>
+                            <div className='col-3'>
+                                <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M44 12C44 9.8 42.2 8 40 8H8C5.8 8 4 9.8 4 12M44 12V36C44 38.2 42.2 40 40 40H8C5.8 40 4 38.2 4 36V12M44 12L24 26L4 12" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                            <div className='col-9' >
+                                <center id='sidebarlinkmenu2'>งานที่ได้รับ</center>
+                            </div>
+                            
+                        </div>
+                        </a>
+                        <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician-trackstatus"><div className='row'>
+                            <div className='col-3'>
+                                <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M44 12C44 9.8 42.2 8 40 8H8C5.8 8 4 9.8 4 12M44 12V36C44 38.2 42.2 40 40 40H8C5.8 40 4 38.2 4 36V12M44 12L24 26L4 12" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                            <div className='col-9' >
+                                <center id='sidebarlinkmenu2'>อัพเดทสถานะ</center>
+                            </div>
+                            
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+
             <div id="content">
-                <div className="d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
+
+                {/* ธรรมดา */}
+                <div className="d-none d-lg-flex d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
                     <span className="badge bg-white text-dark" id="sidebartitleout">
                         <div className="sidebartitlefont">
                             <span id='seereportspan'>รายละเอียดของงาน</span>
@@ -289,7 +321,9 @@ export default function TechnicianIndexPage() {
                         </li>
                     </ul>
                 </div>
-                <div className="container" id="pagecon">
+
+                {/* ธรรมดา */}
+                <div className="container d-none d-md-block" id="pagecon">
                     <nav style={{ "--bs-breadcrumb-divider": "'>'" } as React.CSSProperties} aria-label="breadcrumb" id='breadcrumb'>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
@@ -339,6 +373,85 @@ export default function TechnicianIndexPage() {
                             <div id='formbuttonsubmittask'>
                                 <center>
                                     <button type="button" className="btn btn-warning" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        รับงาน
+                                    </button>
+                                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h1>
+                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div id='footermodal'>
+                                                    <div className='row'>
+                                                        <div className='col'>
+                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter'>รับงาน</button>
+                                                        </div>
+                                                        <div className='col'>
+                                                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" id='modalbuttonletter'>ยกเลิก</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </center>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {/* Responsive */}
+                <div className="container d-block d-md-none" id="pagecon">
+                    <nav style={{ "--bs-breadcrumb-divider": "'>'" } as React.CSSProperties} aria-label="breadcrumb" id='breadcrumb'>
+                        <ol className="breadcrumb ">
+                            <li className="breadcrumb-item ">
+                                <a href="/technician" id='breadcrumb-link' className="fs-6">งานที่ได้รับ</a>
+                            </li>
+                            <li className="breadcrumb-item active fs-6" aria-current="page" id='breadcrumb-link'>
+                                รายละเอียดและสถานะ
+                            </li>
+                        </ol>
+                    </nav>
+                    <div id='taskdetailarea'>
+                        <form onSubmit={handleSubmit}>
+                            <div id='formshow'>
+                                <div>
+                                    <p id='remarkletter' className='fs-6'>หมายเหตุ :</p>
+                                </div>
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="remarks"
+                                        className="form-control fs-6"
+                                        value={formData.remarks}
+                                        onChange={handleChange}
+                                        id='remarks-show'
+                                        readOnly
+                                        required>
+                                    </input>
+                                </div>
+                            </div>
+                            <div id='formshow'>
+                                <div>
+                                    <p id='remarkletter' className='fs-6'>สถานะ :</p>
+                                </div>
+                                <div>
+                                    <input
+                                        readOnly
+                                        type="text"
+                                        name="status"
+                                        className="form-control fs-6"
+                                        value={formData.status.charAt(0).toUpperCase() + formData.status.slice(1).toLowerCase()}
+                                        onChange={handleChange}
+                                        id='status-show'
+                                        required>
+                                    </input>
+                                </div>
+                            </div>
+                            <div id='formbuttonsubmittask'>
+                                <center>
+                                    <button type="button" className="btn btn-warning fs-6" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
                                         รับงาน
                                     </button>
                                     <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">

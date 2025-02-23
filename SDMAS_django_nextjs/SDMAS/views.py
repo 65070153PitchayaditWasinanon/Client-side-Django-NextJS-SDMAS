@@ -87,26 +87,42 @@ class TechnicianRequestCreateView(CreateAPIView):
     serializer_class = TechnicianRequestSerializer
 
     def perform_create(self, serializer):
-        # ดึง technician_id จาก request.data
-        repair_request = self.request.data.get("repair_request")
-        technician_id = self.request.data.get("technician")
+        # ดึงค่าจาก request
+        repair_request_id = self.request.data.get("repair_request", None)
+        technician_id = self.request.data.get("technician", None)
 
-        if not repair_request:
+        if isinstance(technician_id, list) and technician_id:  
+            technician_id = technician_id[0]  # ดึงค่าแรกออกมา
+
+        technician_id = int(technician_id) if technician_id is not None else None
+
+        # ตรวจสอบค่าที่รับเข้ามา
+        if not repair_request_id:
+            raise ValidationError({"repair_request": "Repair Request ID is required"})
+
+        if not technician_id:
             raise ValidationError({"technician": "Technician ID is required"})
 
+        # ตรวจสอบว่า technician_id มีอยู่จริงหรือไม่
         try:
-            technician = Technician.objects.get(technician_id=technician_id)
+            technician = Technician.objects.get(id=technician_id)
         except Technician.DoesNotExist:
             raise ValidationError({"technician": "Technician not found"})
 
-        # หาว่า technician นี้มี RepairAssignment อะไรที่ต้องถูกลบ
-        repair_assignment = RepairAssignment.objects.filter(repair_request__id=repair_request).first()
+        # ตรวจสอบว่า repair_request_id มีอยู่จริงหรือไม่
+        try:
+            repair_request = RepairRequest.objects.get(id=repair_request_id)
+        except RepairRequest.DoesNotExist:
+            raise ValidationError({"repair_request": "Repair Request not found"})
+
+        # หา RepairAssignment ที่เกี่ยวข้องกับ repair_request นี้
+        repair_request.status = "assigned"
+        repair_request.save()
+        repair_assignment = RepairAssignment.objects.filter(repair_request=repair_request).first()
         if repair_assignment:
-            repair_assignment.technician.remove(technician)
+            repair_assignment.technician.remove(technician)  # เอา technician ออกจาก many-to-many
 
-        # RepairAssignment.objects.filter(repair_request__id=repair_request).delete()
-
-        # บันทึกข้อมูลการร้องขอใหม่
+        # บันทึกข้อมูลใหม่
         serializer.save()
 
     def create(self, request, *args, **kwargs):
@@ -144,6 +160,99 @@ class StaffAssignCreateView(CreateAPIView):
 
         # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#update-famf
+class TechnicianRepairUpdateView(CreateAPIView):
+    def post(self, request):
+        repair_update_id = request.data.get('id')
+        status1 = request.data.get('status')
+        repair_update_id = int(repair_update_id)
+        # description = request.data.get('description')
+        # urgency = request.data.get('urgency')
+        # repair_appointment_time = request.data.get('repair_appointment_time')
+
+        # print(f"Received repair_request_id: {repair_request_id}")
+        # print(f"Received student: {student}")
+
+        # if not all([repair_request_id, student, description, urgency, repair_appointment_time]):
+        #     return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
+
+        repairstatusupdate = get_object_or_404(RepairStatusUpdate, id=repair_update_id)
+        repairrequest = get_object_or_404(RepairRequest, id=repairstatusupdate.repair_request.id)
+
+
+        if status1 == "completed":
+            repairstatusupdate.delete()
+            repairrequest.delete()
+        else:
+            repairstatusupdate.status = status1
+            repairstatusupdate.save()
+        # try:
+        #     repairstatusupdate.status = status
+            
+        #     repairstatusupdate.save()
+        # except Exception as e:
+        #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({
+            "message": "Repair request updated successfully",
+            "id": repair_update_id,
+            "status": status1,
+        },status=status.HTTP_200_OK)
+    # queryset = RepairRequest.objects.all()
+    # serializer_class = TechnicianRequestSerializer  
+
+    # def perform_create(self, serializer):
+    #     # ดึงค่าจาก request
+    #     repair_update_id = self.request.data.get("id", None)
+    #     status = self.request.data.get("status", None)
+    #     technician_id = self.request.data.get("technician", None)
+
+    #     if isinstance(technician_id, list) and technician_id:  
+    #         technician_id = technician_id[0]  # ดึงค่าแรกออกมา
+
+    #     technician_id = int(technician_id) if technician_id is not None else None
+
+    #     if not repair_update_id:
+    #         raise ValidationError({"id": "Repair Update ID is required"})
+
+    #     # ตรวจสอบค่าที่รับเข้ามา
+    #     # if not repair_request_id:
+    #     #     raise ValidationError({"repair_request": "Repair Request ID is required"})
+
+    #     if not technician_id:
+    #         raise ValidationError({"technician": "Technician ID is required"})
+
+    #     # ตรวจสอบว่า technician_id มีอยู่จริงหรือไม่
+    #     try:
+    #         technician = Technician.objects.get(id=technician_id)
+    #     except Technician.DoesNotExist:
+    #         raise ValidationError({"technician": "Technician not found"})
+
+    #     # ตรวจสอบว่า repair_request_id มีอยู่จริงหรือไม่
+    #     try:
+    #         repair_update = RepairStatusUpdate.objects.get(id=repair_update_id)
+    #     except RepairStatusUpdate.DoesNotExist:
+    #         raise ValidationError({"repair_request": "Repair Request not found"})
+
+    #     # หา RepairAssignment ที่เกี่ยวข้องกับ repair_request นี้
+    #     if status == "completed":
+    #         repair_update.delete()
+    #     else:
+    #         repair_update.status = status
+    #         repair_update.save()
+        
+
+    #     # บันทึกข้อมูลใหม่
+    #     serializer.save()
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+
+    #     if serializer.is_valid():
+    #         self.perform_create(serializer)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentRepairRequestView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/auth/'
@@ -838,6 +947,44 @@ class RepairRequestListView(APIView):
 
         repair_request.delete()
         return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
+#fam
+class RepairUpdateListView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    # def get(self, request):
+    #     technician_id = request.query_params.get("technician_id", None)
+        
+    #     if not technician_id:
+    #         return Response({"error": "Missing technician_id"}, status=400)
+        
+    #     try:
+    #         technician = Technician.objects.get(id=technician_id, user=request.user)
+    #         repair_statusupdate = RepairStatusUpdate.objects.filter(technician=technician)
+    #         serializer = RequestUpdateDjangotoNextJSSerializer(repair_statusupdate, many=True)
+    #         return Response(serializer.data)
+    #     except Student.DoesNotExist:
+    #         return Response({"error": "Student not found"}, status=404)
+        
+    # def delete(self, request, repair_request_id):
+    #     """
+    #     ลบ RepairRequest โดยต้องเป็นเจ้าของเท่านั้น
+    #     """
+    #     repair_request = get_object_or_404(RepairRequest, id=repair_request_id)
+
+    #     # ตรวจสอบว่า repair_request เป็นของ student นี้หรือไม่
+    #     if repair_request.student.user != request.user:
+    #         return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+
+    #     repair_request.delete()
+    #     return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    def get(self, request, id):
+        try:
+            repair_update = RepairStatusUpdate.objects.get(id=id)
+            serializer = RequestUpdateDjangotoNextJSSerializer(repair_update)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except RepairRequest.DoesNotExist:
+            return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
 
 #Staff - Index Page
 
@@ -907,6 +1054,25 @@ class RepairAssignmentView(APIView):
             repair_assignmen = RepairAssignment.objects.filter(technician=technician)
             serializer = RepairAssignmentDjangotoNextJSSerializer(repair_assignmen, many=True)
             return Response(serializer.data)
+        except Student.DoesNotExist:
+            return Response({"error": "Student not found"}, status=404)
+        
+class RepairStatusUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        technician_id = request.query_params.get("technician_id", None)
+        
+        if not technician_id:
+            return Response({"error": "Missing student_id"}, status=400)
+        
+        try:
+            technician = Technician.objects.get(id=technician_id, user=request.user)
+            repair_statusupdate = RepairStatusUpdate.objects.filter(technician=technician)
+
+            serializer = RequestUpdateDjangotoNextJSSerializer(repair_statusupdate, many=True)
+            return Response(serializer.data)
+        
         except Student.DoesNotExist:
             return Response({"error": "Student not found"}, status=404)
         

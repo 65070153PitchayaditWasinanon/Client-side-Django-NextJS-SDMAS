@@ -56,6 +56,9 @@ urlpatterns = [
 
     path('api/repair-requests/', views.RepairRequestCreateView.as_view(), name='repair-request-create'),
 
+    #fam
+    path('api/repair-requests-update-get/<int:id>/', views.RepairUpdateListView.as_view(), name='repair-update-get'),
+
     path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
 
     path('api/repair-requests-views-staff/', views.RepairRequestListViewStaff.as_view(), name='repair-request-view-staff'), #Repair Request for Staff Index Page
@@ -72,6 +75,8 @@ urlpatterns = [
     
     path('api/requests-asignment-views/', views.RepairAssignmentView.as_view(), name='requests-asignment-views'),
 
+    path('api/repair-status-update-views/', views.RepairStatusUpdateView.as_view(), name='repair-status-update-views'),
+
     # path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
 
     path('api/repair-requests/<int:id>/', views.RepairRequestFilteredbyIDView.as_view(), name='repair_request_detail'),
@@ -81,6 +86,8 @@ urlpatterns = [
     path('api/repair-assignment-filter/<int:id>/', views.RepairASsignmentFilterbyIDTechnicianView.as_view(), name='repair_assignment_filter_by_techinician_id'),
     
     path('api/technician-requests/', views.TechnicianRequestCreateView.as_view(), name='technician-request-create'),
+
+    path('api/technician-repair-update/', views.TechnicianRepairUpdateView.as_view(), name='technician-repair-updateView'),
 
     path('api/profile/', views.ProfileView.as_view(), name='profile'),
 
