@@ -236,6 +236,26 @@ nav .col {
     padding: 4% 10% 4% 10%
 }
 
+#navlinksidebar2 {
+    font-family: 'Mitr-Medium', sans-serif;
+    background-color: rgba(0, 0, 0, 0.158);
+    border-radius: 32px;
+    padding: 2% 2% ;
+}
+
+#navlinksidebar3 {
+    font-family: 'Mitr-Medium', sans-serif;
+    background-color: rgba(50, 50, 50, 0.05);
+    border-radius: 32px;
+    padding: 2% 2% ;
+}
+
+#sidebarlinkmenu2 {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 80%;
+}
+
 #linavlink {
     margin: 5%;
 }

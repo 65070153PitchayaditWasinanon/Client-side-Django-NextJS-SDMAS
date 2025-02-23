@@ -1,8 +1,21 @@
+html, body {
+    overflow: auto !important;
+    height: auto !important;
+}
+
 @font-face {
     font-family: 'Nunito';
     src: url('/fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
+}
+
+.navbar {
+    position: relative !important;
+}
+
+#content {
+    min-height: 100vh;
 }
 
 @font-face {
@@ -58,6 +71,10 @@
     font-style: normal;
 }
 
+body {
+    overflow: hidden;
+}
+
 #pagecon {
     padding: 2% 2% 0% 2%;
 }
@@ -72,8 +89,6 @@ nav {
     background-color: #2E86C1;
     color: white;
     padding: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 nav .col {
@@ -185,43 +200,16 @@ nav .col {
     background-color: rgba(13, 13, 13, 0.725);
 }
 
-#student1label {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-    font-size: 200%;
-    padding: 0% 0% 1% 0%;
-}
-
 #roompara {
     font-family: 'Nunito', sans-serif;
     font-weight: 200;
     font-size: 200%;
 }
 
-#reportproblemspan {
+#seereportspan {
     font-family: 'Mitr-Medium', sans-serif;
     font-weight: 200;
     font-size: 120%;
-}
-
-.student1textarea {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-}
-
-#student1urgencyselect {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-}
-
-#repair_appointment_time_show {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
-}
-
-#student1button, #studentdenybutton {
-    font-family: 'Mitr-Light', sans-serif;
-    font-weight: 200;
 }
 
 #sidebarlinkmenu {
@@ -230,16 +218,88 @@ nav .col {
     font-size: 160%;
 }
 
-#sidebarlinkmenu2 {
-    font-family: 'Mitr-Medium', sans-serif;
-    font-weight: 200;
-    font-size: 80%;
-}
-
 #navlinksidebar {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 32px;
-    padding: 4% 10% 4% 10%
+    padding: 4% 10% 4% 10%;
+}
+
+#linavlink {
+    margin: 5%;
+}
+
+#cardtask {
+    margin: 2%;
+    width: 75%;
+    overflow: hidden;
+}
+
+#technicianreport {
+    padding: 3%;
+}
+
+#roompara {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    text-align: left;
+}
+
+#floorpara {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    text-align: left;
+}
+
+#taskrowinfo {
+    padding: 2%;
+}
+
+#clickfordetailsarea {
+    background-color: #f2f3f4;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#linktodetails {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#clickforaccepttaskmodalbutton {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+}
+
+#modaltitletter {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 120%;
+}
+
+#modalfooterbutton {
+    justify-content: center;
+}
+
+#buttoninmodalletter {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 100%;
+}
+
+.taskarea {
+    height: calc(100vh - 200px); /* Adjust height dynamically */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#sidebarlinkmenu {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 160%;
 }
 
 #navlinksidebar2 {
@@ -256,11 +316,8 @@ nav .col {
     padding: 2% 2% ;
 }
 
-#linavlink {
-    margin: 5%;
-}
-
-#optionletter {
-    font-family: 'Mitr-Light', sans-serif;
+#sidebarlinkmenu2 {
+    font-family: 'Mitr-Medium', sans-serif;
     font-weight: 200;
+    font-size: 80%;
 }

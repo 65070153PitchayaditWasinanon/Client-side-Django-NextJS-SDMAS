@@ -72,8 +72,13 @@ nav {
     background-color: #2E86C1;
     color: white;
     padding: 20px;
+}
+
+.navroom {
     display: flex;
     justify-content: space-between;
+    align-items: center; /* ทำให้ปุ่มและข้อความอยู่แนวเดียวกัน */
+    width: 100%;  /* ทำให้ navroom กว้างเต็มที่ */
 }
 
 nav .col {
@@ -204,10 +209,31 @@ nav .col {
     font-size: 160%;
 }
 
+#sidebarlinkmenu2 {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 80%;
+}
+
+
 #navlinksidebar {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 32px;
     padding: 4% 10% 4% 10%;
+}
+
+#navlinksidebar2 {
+    font-family: 'Mitr-Medium', sans-serif;
+    background-color: rgba(0, 0, 0, 0.158);
+    border-radius: 32px;
+    padding: 2% 2% ;
+}
+
+#navlinksidebar3 {
+    font-family: 'Mitr-Medium', sans-serif;
+    background-color: rgba(50, 50, 50, 0.05);
+    border-radius: 32px;
+    padding: 2% 2% ;
 }
 
 #linavlink {
