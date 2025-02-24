@@ -4,8 +4,8 @@ import './studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
-import { login } from "@/utils/auth";
 
 export default function StudentReportPage() {
 
@@ -52,9 +52,6 @@ export default function StudentReportPage() {
         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
     };
 
-
-    // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
-    // ดึงค่าและ อัพเดทค่า
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -134,7 +131,7 @@ export default function StudentReportPage() {
             <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
                     <div className="navbar-nav d-flex flex-row gap-3 w-100 justify-content-center">
-                        <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/student"><div className='row'>
+                        <motion.a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/student" whileTap={{ scale: 0.9 }} whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}><div className='row'>
                             <div className='col-3'>
                                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M44 12C44 9.8 42.2 8 40 8H8C5.8 8 4 9.8 4 12M44 12V36C44 38.2 42.2 40 40 40H8C5.8 40 4 38.2 4 36V12M44 12L24 26L4 12" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -144,8 +141,8 @@ export default function StudentReportPage() {
                                 <center id='sidebarlinkmenu2'>ปัญหาที่ส่ง</center>
                             </div>
                         </div>
-                        </a>
-                        <a className="nav-link active" id='navlinksidebar2' aria-current="page" href="/student/report"><div className='row'>
+                        </motion.a>
+                        <motion.a className="nav-link active" id='navlinksidebar2' aria-current="page" href="/student/report" whileTap={{ scale: 0.9 }} whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}><div className='row'>
                             <div className='col-3'>
                                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M25 19.125V27.625M25 36.125H25.0208M21.4375 8.20249L3.79165 38.25C3.42783 38.8926 3.23533 39.6213 3.23329 40.3633C3.23126 41.1054 3.41975 41.8351 3.78004 42.4799C4.14032 43.1246 4.65983 43.6618 5.28687 44.0382C5.91392 44.4145 6.62665 44.6168 7.35415 44.625H42.6458C43.3733 44.6168 44.086 44.4145 44.7131 44.0382C45.3401 43.6618 45.8596 43.1246 46.2199 42.4799C46.5802 41.8351 46.7687 41.1054 46.7667 40.3633C46.7646 39.6213 46.5721 38.8926 46.2083 38.25L28.5625 8.20249C28.1911 7.57797 27.6682 7.06162 27.0441 6.70327C26.4201 6.34492 25.7161 6.15666 25 6.15666C24.2839 6.15666 23.5798 6.34492 22.9558 6.70327C22.3318 7.06162 21.8089 7.57797 21.4375 8.20249Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -154,8 +151,8 @@ export default function StudentReportPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>รายงานปัญหา</center>
                             </div>
-                        </div></a>
-                        <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/student-trackstatus"><div className='row'>
+                        </div></motion.a>
+                        <motion.a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/student-trackstatus" whileTap={{ scale: 0.9 }} whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}><div className='row'>
                             <div className='col-3'>
                                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M25 19.125V27.625M25 36.125H25.0208M21.4375 8.20249L3.79165 38.25C3.42783 38.8926 3.23533 39.6213 3.23329 40.3633C3.23126 41.1054 3.41975 41.8351 3.78004 42.4799C4.14032 43.1246 4.65983 43.6618 5.28687 44.0382C5.91392 44.4145 6.62665 44.6168 7.35415 44.625H42.6458C43.3733 44.6168 44.086 44.4145 44.7131 44.0382C45.3401 43.6618 45.8596 43.1246 46.2199 42.4799C46.5802 41.8351 46.7687 41.1054 46.7667 40.3633C46.7646 39.6213 46.5721 38.8926 46.2083 38.25L28.5625 8.20249C28.1911 7.57797 27.6682 7.06162 27.0441 6.70327C26.4201 6.34492 25.7161 6.15666 25 6.15666C24.2839 6.15666 23.5798 6.34492 22.9558 6.70327C22.3318 7.06162 21.8089 7.57797 21.4375 8.20249Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -164,7 +161,7 @@ export default function StudentReportPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>ติดตามสถานะ</center>
                             </div>
-                        </div></a>
+                        </div></motion.a>
                     </div>
                 </div>
             </nav>
@@ -229,20 +226,18 @@ export default function StudentReportPage() {
 
                 <div className="container" id="pagecon">
                     <div className="emp-form-box">
-                        {/* onSubmit handleSubmit = เมื่อ submit จะเข้า function นี้ */}
                         <form onSubmit={handleSubmit} className="p-3 border rounded">
                             <div className="form-group mb-3">
                                 <label htmlFor="description" id="student1label">
                                     อธิบายสาเหตุ :
                                 </label>
                                 <div className="student1textarea">
-                                    {/* value={formData.description} → ดึงค่าจาก formData ,onChange={handleChange} → อัปเดตค่าเมื่อผู้ใช้พิมพ์ */}
                                     <input
                                         type="text"
                                         name="description"
                                         className="form-control"
-                                        value={formData.description} // ⬅️ กำหนดค่าของ input ให้ตรงกับค่าใน formData
-                                        onChange={handleChange}// ⬅️ อัปเดตค่าใน formData เมื่อผู้ใช้พิมพ์
+                                        value={formData.description} 
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -272,14 +267,6 @@ export default function StudentReportPage() {
                                     วันเวลาที่นัดหมาย
                                 </label>
                                 <div className="d-flex justify-content-around" id="repair_appointment_time_show">
-                                    {/* <input
-                                        type="datetime-local"
-                                        id="repairAppointmentTime"
-                                        // onChange={(e) => setRepairAppointmentTime(e.target.value)}
-                                        onFocus={(e) => e.target.showPicker()}
-                                        className="form-control"
-                                        required
-                                    /> */}
                                     <input
                                         type="datetime-local"
                                         name="repair_appointment_time"
@@ -295,9 +282,7 @@ export default function StudentReportPage() {
                                 <div className="col">
                                     <center>
                                         <button type="submit" className="btn btn-success" id="student1button">
-                                            {/* <a href="/student" id="studentdenybutton" style={{ color: "white", textDecoration: "none" }}> */}
                                                 เสร็จสิ้น
-                                            {/* </a> */}
                                         </button>
                                     </center>
                                 </div>

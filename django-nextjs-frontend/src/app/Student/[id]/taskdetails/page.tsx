@@ -1,10 +1,9 @@
-// app/nontakorn/page.tsx
+
 'use client'
 import './studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from "react";
 import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
-import { login } from "@/utils/auth";
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 
@@ -39,7 +38,7 @@ export default function StudentReportPage() {
     const fetchRepairRequest = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/api/repair-requests/${id}/`);
-            setRepairRequest(response.data); // ✅ ตั้งค่า repairRequest แล้วให้ useEffect ดึงไปใช้
+            setRepairRequest(response.data); // ตั้งค่า repairRequest แล้วให้ useEffect ดึงไปใช้
             console.log("Fetched repair request:", response.data);
         } catch (error) {
             console.error("Error fetching repair request:", error);
@@ -65,7 +64,6 @@ export default function StudentReportPage() {
     
 
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
@@ -90,12 +88,9 @@ export default function StudentReportPage() {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-
         // Redirect ไปยังหน้า login
         window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
     };
-
-
     // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
     // ดึงค่าและ อัพเดทค่า
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -130,11 +125,6 @@ export default function StudentReportPage() {
             alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
         }
     };
-    
-    // ✅ ตรวจสอบ formData ว่าอัปเดตถูกต้องหรือไม่
-    useEffect(() => {
-        console.log("Updated formData:", formData);
-    }, [formData]);
 
     return (
         <>
@@ -286,20 +276,20 @@ export default function StudentReportPage() {
 
                 <div className="container" id="pagecon">
                     <div className="emp-form-box">
-                        {/* onSubmit handleSubmit = เมื่อ submit จะเข้า function นี้ */}
+                        
                         <form onSubmit={handleSubmit} className="p-3 border rounded">
                             <div className="form-group mb-3">
                                 <label htmlFor="description" id="student1label">
                                     อธิบายสาเหตุ :
                                 </label>
                                 <div className="student1textarea">
-                                    {/* value={formData.description} → ดึงค่าจาก formData ,onChange={handleChange} → อัปเดตค่าเมื่อผู้ใช้พิมพ์ */}
+                                    
                                     <input
                                         type="text"
                                         name="description"
                                         className="form-control"
-                                        value={formData.description} // ⬅️ กำหนดค่าของ input ให้ตรงกับค่าใน formData
-                                        onChange={handleChange}// ⬅️ อัปเดตค่าใน formData เมื่อผู้ใช้พิมพ์
+                                        value={formData.description}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>

@@ -1,9 +1,6 @@
-// app/nontakorn/page.tsx
 'use client'
-
 import '../technician/technicianindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { useEffect, useState } from 'react';
 import { getProfile } from "@/utils/auth";
 import axios from 'axios';
@@ -17,9 +14,7 @@ export default function TechnicianIndexPage() {
         try {
             const token = localStorage.getItem("accessToken");
             console.log("Token ที่ใช้:", token); // ตรวจสอบ token
-
             if (!token) throw new Error("No token found");
-
             const response = await axios.get(
                 `http://localhost:8080/api/requests-asignment-views/?technician_id=${technician_id}`,
                 {
@@ -36,18 +31,13 @@ export default function TechnicianIndexPage() {
     };
 
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
-                // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
-
                 if (data?.technician_id) {
-                    fetchRepairAssignment(data.technician_id); // เรียก API ด้วย student_id
+                    fetchRepairAssignment(data.technician_id);
                 }
-
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
                 window.location.href = '/login';
@@ -57,20 +47,15 @@ export default function TechnicianIndexPage() {
     }, []);
 
     const logout = () => {
-        // ลบ JWT จาก localStorage
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-
-        // Redirect ไปยังหน้า login
-        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+        window.location.href = '/login';
     };
-
 
     return (
         <>
-
             {/* ธรรมดา */}
             <div id="nav" className="d-none d-md-block">
                 <header>
@@ -132,7 +117,6 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>งานที่ได้รับ</center>
                             </div>
-                            
                         </div>
                         </a>
                         <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician-trackstatus"><div className='row'>
@@ -144,7 +128,6 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>อัพเดทสถานะ</center>
                             </div>
-                            
                         </div>
                         </a>
                     </div>
@@ -152,7 +135,6 @@ export default function TechnicianIndexPage() {
             </nav>
 
             <div id="content">
-
                 {/* ธรรมดา */}
                 <div className="d-none d-lg-flex d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
                     <span className="badge bg-white text-dark" id="sidebartitleout">
@@ -262,19 +244,27 @@ export default function TechnicianIndexPage() {
 
                 {/* responsive */}
                 <div className="container d-block d-md-none" id="pagecon">
-                    <div>
-
+                    <div className="d-flex flex-column align-items-center gap-4">
                         {RepairAssignmentView.map((request) => (
-                            <div className="card" key={request.id}>
+                            <div
+                                className="card shadow-lg border-0 rounded-4 p-4 w-100"
+                                key={request.id}
+                                style={{ maxWidth: "420px", backgroundColor: "#ffffff" }}
+                            >
                                 <div className="card-body">
-                                    {/* <h5 className="card-title">หมายเหตุ : {request.description}</h5> */}
-                                    <h5 className="card-title" key={request.repair_request.student.room_id.room_number}>ห้อง: {request.repair_request.student.room_id.room_number}</h5>
-                                    <p className="card-text">สถานะ : {request.status}</p>
-                                    <p className="card-text" key={request.repair_request.student.room_id.floor}>ชั้น {request.repair_request.student.room_id.floor}</p>
+                                    <h5 className="card-title fw-bold text-dark mb-2">
+                                        ห้อง: {request.repair_request.student.room_id.room_number}
+                                    </h5>
+                                    <p className="card-text text-muted mb-2">สถานะ:
+                                        <span className={`badge ${request.status === "completed" ? "bg-success" : "bg-info"} text-dark`}>
+                                            {request.status}
+                                        </span>
+                                    </p>
+                                    <p className="card-text text-muted">ชั้น: {request.repair_request.student.room_id.floor}</p>
 
-                                    <div className="d-flex justify-content-end gap-1"> {/* Bootstrap 5 */}
-                                        <a href={`technician/${request.repair_request.id}/taskdetails`}>
-                                            <button type="button" className="btn btn-warning">
+                                    <div className="d-flex justify-content-end gap-3 mt-3">
+                                        <a href={`technician/${request.repair_request.id}/taskdetails`} className="text-decoration-none">
+                                            <button type="button" className="btn btn-warning px-4 py-2 rounded-3 shadow-sm" style={{color: "#fff" }}>
                                                 รับงาน
                                             </button>
                                         </a>
@@ -282,7 +272,6 @@ export default function TechnicianIndexPage() {
                                 </div>
                             </div>
                         ))}
-
                     </div>
                 </div>
             </div>
