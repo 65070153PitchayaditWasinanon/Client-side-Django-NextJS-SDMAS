@@ -16,8 +16,7 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from .models import RepairRequest
-from .serializers import RepairRequestSerializer, TechnicianRequestSerializer
-from .serializers import RepairRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer, RequestUpdateDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerializer, TechnicianDjangotoNextJSSerializer, RepairAssignmentCreateSerializer
+from .serializers import RepairRequestSerializer, TechnicianRequestSerializer, RepairRequestDjangotoNextJSSerializer, RoomDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerailizer, RequestUpdateDjangotoNextJSSerializer, RepairAssignmentDjangotoNextJSSerializer, TechnicianDjangotoNextJSSerializer, RepairAssignmentCreateSerializer
 
 from rest_framework.views import APIView
 
@@ -160,6 +159,7 @@ class StaffAssignCreateView(CreateAPIView):
 
         # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 #update-famf
 class TechnicianRepairUpdateView(CreateAPIView):
     def post(self, request):

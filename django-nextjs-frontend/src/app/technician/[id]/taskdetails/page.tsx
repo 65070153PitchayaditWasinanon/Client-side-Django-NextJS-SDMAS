@@ -145,38 +145,6 @@ export default function TechnicianIndexPage() {
             alert("เกิดข้อผิดพลาด กรุณาตรวจสอบการเชื่อมต่อ");
         }
     };
-    
-
-    const [profile, setProfile] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null);
-    useEffect(() => {
-        // 
-        async function fetchProfile() {
-            try {
-                // getProfile ดึงข้อมูลมาจาก django ใส่ data
-                const data = await getProfile();
-                console.log("Profile : ", data);
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
-                setProfile(data);
-
-            } catch (err) {
-                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-                // window.location.href = '/login';
-            }
-        }
-        fetchProfile();
-    }, []);
-
-    const logout = () => {
-        // ลบ JWT จาก localStorage
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("student_id");
-        localStorage.removeItem("technician_id");
-
-        // Redirect ไปยังหน้า login
-        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
-    };
 
     // useEffect(() => {
     //     if (profile && profile.technician_id) {

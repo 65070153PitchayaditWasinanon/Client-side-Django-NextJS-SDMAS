@@ -78,8 +78,37 @@ export default function StaffIndexPage() {
                     </div>
                 </header>
             </div>
+
+            {/* responsive */}
+            <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
+                <div className="container-fluid">
+                    <div className="row d-flex w-100 justify-content-center">
+                        <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>มอบหมายงาน</center>
+                            </a>
+                        </div>
+                        <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
+                            </a>
+                        </div>
+                        <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>จัดการช่าง</center>
+                            </a>
+                        </div>
+                        <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
             <div id="content">
-                <div className="d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
+                <div className="d-none d-lg-flex d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
                     <span className="badge bg-white text-dark" id="sidebartitleout">
                         <div className="sidebartitlefont">
                             <span id='seereportspan'>มอบหมายงาน</span>
@@ -108,7 +137,9 @@ export default function StaffIndexPage() {
                         </li>
                     </ul>
                 </div>
-                <div className="container" id="pagecon">
+
+                {/* ธรรมดา */}
+                <div className="container d-none d-md-block" id="pagecon">
                     <div className='row'>
                         {RepairRequestView.map((RepairRequestView) => (
                             <div className='col-6' key={RepairRequestView.id}>
@@ -131,6 +162,58 @@ export default function StaffIndexPage() {
                                                 </center>
                                             </div>
                                             <div className='col-7'>
+                                                <center>
+                                                    <p className='card-text-small' id='urgency-level-text'>ความเร่งด่วน : {RepairRequestView.urgency.charAt(0).toUpperCase() + RepairRequestView.urgency.slice(1)}</p>
+                                                </center>
+                                            </div>
+                                        </div>
+                                        <div className='row' id='buttonframe'>
+                                            <div className='col-6'>
+                                                <center>
+                                                    <a href={`staff/assignjob/${RepairRequestView.id}`} className="btn btn-success" id='buttonstudentviewreport'>
+                                                        มอบหมายงาน
+                                                    </a>
+                                                </center>
+                                            </div>
+                                            <div className='col-6'>
+                                                <center>
+                                                    <button type="button" className="btn btn-warning" id='buttonstudentviewreport'>
+                                                        แก้ไข
+                                                    </button>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* responsive */}
+                <div className="container d-block d-md-none" id="pagecon">
+                    <div>
+                        {RepairRequestView.map((RepairRequestView) => (
+                            <div className='col-12' key={RepairRequestView.id}>
+                                <div className="card" id='card'>
+                                    <div className="card-body">
+                                        <div className='remark-bg' id='remark-bg'>
+                                            <center>
+                                                <p className="card-text" id='remark-text'>หมายเหตุ : {RepairRequestView.description}</p>
+                                            </center>
+                                        </div>
+                                        <div className='remark-status-bg' id='remark-status-bg'>
+                                            <center>
+                                                <p className="card-text" id='remark-status-text'>สถานะ : {RepairRequestView.status.charAt(0).toUpperCase() + RepairRequestView.status.slice(1)}</p>
+                                            </center>
+                                        </div>
+                                        <div className='row'>
+                                            <div className='col-12'>
+                                                <center>
+                                                    <p className='card-text' id='room-number-text'>ห้อง : {RepairRequestView.student.room_id.room_number}</p>
+                                                </center>
+                                            </div>
+                                            <div className='col-12'>
                                                 <center>
                                                     <p className='card-text-small' id='urgency-level-text'>ความเร่งด่วน : {RepairRequestView.urgency.charAt(0).toUpperCase() + RepairRequestView.urgency.slice(1)}</p>
                                                 </center>

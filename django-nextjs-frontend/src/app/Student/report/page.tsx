@@ -307,9 +307,7 @@ export default function StudentReportPage() {
                                 <div className="col">
                                     <center>
                                         <button type="submit" className="btn btn-success" id="student1button">
-                                            <a href="/student" id="studentdenybutton" style={{ color: "white", textDecoration: "none" }}>
-                                                เสร็จสิ้น
-                                            </a>
+                                            เสร็จสิ้น
                                         </button>
                                     </center>
                                 </div>

@@ -1,6 +1,6 @@
 // app/nontakorn/page.tsx
 'use client'
-import '../[id]/staffassignjob.css';
+import '../[id]/staffeditjob.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { getProfile } from "@/utils/auth";
@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { useParams } from 'next/navigation';
 
 
-export default function StaffAssignJobPage() {
+export default function StaffEditJobPage() {
     const { id } = useParams();
 
     const [profile, setProfile] = useState<any>(null);

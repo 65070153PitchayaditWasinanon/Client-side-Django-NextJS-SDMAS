@@ -3,7 +3,6 @@
 
 import '../technician/technicianindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { useEffect, useState } from 'react';
 import { getProfile } from "@/utils/auth";
 import axios from 'axios';
@@ -117,7 +116,7 @@ export default function TechnicianIndexPage() {
                                 <span className=''>Technician ID : {profile.technician_id ?? "ไม่มีข้อมูล"}</span>
 
                                 <div>
-                                    <span >
+                                    <span>
                                         {profile.first_name} {profile.last_name}&nbsp;
                                     </span>
                                     <button type="button" className="btn btn-danger btn-sm" onClick={logout}>
@@ -145,7 +144,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>งานที่ได้รับ</center>
                             </div>
-                            
+
                         </div>
                         </a>
                         <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician-trackstatus"><div className='row'>
@@ -157,7 +156,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>อัพเดทสถานะ</center>
                             </div>
-                            
+
                         </div>
                         </a>
                     </div>
@@ -247,9 +246,18 @@ export default function TechnicianIndexPage() {
                                             </a>
                                         </div>
                                         <div className='col-3' id='clickfordetailsarea'>
-                                            <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
-                                                รับงาน
-                                            </button>
+
+                                            <a href={`technician/${RepairAssignmentView.repair_request.id}/taskdetails`}
+                                                className={`btn w-100 h-100 d-flex align-items-center justify-content-center ${RepairAssignmentView?.repair_request.urgency === "low" ? "btn-success" :
+                                                    RepairAssignmentView?.repair_request.urgency === "medium" ? "btn-warning" :
+                                                        RepairAssignmentView?.repair_request.urgency === "high" ? "btn-danger" :
+                                                            "btn-secondary" // กรณีไม่มีค่า urgency
+                                                    }`}
+                                                id='clickforaccepttaskmodalbutton'>
+                                                {RepairAssignmentView?.repair_request.urgency
+                                                    ? RepairAssignmentView.repair_request.urgency.charAt(0).toUpperCase() + RepairAssignmentView.repair_request.urgency.slice(1)
+                                                    : "Loading ..."}
+                                            </a>
                                             <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog">
                                                     <div className="modal-content">
@@ -281,16 +289,40 @@ export default function TechnicianIndexPage() {
                             <div className="card" key={request.id}>
                                 <div className="card-body">
                                     {/* <h5 className="card-title">หมายเหตุ : {request.description}</h5> */}
-                                    <h5 className="card-title" key={request.repair_request.student.room_id.room_number}>ห้อง: {request.repair_request.student.room_id.room_number}</h5>
-                                    <p className="card-text">สถานะ : {request.status}</p>
-                                    <p className="card-text" key={request.repair_request.student.room_id.floor}>ชั้น {request.repair_request.student.room_id.floor}</p>
-
-                                    <div className="d-flex justify-content-end gap-1"> {/* Bootstrap 5 */}
-                                        <a href={`technician/${request.repair_request.id}/taskdetails`}>
-                                            <button type="button" className="btn btn-warning">
-                                                รับงาน
-                                            </button>
-                                        </a>
+                                    <div className='row'>
+                                        <div className='col-6'>
+                                            <div className='row' id='padding-2-percent'>
+                                                <div className='col-2'>
+                                                    <svg width="48" height="48" className="responsive-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </div>
+                                                <div className='col-10 d-flex align-items-center justify-content-center'>
+                                                    <h5 className="card-title" key={request.repair_request.student.room_id.room_number} id='responsive-room-para'>
+                                                        {request.repair_request.student.room_id.room_number}
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div className='row' id='padding-2-percent'>
+                                                <div className='col-2'>
+                                                    <svg width="48" height="48" className="responsive-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M24 4L38 42L24 34L10 42L24 4Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </div>
+                                                <div className='col-10 d-flex align-items-center justify-content-center'>
+                                                    <p className="card-text text-center" key={request.repair_request.student.room_id.floor} id='responsive-floor-para'>ชั้น {request.repair_request.student.room_id.floor}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='col-6'>
+                                            <div className="d-flex w-100 h-100">
+                                                <a href={`technician/${request.repair_request.id}/taskdetails`}
+                                                    className="btn btn-warning w-100 h-100 d-flex align-items-center justify-content-center"
+                                                    id='responsive-button-rabyan'>
+                                                    รับงาน
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

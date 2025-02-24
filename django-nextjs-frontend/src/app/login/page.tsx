@@ -103,7 +103,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div id='content'>
+        <div id='content' className='bg-black'>
             <div className="container" id="pagecon">
                 <center>
                     <div className="card" id='login-menu'>

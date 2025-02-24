@@ -66,6 +66,19 @@ class RequestUpdateDjangotoNextJSSerializer(serializers.ModelSerializer):
         model = RepairStatusUpdate
         fields = '__all__'
 
+class UserDJangotoNextJSSerializrs(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+class TechnicianDjangotoNextJSSerializer(serializers.ModelSerializer):
+    user = UserDJangotoNextJSSerializrs()
+    class Meta:
+        model = Technician
+        fields = '__all__'
+
+
+
 class RepairAssignmentDjangotoNextJSSerailizer(serializers.ModelSerializer):
     repair_request = RepairRequestDjangotoNextJSSerializer()
     class Meta:

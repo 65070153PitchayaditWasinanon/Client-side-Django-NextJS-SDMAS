@@ -282,3 +282,12 @@ body {
     color: white;
     padding: 3% 6% 3% 6%;
 }
+
+#response-navlinksidebar {
+    font-family: 'Mitr-Medium', sans-serif;
+    font-weight: 200;
+    font-size: 70%;
+    background-color: rgba(50, 50, 50, 0.05);
+    border-radius: 32px;
+    padding: 2% 2% ;
+}

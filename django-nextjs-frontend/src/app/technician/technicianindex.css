@@ -187,6 +187,13 @@ nav .col {
     background-color: rgba(13, 13, 13, 0.725);
 }
 
+#urgency-level-tag-a {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    justify-content: center;
+}
+
 #roompara {
     font-family: 'Nunito', sans-serif;
     font-weight: 200;
@@ -312,4 +319,35 @@ nav .col {
     font-family: 'Mitr-Medium', sans-serif;
     font-weight: 200;
     font-size: 80%;
+}
+
+#responsive-room-para {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+
+    justify-content: center;
+    align-items: center;
+}
+
+#padding-2-percent {
+    padding: 0% 0% 5% 0%;
+}
+
+#responsive-floor-para {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+
+    justify-content: center;
+    align-items: center;
+}
+
+#responsive-button-rabyan {
+    font-family: 'Mitr-Light', sans-serif;
+    font-weight: 200;
+    font-size: 200%;
+    color: white;
+    width: 100%;
+    height: 100%;
 }
