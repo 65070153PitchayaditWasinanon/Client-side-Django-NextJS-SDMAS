@@ -1,27 +1,23 @@
-// app/nontakorn/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react';
-import '../taskdetails/technicianviewtask.css';
+import '../taskdetails/technicianviewtask2.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import { login} from "@/utils/auth";
 import { getProfile } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 
 
 
-export default function TechnicianIndexPage() {
+export default function TechnicianIDPage() {
     const { id } = useParams();
-
     const [repairRequest, setRepairRequest] = useState(null);
     const [error, setError] = useState<string | null>(null);
     const [profile, setProfile] = useState<any>(null);
     const router = useRouter();
-    //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
-        
+
         repair_request: "",
         technician: [],
         status: "assigned",
@@ -29,54 +25,43 @@ export default function TechnicianIndexPage() {
     });
 
     useEffect(() => {
-            // 
-            async function fetchProfile() {
-                try {
-                    // getProfile ดึงข้อมูลมาจาก django ใส่ data
-                    const data = await getProfile();
-                    //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
-                    setProfile(data);
-                    // setFormData((prevFormData) => ({
-                    //     ...prevFormData,
-                    //     technician: data.technician_id ? [data.technician_id] : [],  // ตั้งค่า student_id เมื่อข้อมูลโปรไฟล์โหลดแล้ว
-                    // }));
-                    if (data?.technician_id) {
-                        setFormData((prevFormData) => ({
-                            ...prevFormData,
-                            technician: [data.technician_id],  // เซ็ตเป็น array ตาม Django
-                        }));
-                    }
-                    
-    
-                } catch (err) {
-                    setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
-                    console.error("Error fetching profile:", err);
-                    window.location.href = '/login';
+        async function fetchProfile() {
+            try {
+                const data = await getProfile();
+                setProfile(data);
+                if (data?.technician_id) {
+                    setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        technician: [data.technician_id],
+                    }));
                 }
+
+
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+                console.error("Error fetching profile:", err);
+                window.location.href = '/login';
             }
-            fetchProfile();
-        }, []);
-    
-        const logout = () => {
-            // ลบ JWT จาก localStorage
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("student_id");
-            localStorage.removeItem("technician_id");
-    
-            // Redirect ไปยังหน้า login
-            window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
-        };
+        }
+        fetchProfile();
+    }, []);
+
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+        window.location.href = '/login';  
+    };
 
     useEffect(() => {
-        // เช็คว่า id มีค่าอยู่หรือไม่
         if (id) {
             setFormData((prevData) => ({
                 ...prevData,
-                repair_request: id, // ตั้งค่า repair_request เป็น string จาก query params
+                repair_request: id, 
             }));
         }
-    }, [id]);  // คอยตรวจสอบการเปลี่ยนแปลงของ id
+    }, [id]);  
 
     useEffect(() => {
         if (repairRequest) {
@@ -103,35 +88,32 @@ export default function TechnicianIndexPage() {
         }
     }, [id]);
 
-    // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
-    // ดึงค่าและ อัพเดทค่า
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-   
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+
         if (!profile?.technician_id) {
             alert("ไม่พบ technician_id");
             return;
         }
-    
+
         const requestData = {
             ...formData,
-            technician: [profile.technician_id],  // ใช้ technician_id จาก profile
+            technician: [profile.technician_id],
         };
-    
-        console.log(" ส่งข้อมูล:", requestData); // Debug ดูค่าที่จะส่งจริงๆ
-    
+
+        console.log(" ส่งข้อมูล:", requestData);
+
         try {
             const response = await fetch("http://localhost:8080/api/technician-requests/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestData),
             });
-    
+
             if (response.ok) {
                 alert("ส่งคำร้องขอซ่อมแล้ว!");
                 router.push("/technician");
@@ -146,23 +128,9 @@ export default function TechnicianIndexPage() {
         }
     };
 
-    // useEffect(() => {
-    //     if (profile && profile.technician_id) {
-    //         const fetchRepairAssignments = async () => {
-    //             try {
-    //                 const response = await axios.get(`http://localhost:8080/api/repair-assignment-filter/${profile.technician_id}/`);
-    //                 setRepairAssignment(response.data);  // ถ้ามีข้อมูล จะใส่ใน array
-    //                 console.log("Repair Assignments:", response.data);
-    //             } catch (error) {
-    //                 console.error("Error fetching repair assignments:", error);
-    //             }
-    //         };
-    //         fetchRepairAssignments();
-    //     }
-    // }, [profile]);
 
     useEffect(() => {
-        require('bootstrap/dist/js/bootstrap.bundle.min.js'); //required อันที่ต้องใช้ bundle + Popper.js มาให้แล้ว เพื่อให้ฝั่ง client ใช้ได้ (ปล. อันทำเพื่อให้ใช้ modal ได้)
+        require('bootstrap/dist/js/bootstrap.bundle.min.js'); 
     }, []);
     return (
         <>
@@ -227,12 +195,11 @@ export default function TechnicianIndexPage() {
                 </header>
             </div>
 
-
             {/* responsive */}
             <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
                     <div className="navbar-nav d-flex flex-row gap-3 w-100 justify-content-center">
-                        <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician"><div className='row'>
+                        <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician" ><div className='row'>
                             <div className='col-3'>
                                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M44 12C44 9.8 42.2 8 40 8H8C5.8 8 4 9.8 4 12M44 12V36C44 38.2 42.2 40 40 40H8C5.8 40 4 38.2 4 36V12M44 12L24 26L4 12" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -241,7 +208,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>งานที่ได้รับ</center>
                             </div>
-                            
+
                         </div>
                         </a>
                         <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician-trackstatus"><div className='row'>
@@ -253,7 +220,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>อัพเดทสถานะ</center>
                             </div>
-                            
+
                         </div>
                         </a>
                     </div>
@@ -371,82 +338,84 @@ export default function TechnicianIndexPage() {
 
                 {/* Responsive */}
                 <div className="container d-block d-md-none" id="pagecon">
-                    <nav style={{ "--bs-breadcrumb-divider": "'>'" } as React.CSSProperties} aria-label="breadcrumb" id='breadcrumb'>
-                        <ol className="breadcrumb ">
-                            <li className="breadcrumb-item ">
-                                <a href="/technician" id='breadcrumb-link' className="fs-6">งานที่ได้รับ</a>
+                    <nav style={{ "--bs-breadcrumb-divider": "'>'" }} aria-label="breadcrumb" id="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item">
+                                <a href="/technician" id="breadcrumb-link" className="fs-6">งานที่ได้รับ</a>
                             </li>
-                            <li className="breadcrumb-item active fs-6" aria-current="page" id='breadcrumb-link'>
+                            <li className="breadcrumb-item active fs-6" aria-current="page" id="breadcrumb-link">
                                 รายละเอียดและสถานะ
                             </li>
                         </ol>
                     </nav>
-                    <div id='taskdetailarea'>
+
+                    <div id="taskdetailarea" className="py-3">
                         <form onSubmit={handleSubmit}>
-                            <div id='formshow'>
-                                <div>
-                                    <p id='remarkletter' className='fs-6'>หมายเหตุ :</p>
-                                </div>
-                                <div>
-                                    <input
-                                        type="text"
-                                        name="remarks"
-                                        className="form-control fs-6"
-                                        value={formData.remarks}
-                                        onChange={handleChange}
-                                        id='remarks-show'
-                                        readOnly
-                                        required>
-                                    </input>
-                                </div>
+                            <div id="formshow" className="mb-3">
+                                <label htmlFor="remarks" className="fs-6">หมายเหตุ :</label>
+                                <input
+                                    type="text"
+                                    name="remarks"
+                                    className="form-control fs-6"
+                                    value={formData.remarks}
+                                    onChange={handleChange}
+                                    id="remarks-show"
+                                    readOnly
+                                    required
+                                />
                             </div>
-                            <div id='formshow'>
-                                <div>
-                                    <p id='remarkletter' className='fs-6'>สถานะ :</p>
-                                </div>
-                                <div>
-                                    <input
-                                        readOnly
-                                        type="text"
-                                        name="status"
-                                        className="form-control fs-6"
-                                        value={formData.status.charAt(0).toUpperCase() + formData.status.slice(1).toLowerCase()}
-                                        onChange={handleChange}
-                                        id='status-show'
-                                        required>
-                                    </input>
-                                </div>
+
+                            <div id="formshow" className="mb-3">
+                                <label htmlFor="status" className="fs-6">สถานะ :</label>
+                                <input
+                                    readOnly
+                                    type="text"
+                                    name="status"
+                                    className="form-control fs-6"
+                                    value={formData.status.charAt(0).toUpperCase() + formData.status.slice(1).toLowerCase()}
+                                    onChange={handleChange}
+                                    id="status-show"
+                                    required
+                                />
                             </div>
-                            <div id='formbuttonsubmittask'>
-                                <center>
-                                    <button type="button" className="btn btn-warning fs-6" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        รับงาน
-                                    </button>
-                                    <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div className="modal-dialog">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h1>
-                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div id='footermodal'>
-                                                    <div className='row'>
-                                                        <div className='col'>
-                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter'>รับงาน</button>
-                                                        </div>
-                                                        <div className='col'>
-                                                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" id='modalbuttonletter'>ยกเลิก</button>
-                                                        </div>
+
+                            <div id="formbuttonsubmittask" className="text-center mt-4">
+                                <button
+                                    type="button"
+                                    className="btn btn-warning fs-6 px-4 py-2"
+                                    id="buttonforsubmittask"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                >
+                                    รับงาน
+                                </button>
+
+                                {/* Modal */}
+                                <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div className="modal-dialog">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h5>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div id="footermodal">
+                                                <div className="row">
+                                                    <div className="col">
+                                                        <button type="submit" className="btn btn-success w-100">รับงาน</button>
+                                                    </div>
+                                                    <div className="col">
+                                                        <button type="button" className="btn btn-danger w-100" data-bs-dismiss="modal">ยกเลิก</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </center>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
+
             </div>
         </>
     );

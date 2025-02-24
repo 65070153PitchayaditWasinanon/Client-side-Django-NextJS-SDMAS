@@ -177,15 +177,26 @@ class TechnicianRepairUpdateView(CreateAPIView):
         #     return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
 
         repairstatusupdate = get_object_or_404(RepairStatusUpdate, id=repair_update_id)
+        repairassignment = get_object_or_404(RepairAssignment, repair_request__id = repairstatusupdate.repair_request.id)
         repairrequest = get_object_or_404(RepairRequest, id=repairstatusupdate.repair_request.id)
 
 
-        if status1 == "completed":
+        if status1.lower() == "completed":
+            if repairassignment:
+                repairassignment.technician.clear()  # ลบ Technician ที่เชื่อมอยู่
+                repairassignment.delete()  # ลบ RepairAssignment เอง
             repairstatusupdate.delete()
             repairrequest.delete()
         else:
             repairstatusupdate.status = status1
             repairstatusupdate.save()
+    
+            repairrequest.status = status1
+            repairrequest.save()
+
+            if repairassignment:
+                repairassignment.status = status1  # ต้องแน่ใจว่า RepairAssignment มี status จริงๆ
+                repairassignment.save()
         # try:
         #     repairstatusupdate.status = status
             

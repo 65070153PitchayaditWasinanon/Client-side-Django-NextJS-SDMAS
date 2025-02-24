@@ -1,6 +1,4 @@
-// app/nontakorn/page.tsx
 'use client'
-
 import '../technician/technicianindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
@@ -16,9 +14,7 @@ export default function TechnicianIndexPage() {
         try {
             const token = localStorage.getItem("accessToken");
             console.log("Token ที่ใช้:", token); // ตรวจสอบ token
-
             if (!token) throw new Error("No token found");
-
             const response = await axios.get(
                 `http://localhost:8080/api/requests-asignment-views/?technician_id=${technician_id}`,
                 {
@@ -35,18 +31,13 @@ export default function TechnicianIndexPage() {
     };
 
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
-                // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
-
                 if (data?.technician_id) {
-                    fetchRepairAssignment(data.technician_id); // เรียก API ด้วย student_id
+                    fetchRepairAssignment(data.technician_id);
                 }
-
             } catch (err) {
                 setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
                 window.location.href = '/login';
@@ -56,20 +47,15 @@ export default function TechnicianIndexPage() {
     }, []);
 
     const logout = () => {
-        // ลบ JWT จาก localStorage
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-
-        // Redirect ไปยังหน้า login
-        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+        window.location.href = '/login';
     };
-
 
     return (
         <>
-
             {/* ธรรมดา */}
             <div id="nav" className="d-none d-md-block">
                 <header>
@@ -144,7 +130,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>งานที่ได้รับ</center>
                             </div>
-
+                            
                         </div>
                         </a>
                         <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician-trackstatus"><div className='row'>
@@ -156,7 +142,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>อัพเดทสถานะ</center>
                             </div>
-
+                            
                         </div>
                         </a>
                     </div>
@@ -164,7 +150,6 @@ export default function TechnicianIndexPage() {
             </nav>
 
             <div id="content">
-
                 {/* ธรรมดา */}
                 <div className="d-none d-lg-flex d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
                     <span className="badge bg-white text-dark" id="sidebartitleout">
@@ -283,51 +268,29 @@ export default function TechnicianIndexPage() {
 
                 {/* responsive */}
                 <div className="container d-block d-md-none" id="pagecon">
-                    <div>
-
+                    <div className="d-flex flex-column align-items-center gap-4">
                         {RepairAssignmentView.map((request) => (
-                            <div className="card" key={request.id}>
+                            <div
+                                className="card shadow-lg border-0 rounded-4 p-4 w-100"
+                                key={request.id}
+                                style={{ maxWidth: "420px", backgroundColor: "#ffffff" }}
+                            >
                                 <div className="card-body">
                                     {/* <h5 className="card-title">หมายเหตุ : {request.description}</h5> */}
-                                    <div className='row'>
-                                        <div className='col-6'>
-                                            <div className='row' id='padding-2-percent'>
-                                                <div className='col-2'>
-                                                    <svg width="48" height="48" className="responsive-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                                    </svg>
-                                                </div>
-                                                <div className='col-10 d-flex align-items-center justify-content-center'>
-                                                    <h5 className="card-title" key={request.repair_request.student.room_id.room_number} id='responsive-room-para'>
-                                                        {request.repair_request.student.room_id.room_number}
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                            <div className='row' id='padding-2-percent'>
-                                                <div className='col-2'>
-                                                    <svg width="48" height="48" className="responsive-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M24 4L38 42L24 34L10 42L24 4Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                                    </svg>
-                                                </div>
-                                                <div className='col-10 d-flex align-items-center justify-content-center'>
-                                                    <p className="card-text text-center" key={request.repair_request.student.room_id.floor} id='responsive-floor-para'>ชั้น {request.repair_request.student.room_id.floor}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='col-6'>
-                                            <div className="d-flex w-100 h-100">
-                                                <a href={`technician/${request.repair_request.id}/taskdetails`}
-                                                    className="btn btn-warning w-100 h-100 d-flex align-items-center justify-content-center"
-                                                    id='responsive-button-rabyan'>
-                                                    รับงาน
-                                                </a>
-                                            </div>
-                                        </div>
+                                    <h5 className="card-title" key={request.repair_request.student.room_id.room_number}>ห้อง: {request.repair_request.student.room_id.room_number}</h5>
+                                    <p className="card-text">สถานะ : {request.status}</p>
+                                    <p className="card-text" key={request.repair_request.student.room_id.floor}>ชั้น {request.repair_request.student.room_id.floor}</p>
+
+                                    <div className="d-flex justify-content-end gap-1"> {/* Bootstrap 5 */}
+                                        <a href={`technician/${request.repair_request.id}/taskdetails`}>
+                                            <button type="button" className="btn btn-warning">
+                                                รับงาน
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         ))}
-
                     </div>
                 </div>
             </div>

@@ -236,6 +236,13 @@ nav .col {
     padding: 2% 2% ;
 }
 
+#navprofile {
+    font-family: 'Mitr-Medium', sans-serif;
+    background-color: rgba(231, 231, 231, 0.05);
+    border-radius: 32px;
+    padding: 2% 2% ;
+}
+
 #linavlink {
     margin: 5%;
 }
@@ -283,3 +290,17 @@ nav .col {
     font-weight: 200;
     
 }
+
+.nav-link {
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+  
+  .nav-link:active {
+    transform: scale(0.9);
+  }
+  
+  .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  

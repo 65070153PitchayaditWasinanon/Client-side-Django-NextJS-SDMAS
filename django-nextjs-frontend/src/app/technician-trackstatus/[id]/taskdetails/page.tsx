@@ -6,7 +6,6 @@ import '../taskdetails/technicianviewtask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import { login } from "@/utils/auth";
 import { getProfile } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +18,6 @@ export default function TechnicianIndexPage() {
     const [error, setError] = useState<string | null>(null);
     const [profile, setProfile] = useState<any>(null);
     const router = useRouter();
-    //สร้างตัวแปรมาเก็บค่า และตั้งค่าเริ่มต้น
     const [formData, setFormData] = useState({
 
         id: "",
@@ -30,17 +28,10 @@ export default function TechnicianIndexPage() {
     });
 
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
-                // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
-                // setFormData((prevFormData) => ({
-                //     ...prevFormData,
-                //     technician: data.technician_id ? [data.technician_id] : [],  // ตั้งค่า student_id เมื่อข้อมูลโปรไฟล์โหลดแล้ว
-                // }));
                 if (data?.technician_id) {
                     setFormData((prevFormData) => ({
                         ...prevFormData,
@@ -59,25 +50,12 @@ export default function TechnicianIndexPage() {
     }, []);
 
     const logout = () => {
-        // ลบ JWT จาก localStorage
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-
-        // Redirect ไปยังหน้า login
-        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+        window.location.href = '/login';  
     };
-
-    // useEffect(() => {
-    //     // เช็คว่า id มีค่าอยู่หรือไม่
-    //     if (id) {
-    //         setFormData((prevData) => ({
-    //             ...prevData,
-    //             repair_request: id, // ตั้งค่า repair_request เป็น string จาก query params
-    //         }));
-    //     }
-    // }, [id]);  // คอยตรวจสอบการเปลี่ยนแปลงของ id
 
     useEffect(() => {
         if (RepairUpdate) {
@@ -106,9 +84,6 @@ export default function TechnicianIndexPage() {
             fetchRepairUpdate();
         }
     }, [id]);
-
-    // ใช้กับ <input> และ <select> ดึงค่า name และ value จากช่องที่ผู้ใช้กรอก อัปเดต formData ให้มีค่าตามที่ผู้ใช้พิมพ์
-    // ดึงค่าและ อัพเดทค่า
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -123,10 +98,10 @@ export default function TechnicianIndexPage() {
 
         const requestData = {
             ...formData,
-            technician: [profile.technician_id],  // ใช้ technician_id จาก profile
+            technician: [profile.technician_id],  
         };
 
-        console.log(" ส่งข้อมูล:", requestData); // Debug ดูค่าที่จะส่งจริงๆ
+        console.log(" ส่งข้อมูล:", requestData); 
 
         try {
             const response = await fetch("http://localhost:8080/api/technician-repair-update/", {
@@ -136,7 +111,6 @@ export default function TechnicianIndexPage() {
             });
 
             if (response.ok) {
-                // alert("ส่งคำร้องขอซ่อมแล้ว!");
                 router.push("/technician");
             } else {
                 const errorData = await response.json();
@@ -151,11 +125,10 @@ export default function TechnicianIndexPage() {
 
 
     useEffect(() => {
-        require('bootstrap/dist/js/bootstrap.bundle.min.js'); //required อันที่ต้องใช้ bundle + Popper.js มาให้แล้ว เพื่อให้ฝั่ง client ใช้ได้ (ปล. อันทำเพื่อให้ใช้ modal ได้)
+        require('bootstrap/dist/js/bootstrap.bundle.min.js'); 
     }, []);
     return (
         <>
-
             {/* ธรรมดา */}
             <div id="nav" className="d-none d-md-block">
                 <header>
@@ -305,10 +278,10 @@ export default function TechnicianIndexPage() {
                                     <select
                                         name="status"
                                         className="form-select"
-                                        value={formData.status} // ถ้า status ว่าง ให้ค่าเริ่มต้นเป็น "reported"
+                                        value={formData.status} 
                                         onChange={handleChange}
                                     >
-                                        {/* <option value="">{RepairUpdate.status}</option> */}
+                                        
                                         <option value="assigned">Assigned</option>
                                         <option value="in_progress">In Progress</option>
                                         <option value="completed">Completed</option>
@@ -385,10 +358,9 @@ export default function TechnicianIndexPage() {
                                 <select
                                         name="status"
                                         className="form-select"
-                                        value={formData.status} // ถ้า status ว่าง ให้ค่าเริ่มต้นเป็น "reported"
+                                        value={formData.status} 
                                         onChange={handleChange}
                                     >
-                                        {/* <option value="">{RepairUpdate.status}</option> */}
                                         <option value="assigned">Assigned</option>
                                         <option value="in_progress">In Progress</option>
                                         <option value="completed">Completed</option>

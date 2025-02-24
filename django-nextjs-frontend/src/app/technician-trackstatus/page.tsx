@@ -1,14 +1,13 @@
-// app/nontakorn/page.tsx
 'use client'
 
-import '../technician/technicianindex.css';
+import '../technician-trackstatus/techniciantrackstatus.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useEffect, useState } from 'react';
 import { getProfile } from "@/utils/auth";
 import axios from 'axios';
 
-export default function TechnicianIndexPage() {
+export default function TechnicianTrackstatusPage() {
     const [RepairStatusUpdateView, setRepairStatusUpdate] = useState([]);
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
@@ -28,9 +27,6 @@ export default function TechnicianIndexPage() {
                     }
                 }
             );
-            // กำหนดว่าต้องเป็น Reported เท่านั้น
-            // const filteredData = response.data.filter((request: any) => request.status === "Reported"); // กรองเฉพาะ status = "reported"
-            // setRepairRequest(filteredData);
             setRepairStatusUpdate(response.data);
         } catch (err) {
             console.error("Error fetching repair requests:", err);
@@ -38,16 +34,13 @@ export default function TechnicianIndexPage() {
     };
 
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
-                // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
                 setProfile(data);
 
                 if (data?.technician_id) {
-                    fetchRepairStatusUpdate(data.technician_id); // เรียก API ด้วย student_id
+                    fetchRepairStatusUpdate(data.technician_id); 
                 }
 
             } catch (err) {
@@ -59,14 +52,11 @@ export default function TechnicianIndexPage() {
     }, []);
 
     const logout = () => {
-        // ลบ JWT จาก localStorage
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-
-        // Redirect ไปยังหน้า login
-        window.location.href = '/login';  // หรือหน้าอื่นๆ ตามต้องการ
+        window.location.href = '/login';  
     };
 
 
@@ -265,29 +255,31 @@ export default function TechnicianIndexPage() {
                 </div>
                 {/* responsive */}
                 <div className="container d-block d-md-none" id="pagecon">
-                    <div>
-
+                    <div className="d-flex flex-column align-items-center gap-3" style={{ overflowY: "auto", maxHeight: "80vh" }}>
                         {RepairStatusUpdateView.map((request) => (
-                            <div className="card" key={request.id}>
+                            <div
+                                className="card shadow-sm border-0 rounded-4 p-3 w-100"
+                                key={request.id}
+                                style={{ maxWidth: "400px", backgroundColor: "#f8f9fa" }}
+                            >
                                 <div className="card-body">
-                                    {/* <h5 className="card-title">หมายเหตุ : {request.description}</h5> */}
-                                    <h5 className="card-title" key={request.repair_request.student.room_id.room_number}>ห้อง: {request.repair_request.student.room_id.room_number} </h5> 
-                                    <p className="card-text">สถานะ : {request.status}</p>
-                                    <p className="card-text" key={request.repair_request.student.room_id.floor}>ชั้น {request.repair_request.student.room_id.floor}</p>
+                                    <h5 className="card-title fw-bold text-dark">ห้อง: {request.repair_request.student.room_id.room_number}</h5>
+                                    <p className="card-text text-muted">สถานะ: <span className="badge bg-info text-dark">{request.status}</span></p>
+                                    <p className="card-text text-muted">ชั้น: {request.repair_request.student.room_id.floor}</p>
 
-                                    <div className="d-flex justify-content-end gap-1"> {/* Bootstrap 5 */}
+                                    <div className="d-flex justify-content-end gap-1">
                                         <a href={`technician-trackstatus/${request.id}/taskdetails`}>
-                                                <button type="button" className="btn btn-warning">
-                                                    รับงาน
-                                                </button>
-                                            </a>
+                                            <button type="button" className="btn btn-warning fs-6 px-4 py-2" style={{color: "#fff" }}>
+                                                อัพเดพสถานะ
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         ))}
-
                     </div>
                 </div>
+
             </div>
         </>
     );

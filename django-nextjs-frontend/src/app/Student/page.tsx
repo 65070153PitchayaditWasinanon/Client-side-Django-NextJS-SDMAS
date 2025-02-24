@@ -4,6 +4,7 @@ import './studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import axios from 'axios';
 
 export default function StudentIndexPage() {
@@ -143,7 +144,7 @@ export default function StudentIndexPage() {
             <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
                     <div className="navbar-nav d-flex flex-row gap-3 w-100 justify-content-center">
-                        <a className="nav-link active" id='navlinksidebar2' aria-current="page" href="/student"><div className='row'>
+                        <motion.a className="nav-link active" id='navlinksidebar2' aria-current="page" href="/student" whileTap={{ scale: 0.9 }} whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}><div className='row'>
                             <div className='col-3'>
                                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M44 12C44 9.8 42.2 8 40 8H8C5.8 8 4 9.8 4 12M44 12V36C44 38.2 42.2 40 40 40H8C5.8 40 4 38.2 4 36V12M44 12L24 26L4 12" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -153,7 +154,7 @@ export default function StudentIndexPage() {
                                 <center id='sidebarlinkmenu2'>ปัญหาที่ส่ง</center>
                             </div>
                         </div>
-                        </a>
+                        </motion.a>
                         <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/student/report"><div className='row'>
                             <div className='col-3'>
                                 <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -178,7 +179,7 @@ export default function StudentIndexPage() {
                 </div>
             </nav>
 
-            
+
             <div id="content">
                 {/* ธรรมดา */}
                 <div className="d-none d-lg-flex d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
@@ -273,30 +274,38 @@ export default function StudentIndexPage() {
 
                 {/* responsive */}
                 <div className="container d-block d-md-none" id="pagecon">
-                    <div>
-                        <center>
-                            {RepairRequestView.map((request) => (
-                                <div className="card" key={request.id}>
-                                    <div className="card-body">
-                                        <h5 className="card-title">หมายเหตุ : {request.description}</h5>
-                                        <p className="card-text">สถานะ : {request.status}</p>
+                    <div className="d-flex flex-column align-items-center gap-3">
+                        {RepairRequestView.map((request) => (
+                            <div
+                                className="card shadow-sm border-0 rounded-4 p-3 w-100"
+                                key={request.id}
+                                style={{ maxWidth: "400px", backgroundColor: "#f8f9fa" }}
+                            >
+                                <div className="card-body" >
+                                    <h5 className="card-title fw-bold text-dark" >หมายเหตุ : {request.description}</h5>
+                                    <p className="card-text text-muted">สถานะ : <span className="badge bg-info text-dark" >{request.status}</span></p>
 
-                                        <div className="d-flex justify-content-end gap-1"> {/* Bootstrap 5 */}
-                                            <a href={`student/${request.id}/taskdetails`}>
-                                                <button type="button" className="btn btn-warning">
-                                                    แก้ไข
-                                                </button>
-                                            </a>
-                                            <button type="button" className="btn btn-danger" onClick={() => handleDelete(request.id)}>
-                                                ลบ
+                                    <div className="d-flex justify-content-end gap-2">
+                                        <a href={`student/${request.id}/taskdetails`} className="text-decoration-none">
+                                            <button type="button" className="btn rounded-3 px-4 shadow-sm" style={{ backgroundColor: "#ffe45c", color: "#fff" }}>
+                                                แก้ไข
                                             </button>
-                                        </div>
+                                        </a>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger rounded-3 px-4 shadow-sm"
+                                            
+                                            onClick={() => handleDelete(request.id)}
+                                        >
+                                            ลบ
+                                        </button>
                                     </div>
                                 </div>
-                            ))}
-                        </center>
+                            </div>
+                        ))}
                     </div>
                 </div>
+
             </div>
         </>
     );

@@ -30,12 +30,6 @@ const RegisterPage = () => {
         fetchRoom();
     }, []);
 
-
-    // useEffect(() => {
-    //     // Check if the router is ready
-    //     if (!router.isReady) return;
-    // }, [router]);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
