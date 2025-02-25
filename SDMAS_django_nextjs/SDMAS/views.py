@@ -30,7 +30,7 @@ from django.contrib.auth.models import User  # หรือโมเดลผู
 from rest_framework.exceptions import ValidationError
 
 
-# fam
+# famnew
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]  # ต้องผ่านการยืนยันตัวตน (authentication)
 
@@ -54,7 +54,7 @@ class ProfileView(APIView):
 
         return Response(profile_data, status=status.HTTP_200_OK)
 
-
+#famnew
 class RepairRequestCreateView(CreateAPIView):
     queryset = RepairRequest.objects.all()  # กำหนด queryset ที่จะใช้
     # ใช้เพื่อระบุว่าเราจะใช้ serializer อะไรในการแปลงข้อมูลจาก JSON ที่ส่งมาจาก client (ในที่นี้คือ React หรือ Postman) ให้เป็น Python object หรือจะใช้ในการแปลง Python object ไปเป็น JSON ที่จะตอบกลับ
@@ -902,7 +902,7 @@ class StaffAddRoomView(LoginRequiredMixin, PermissionRequiredMixin, View):
 #         except Student.DoesNotExist:
 #             return Response({"error": "Student not found"}, status=404)
 
-
+#famnew
 class RepairRequestListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -933,7 +933,7 @@ class RepairRequestListView(APIView):
         repair_request.delete()
         return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
     
-#fam
+#famnew
 class RepairUpdateListView(APIView):
     # permission_classes = [IsAuthenticated]
 
@@ -971,7 +971,7 @@ class RepairUpdateListView(APIView):
         except RepairRequest.DoesNotExist:
             return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
 
-# fam
+# famnew
 class StudentTrackstatusView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -991,7 +991,7 @@ class StudentTrackstatusView(APIView):
         except Student.DoesNotExist:
             return Response({"error": "Student not found"}, status=404)
 
-#fam     
+#famnew
 class RepairAssignmentView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -1008,7 +1008,8 @@ class RepairAssignmentView(APIView):
             return Response(serializer.data)
         except Student.DoesNotExist:
             return Response({"error": "Student not found"}, status=404)
-        
+
+#famnew 
 class RepairStatusUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -1041,15 +1042,18 @@ class RepairStatusUpdateView(APIView):
     #     repair_request.delete()
     #     return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
+#famnew
 class RepairRequestFilteredbyIDView(APIView):
     def get(self, request, id):
         try:
             repair_request = RepairRequest.objects.get(id=id)
+            
             serializer = RepairRequestDjangotoNextJSSerializer(repair_request)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except RepairRequest.DoesNotExist:
             return Response({"error": "Repair request not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
+#famnew 
 class RepairRequestEditFilteredbyIDView(APIView):
     def post(self, request):
         repair_request_id = request.data.get('repair_request_id')
@@ -1083,6 +1087,7 @@ class RepairRequestEditFilteredbyIDView(APIView):
             "urgency": urgency,
             "repair_appointment_time": repair_appointment_time,
         }, status=status.HTTP_200_OK)
+
 
 class RepairASsignmentFilterbyIDTechnicianView(APIView):
     def get(self, request, id):

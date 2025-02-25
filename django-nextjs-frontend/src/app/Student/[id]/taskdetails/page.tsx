@@ -116,7 +116,7 @@ export default function StudentReportPage() {
     
             if (response.ok) {
                 alert("ส่งคำร้องขอแก้ไขการซ่อมแล้ว!");
-                await fetchRepairRequest(); // ✅ ดึงข้อมูลใหม่ให้แน่ใจว่า UI อัปเดต
+                await fetchRepairRequest(); // ดึงข้อมูลใหม่ให้แน่ใจว่า UI อัปเดต
             } else {
                 alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
             }

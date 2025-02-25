@@ -8,8 +8,6 @@ import axios from 'axios';
 import { getProfile } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 
-
-
 export default function TechnicianIDPage() {
     const { id } = useParams();
     const [repairRequest, setRepairRequest] = useState(null);

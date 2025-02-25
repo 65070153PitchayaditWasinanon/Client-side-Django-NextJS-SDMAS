@@ -75,10 +75,6 @@ urlpatterns = [
     #famnew
     path('api/repair-status-update-views/', views.RepairStatusUpdateView.as_view(), name='repair-status-update-views'),
 
-    
-
-    # path('api/repair-requests-views/', views.RepairRequestListView.as_view(), name='repair-request-view'),
-
     #famnew
     path('api/repair-requests/<int:id>/', views.RepairRequestFilteredbyIDView.as_view(), name='repair_request_detail'),
 
@@ -87,11 +83,13 @@ urlpatterns = [
 
     path('api/repair-assignment-filter/<int:id>/', views.RepairASsignmentFilterbyIDTechnicianView.as_view(), name='repair_assignment_filter_by_techinician_id'),
     
+    #famnew
     path('api/technician-requests/', views.TechnicianRequestCreateView.as_view(), name='technician-request-create'),
 
     #famnew
     path('api/technician-repair-update/', views.TechnicianRepairUpdateView.as_view(), name='technician-repair-updateView'),
 
+    #famnew
     path('api/profile/', views.ProfileView.as_view(), name='profile'),
 
     # fam
