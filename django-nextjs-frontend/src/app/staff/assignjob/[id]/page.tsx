@@ -9,32 +9,31 @@ import { useParams } from 'next/navigation';
 
 
 export default function StaffAssignJobPage() {
-    const { id } = useParams();
+    const { id } = useParams(); //การดึง id มาจาก URL
 
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
-                // getProfile ดึงข้อมูลมาจาก django ใส่ data
+                // getProfile ดึงข้อมูลมาจาก Django ใส่ Data
                 const data = await getProfile();
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล Data ที่ได้มาจาก getProfile 
                 setProfile(data);
 
             } catch (err) {
-                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้");
+                setError("ไม่สามารถดึงข้อมูลโปรไฟล์ได้"); //ถ้า error จะขึ้นเตือน
             }
         }
         fetchProfile();
     }, []);
 
-    const [technicians, setTechnicians] = useState<any>([]);
+    const [technicians, setTechnicians] = useState<any>([]); //ของ Technician
 
     useEffect(() => {
         const fetchTechnicians = async () => {
             try {
-                const token = localStorage.getItem("accessToken");
+                const token = localStorage.getItem("accessToken"); // Get Token มาเพื่อส่งคำขอ
 
                 if (!token) throw new Error("No token found");
                 const response = await axios.get('http://localhost:8080/api/staff/technician/'
@@ -43,8 +42,7 @@ export default function StaffAssignJobPage() {
                             Authorization: `Bearer ${token}` // ใส่ Token ด้วย
                         }
                     });
-                setTechnicians(response.data);
-                console.log("Technician : " + response.data)
+                setTechnicians(response.data); // Set ค่าในตัวแปร technicians
             } catch (error) {
                 console.error("Error fetching technicians", error);
             }
@@ -53,7 +51,7 @@ export default function StaffAssignJobPage() {
         fetchTechnicians();
     }, []);
 
-    const [repairRequest, setRepairRequest] = useState(null);
+    const [repairRequest, setRepairRequest] = useState(null); //ของ RepairRequest
 
     useEffect(() => {
         if (id) {
@@ -61,7 +59,6 @@ export default function StaffAssignJobPage() {
                 try {
                     const response = await axios.get(`http://localhost:8080/api/repair-requests-staff/${id}/`);
                     setRepairRequest(response.data);
-                    console.log("formData :", JSON.stringify(formData, null, 2));
                 } catch (error) {
                     console.error('Error fetching repair request:', error);
                 }
@@ -91,8 +88,6 @@ export default function StaffAssignJobPage() {
             return;
         }
 
-
-
         const response = await fetch("http://localhost:8080/api/staff-create-repairassignment/", {
             method: "POST",
             headers: {
@@ -103,7 +98,7 @@ export default function StaffAssignJobPage() {
         });
 
         if (response.ok) {
-            alert("ส่งคำร้องขอซ่อมแล้ว!");
+            // alert("ส่งคำร้องขอซ่อมแล้ว!");
         } else {
             const errorData = await response.json();
             console.error("API error:", errorData);
@@ -111,7 +106,6 @@ export default function StaffAssignJobPage() {
         }
 
         const responseData = await response.json();
-        console.log("Response data:", responseData);
     };
 
     useEffect(() => {
@@ -147,8 +141,37 @@ export default function StaffAssignJobPage() {
                     </div>
                 </header>
             </div>
+
+            {/* responsive */}
+            <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
+                <div className="container-fluid">
+                    <div className="row d-flex w-100 justify-content-center">
+                        <div className='col-12'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>มอบหมายงาน</center>
+                            </a>
+                        </div>
+                        {/* <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
+                            </a>
+                        </div>
+                        <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>จัดการช่าง</center>
+                            </a>
+                        </div>
+                        <div className='col-3'>
+                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
+                                <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
+                            </a>
+                        </div> */}
+                    </div>
+                </div>
+            </nav>
+
             <div id="content">
-                <div className="d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
+                <div className="d-none d-lg-flex d-flex flex-column flex-shrink-0 p-3" id="sidebarbg" >
                     <span className="badge bg-white text-dark" id="sidebartitleout">
                         <div className="sidebartitlefont">
                             <span id='seereportspan'>มอบหมายงาน</span>
@@ -160,7 +183,7 @@ export default function StaffAssignJobPage() {
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </li>
-                        <li id='linavlink'>
+                        {/* <li id='linavlink'>
                             <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
                                 <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
                             </a>
@@ -174,10 +197,12 @@ export default function StaffAssignJobPage() {
                             <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
                                 <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
-                <div className="container" id="pagecon">
+
+                {/* ธรรมดา */}
+                <div className="container d-none d-md-block" id="pagecon">
                     <form onSubmit={handleSubmit}>
                         <div className='row'>
                             <div className='col-3' id='remark-letter'>
@@ -275,6 +300,122 @@ export default function StaffAssignJobPage() {
                                     </select>
                                 </div>
                                 <div className='col-4'>
+                                    <div>
+                                        <center>
+                                            <button type="submit" className="btn btn-success" id='assignjobbutton'>
+                                                มอบหมายงาน
+                                            </button>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {/* responsive */}
+                <div className="container d-block d-md-none" id="pagecon">
+                    <form onSubmit={handleSubmit}>
+                        <div className='row'>
+                            <div className='col-12' id='room-letter'>
+                                <center>
+                                    ห้อง {repairRequest?.student.room_id.room_number
+                                        ? repairRequest.student.room_id.room_number.charAt(0).toUpperCase() + repairRequest.student.room_id.room_number.slice(1)
+                                        : "Loading ..."}
+                                </center>
+                            </div>
+                        </div>
+
+                        <div className='row'>
+                            <div className='col-12' id='remark-letter'>
+                                หมายเหตุ :
+                            </div>
+                        </div>
+                        <div id='remark-show-area'>
+                            <input
+                                type="text"
+                                name="remarks"
+                                className="form-control"
+                                // value={formData?.description}
+                                value={repairRequest?.description || "Loading ..."}
+                                onChange={handleChange}
+                                id='remarks-show'
+                                readOnly
+                                required>
+                            </input>
+                        </div>
+                        <div className='row' id='status-and-urgency'>
+                            <div className='col-12' id='status-area'>
+                                <div id='status-letter'>
+                                    สถานะหมายเหตุ :
+                                </div>
+                                <div id='status-input'>
+                                    <input
+                                        type="text"
+                                        name="status"
+                                        className="form-control"
+                                        // value={formData.remarks}
+                                        value={repairRequest?.status
+                                            ? repairRequest.status.charAt(0).toUpperCase() + repairRequest.status.slice(1)
+                                            : "Loading ..."}
+                                        // onChange={handleChange}
+                                        id='status-show'
+                                        readOnly
+                                        required>
+                                    </input>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='row' id='status-and-urgency'>
+                            <div className='col-12' id='status-area'>
+                                <div id='urgency-letter'>
+                                    ความเร่งด่วน
+                                </div>
+                                <div id='urgency-input'>
+                                    <input
+                                        type="text"
+                                        name="status"
+                                        className="form-control"
+                                        // value={formData.remarks}
+                                        value={repairRequest?.urgency
+                                            ? repairRequest.urgency.charAt(0).toUpperCase() + repairRequest.urgency.slice(1)
+                                            : "Loading ..."}
+                                        // onChange={handleChange}
+                                        id='urgency-show'
+                                        readOnly
+                                        required>
+                                    </input>
+                                </div>
+                            </div>
+                        </div>
+                        <div id='technician-assign-area'>
+                            <div id='technician-assign-letter'>
+                                มอบหมายงาน
+                            </div>
+                            <div className='row'>
+                                <div className='col-12'>
+                                    <select className="form-control"
+                                        id='select-letter'
+                                        name="technician"
+                                        value={formData.technician[0] || ""}
+                                        onChange={(e) => {
+                                            const selectedTechnicianId = Number(e.target.value);
+                                            setFormData((prevData) => ({
+                                                ...prevData,
+                                                technician: [selectedTechnicianId],  // ✅ ควรเป็นอาร์เรย์ของตัวเลข
+                                            }));
+                                        }}
+                                        required
+                                    >
+                                        <option value="" id='option-letter'>-- เลือกช่าง --</option>
+                                        {technicians.map((tech) => (
+                                            <option key={tech.id} value={tech.id} id='option-letter'>
+                                                {tech.user.first_name} {tech.user.last_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className='col-12' id='responsive-button-area'>
                                     <div>
                                         <center>
                                             <button type="submit" className="btn btn-success" id='assignjobbutton'>

@@ -67,6 +67,10 @@ urlpatterns = [
 
     path('api/staff/technician/', views.TechnicianViewStaffAssignJob.as_view(), name='staff-get-technician-for-assign-job'),
 
+    path('api/staff-edit-repairassignment/<int:pk>/', views.StaffAssignEditView.as_view(), name='staff-edit-repairassignment'),
+
+    path('api/staff/assignment/technician/<int:pk>/', views.RepairAssigmentViewStaffFilteredByID.as_view(), name='staff-edit-technician-show'),
+
     path('api/staff-create-repairassignment/', views.StaffAssignCreateView.as_view(), name='staff-create-repairassignment'),
 
     path('api/repair-requests-staff/<int:id>/', views.RepairRequestFilteredbyIDViewStaff.as_view(), name='repair_request_detail-staff'),

@@ -160,6 +160,32 @@ class StaffAssignCreateView(CreateAPIView):
         # หากข้อมูลไม่ถูกต้องจะส่งกลับไปเป็น error
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class StaffAssignEditView(APIView):
+    def put(self, request, pk, *args, **kwargs):
+        # ดึงข้อมูล RepairAssignment ตามค่า pk ที่ได้รับ
+        repair_assignment = get_object_or_404(RepairAssignment, repair_request_id=pk)
+        
+        # ทำการ validate และอัพเดตข้อมูลด้วย serializer
+        serializer = RepairAssignmentCreateSerializer(repair_assignment, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            updated_assignment = serializer.save()
+            
+            # อัพเดต technician ที่เชื่อมโยง (M2M field)
+            if "technician" in serializer.validated_data:
+                new_technicians = serializer.validated_data["technician"]
+
+                # ตรวจสอบค่าที่ได้รับจาก request
+                print(f"New technicians received: {new_technicians}")
+
+                # ใช้ add() เพื่อเพิ่มช่างใหม่เข้าไปโดยไม่ลบของเดิม
+                updated_assignment.technician.add(*new_technicians)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 #update-famf
 class TechnicianRepairUpdateView(CreateAPIView):
     def post(self, request):
@@ -506,59 +532,59 @@ class StaffManageDeleteStudentView(LoginRequiredMixin, PermissionRequiredMixin, 
         return redirect("managestudent")
 
 #panda การแก้ไข requestassign ในเพิ่มช่างได้
-class StaffAssignEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    login_url = '/auth/'
-    permission_required = ["SDMAS.view_repairrequest", "SDMAS.change_repairrequest", "SDMAS.view_repairassignment", "SDMAS.change_repairassignment", "SDMAS.add_repairassignment"]
+# class StaffAssignEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
+#     login_url = '/auth/'
+#     permission_required = ["SDMAS.view_repairrequest", "SDMAS.change_repairrequest", "SDMAS.view_repairassignment", "SDMAS.change_repairassignment", "SDMAS.add_repairassignment"]
 
-    def get(self, request, pk):
-        request1 = get_object_or_404(RepairRequest, pk=pk)
-        request2 = get_object_or_404(RepairAssignment, repair_request__id = pk)
-        form = StaffAssignmentForm(instance=request1)
-        context = {"form": form, "repairrequest": request1, "technician_list": request2}
-        return render(request, "staff6.html", context)
+#     def get(self, request, pk):
+#         request1 = get_object_or_404(RepairRequest, pk=pk)
+#         request2 = get_object_or_404(RepairAssignment, repair_request__id = pk)
+#         form = StaffAssignmentForm(instance=request1)
+#         context = {"form": form, "repairrequest": request1, "technician_list": request2}
+#         return render(request, "staff6.html", context)
 
-    def post(self, request, pk):
-        form = StaffAssignmentForm(request.POST)
-        if form.is_valid():
-            request1 = get_object_or_404(RepairRequest, pk=pk)
-            request1.status = "Assigned"
-            request1.save()
-            technician_assign = form.cleaned_data["technician"]
-            repair_assignment_create, created_check = RepairAssignment.objects.get_or_create(
-                repair_request = request1
-            )
-            # panda อธิบาย
-            if not created_check:
-                alert = """<div class="alert alert-danger d-flex align-items-center" role="alert">
-                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                                <div>
-                                    An example danger alert with an icon
-                                </div>
-                            </div>"""
+#     def post(self, request, pk):
+#         form = StaffAssignmentForm(request.POST)
+#         if form.is_valid():
+#             request1 = get_object_or_404(RepairRequest, pk=pk)
+#             request1.status = "Assigned"
+#             request1.save()
+#             technician_assign = form.cleaned_data["technician"]
+#             repair_assignment_create, created_check = RepairAssignment.objects.get_or_create(
+#                 repair_request = request1
+#             )
+#             # panda อธิบาย
+#             if not created_check:
+#                 alert = """<div class="alert alert-danger d-flex align-items-center" role="alert">
+#                                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+#                                 <div>
+#                                     An example danger alert with an icon
+#                                 </div>
+#                             </div>"""
                 
-            repair_assignment_create.technician.add(*technician_assign)
-            repair_assignment_create.save()
+#             repair_assignment_create.technician.add(*technician_assign)
+#             repair_assignment_create.save()
 
-            # ที่จำเป็นต้อง loop เพราะว่า technician_assign Queryset
-            for i in technician_assign:
-                subject = 'Staff Had Assigned Appointment for '+str(i.user.first_name)+" "+str(i.user.last_name)
-                message = 'โปรดทำการเช็คงานที่คุณได้รับมอบหมาย ในหน้ารับงานเพื่อดำเนินการต่อ'
-                recipient_list = []#สร้าง list เพิ่มเก็น email ที่ต้องการจะจะส่ง
-                recipient_list.append(str(i.user.email))
+#             # ที่จำเป็นต้อง loop เพราะว่า technician_assign Queryset
+#             for i in technician_assign:
+#                 subject = 'Staff Had Assigned Appointment for '+str(i.user.first_name)+" "+str(i.user.last_name)
+#                 message = 'โปรดทำการเช็คงานที่คุณได้รับมอบหมาย ในหน้ารับงานเพื่อดำเนินการต่อ'
+#                 recipient_list = []#สร้าง list เพิ่มเก็น email ที่ต้องการจะจะส่ง
+#                 recipient_list.append(str(i.user.email))
 
-                # Send the email
-                send_mail(
-                    subject,# หัวข้อ
-                    message,# ข้อมความ
-                    settings.DEFAULT_FROM_EMAIL,# email ที่เป็นคนส่ง
-                    recipient_list,# emailที่เป็นคนรับ
-                    fail_silently=False,# หากเกิดข้อผิดพลาดในขณะส่งอีเมล จะไม่ซ่อนข้อผิดพลาดนั้น (ทำให้การส่งล้มเหลวไม่ถูกเพิกเฉย)
-                )
-            return redirect("staffassignedit", pk=pk)
-        else:
-            request1 = get_object_or_404(RepairRequest, pk=pk)
-            form = StaffAssignmentForm(instance=request1)
-            return render(request, "staff6.html", {"form":form,"alert": alert})
+#                 # Send the email
+#                 send_mail(
+#                     subject,# หัวข้อ
+#                     message,# ข้อมความ
+#                     settings.DEFAULT_FROM_EMAIL,# email ที่เป็นคนส่ง
+#                     recipient_list,# emailที่เป็นคนรับ
+#                     fail_silently=False,# หากเกิดข้อผิดพลาดในขณะส่งอีเมล จะไม่ซ่อนข้อผิดพลาดนั้น (ทำให้การส่งล้มเหลวไม่ถูกเพิกเฉย)
+#                 )
+#             return redirect("staffassignedit", pk=pk)
+#         else:
+#             request1 = get_object_or_404(RepairRequest, pk=pk)
+#             form = StaffAssignmentForm(instance=request1)
+#             return render(request, "staff6.html", {"form":form,"alert": alert})
 
 #panda
 class DeleteTechnicianAssignView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -1005,6 +1031,16 @@ class RepairRequestListViewStaff(APIView):
     def get(self, request):
         repair_requests = RepairRequest.objects.all()  # ดึงข้อมูลทั้งหมด
         serializer = RepairRequestDjangotoNextJSSerializer(repair_requests, many=True)
+        return Response(serializer.data)
+
+#
+
+class RepairAssigmentViewStaffFilteredByID(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        repair_assignment = RepairAssignment.objects.get(repair_request_id=pk) # ดึงข้อมูลทั้งหมด
+        serializer = RepairAssignmentDjangotoNextJSSerializer(repair_assignment)
         return Response(serializer.data)
 
 #Staff - AssignJob Filter By ID

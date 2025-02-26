@@ -32,7 +32,6 @@ export default function StaffIndexPage() {
         const fetchRepairRequest = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
-                console.log("Token ที่ใช้:", token); // ตรวจสอบ token
 
                 if (!token) throw new Error("No token found");
 
@@ -45,7 +44,6 @@ export default function StaffIndexPage() {
                 );
                 const sortedData = response.data.sort((a, b) => a.id - b.id);
                 setRepairRequest(sortedData);
-                console.log(sortedData);
             } catch (err) {
                 console.error("Error fetching repair requests:", err);
             }
@@ -83,12 +81,12 @@ export default function StaffIndexPage() {
             <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
                     <div className="row d-flex w-100 justify-content-center">
-                        <div className='col-3'>
+                        <div className='col-12'>
                             <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </div>
-                        <div className='col-3'>
+                        {/* <div className='col-3'>
                             <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
                                 <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
                             </a>
@@ -102,7 +100,7 @@ export default function StaffIndexPage() {
                             <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
                                 <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
                             </a>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </nav>
@@ -120,7 +118,7 @@ export default function StaffIndexPage() {
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </li>
-                        <li id='linavlink'>
+                        {/* <li id='linavlink'>
                             <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
                                 <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
                             </a>
@@ -134,7 +132,7 @@ export default function StaffIndexPage() {
                             <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
                                 <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
 
@@ -177,9 +175,9 @@ export default function StaffIndexPage() {
                                             </div>
                                             <div className='col-6'>
                                                 <center>
-                                                    <button type="button" className="btn btn-warning" id='buttonstudentviewreport'>
+                                                    <a href={`staff/edit-job/${RepairRequestView.id}`} className="btn btn-warning" id='buttonstudentviewreport'>
                                                         แก้ไข
-                                                    </button>
+                                                    </a>
                                                 </center>
                                             </div>
                                         </div>
@@ -229,9 +227,9 @@ export default function StaffIndexPage() {
                                             </div>
                                             <div className='col-6'>
                                                 <center>
-                                                    <button type="button" className="btn btn-warning" id='buttonstudentviewreport'>
+                                                    <a href={`staff/edit-job/${RepairRequestView.id}`} className="btn btn-warning" id='buttonstudentviewreport'>
                                                         แก้ไข
-                                                    </button>
+                                                    </a>
                                                 </center>
                                             </div>
                                         </div>

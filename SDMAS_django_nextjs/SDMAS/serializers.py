@@ -47,9 +47,21 @@ class RepairRequest2DjangotoNextJSSerializer(serializers.ModelSerializer):
         model = RepairRequest
         fields = '__all__'
 
+class UserDJangotoNextJSSerializrs(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+class TechnicianDjangotoNextJSSerializer(serializers.ModelSerializer):
+    user = UserDJangotoNextJSSerializrs()
+    class Meta:
+        model = Technician
+        fields = '__all__'
+
 # fam
 class RepairAssignmentDjangotoNextJSSerializer(serializers.ModelSerializer):
     repair_request = RepairRequest2DjangotoNextJSSerializer() # เอาข้อมูลของตาราง Student มาใส่ในข้อมูลของ student_id เพราะถ้าส่ง API ไปจะเป็น json ทำให้ใช้การอ้างอิงโดยความสัมพันธ์ไม่ได้
+    technician = TechnicianDjangotoNextJSSerializer(many=True)
     class Meta:
         model = RepairAssignment
         fields = '__all__'
@@ -65,19 +77,6 @@ class RequestUpdateDjangotoNextJSSerializer(serializers.ModelSerializer):
     class Meta:
         model = RepairStatusUpdate
         fields = '__all__'
-
-class UserDJangotoNextJSSerializrs(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-
-class TechnicianDjangotoNextJSSerializer(serializers.ModelSerializer):
-    user = UserDJangotoNextJSSerializrs()
-    class Meta:
-        model = Technician
-        fields = '__all__'
-
-
 
 class RepairAssignmentDjangotoNextJSSerailizer(serializers.ModelSerializer):
     repair_request = RepairRequestDjangotoNextJSSerializer()
