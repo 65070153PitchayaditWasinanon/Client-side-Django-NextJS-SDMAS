@@ -20,6 +20,8 @@
 ใน Next.js ที่ใช้
 - axios
 - bootstrap
+- eslint
+- r-motion
 
 # Backend Dependencies
 
