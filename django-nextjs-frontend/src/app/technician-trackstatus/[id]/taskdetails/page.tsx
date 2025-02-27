@@ -1,4 +1,3 @@
-// app/nontakorn/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react';
@@ -54,7 +53,7 @@ export default function TechnicianIndexPage() {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-        window.location.href = '/login';  
+        window.location.href = '/login';
     };
 
     useEffect(() => {
@@ -72,9 +71,17 @@ export default function TechnicianIndexPage() {
         if (id) {
             const fetchRepairUpdate = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/repair-requests-update-get/${id}/`);
+                    const token = localStorage.getItem("accessToken");
+
+                    if (!token) throw new Error("No token found");
+                    const response = await axios.get(`http://localhost:8080/api/repair-requests-update-get/${id}/`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`, // ส่ง JWT Token
+                            }
+                        }
+                    );
                     setRepairUpdate(response.data);
-                    console.log(response.data);
 
                 } catch (error) {
                     console.error('Error fetching repair request:', error);
@@ -84,6 +91,7 @@ export default function TechnicianIndexPage() {
             fetchRepairUpdate();
         }
     }, [id]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -98,10 +106,8 @@ export default function TechnicianIndexPage() {
 
         const requestData = {
             ...formData,
-            technician: [profile.technician_id],  
+            technician: [profile.technician_id],
         };
-
-        console.log(" ส่งข้อมูล:", requestData); 
 
         try {
             const response = await fetch("http://localhost:8080/api/technician-repair-update/", {
@@ -111,7 +117,7 @@ export default function TechnicianIndexPage() {
             });
 
             if (response.ok) {
-                router.push("/technician");
+                router.push("/technician-trackstatus");
             } else {
                 const errorData = await response.json();
                 console.error("API error:", errorData);
@@ -125,7 +131,7 @@ export default function TechnicianIndexPage() {
 
 
     useEffect(() => {
-        require('bootstrap/dist/js/bootstrap.bundle.min.js'); 
+        require('bootstrap/dist/js/bootstrap.bundle.min.js');
     }, []);
     return (
         <>
@@ -176,7 +182,7 @@ export default function TechnicianIndexPage() {
                     )}
                 </header>
             </div>
-            
+
             {/* responsive */}
             <nav className="d-block d-md-none navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
@@ -190,7 +196,7 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>งานที่ได้รับ</center>
                             </div>
-                            
+
                         </div>
                         </a>
                         <a className="nav-link active" id='navlinksidebar3' aria-current="page" href="/technician-trackstatus"><div className='row'>
@@ -202,13 +208,13 @@ export default function TechnicianIndexPage() {
                             <div className='col-9' >
                                 <center id='sidebarlinkmenu2'>อัพเดทสถานะ</center>
                             </div>
-                            
+
                         </div>
                         </a>
                     </div>
                 </div>
             </nav>
-                    
+
             <div id="content">
 
                 {/* ธรรมดา */}
@@ -274,36 +280,37 @@ export default function TechnicianIndexPage() {
                                     <p id='remarkletter'>สถานะ :</p>
                                 </div>
                                 <div>
-                                    
+
                                     <select
                                         name="status"
                                         className="form-select"
-                                        value={formData.status} 
+                                        value={formData.status}
                                         onChange={handleChange}
+                                        id='selected-fonts'
                                     >
-                                        
-                                        <option value="assigned">Assigned</option>
-                                        <option value="in_progress">In Progress</option>
-                                        <option value="completed">Completed</option>
+
+                                        <option value="assigned" >Assigned</option>
+                                        <option value="in_progress" >In Progress</option>
+                                        <option value="completed" >Completed</option>
                                     </select>
                                 </div>
                             </div>
                             <div id='formbuttonsubmittask'>
                                 <center>
                                     <button type="button" className="btn btn-warning" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        รับงาน
+                                        อัพเดต
                                     </button>
                                     <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog">
                                             <div className="modal-content">
                                                 <div className="modal-header">
-                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h1>
+                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะอัพเดตนี้แล้ว ใช่หรือไม่</h1>
                                                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div id='footermodal'>
                                                     <div className='row'>
                                                         <div className='col'>
-                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter'>รับงาน</button>
+                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter' data-bs-dismiss="modal">อัพเดต</button>
                                                         </div>
                                                         <div className='col'>
                                                             <button type="button" className="btn btn-danger" data-bs-dismiss="modal" id='modalbuttonletter'>ยกเลิก</button>
@@ -355,11 +362,12 @@ export default function TechnicianIndexPage() {
                                     <p id='remarkletter' className='fs-6'>สถานะ :</p>
                                 </div>
                                 <div>
-                                <select
+                                    <select
                                         name="status"
                                         className="form-select"
-                                        value={formData.status} 
+                                        value={formData.status}
                                         onChange={handleChange}
+                                        id='selected-fonts'
                                     >
                                         <option value="assigned">Assigned</option>
                                         <option value="in_progress">In Progress</option>
@@ -370,19 +378,19 @@ export default function TechnicianIndexPage() {
                             <div id='formbuttonsubmittask'>
                                 <center>
                                     <button type="button" className="btn btn-warning fs-6" id='buttonforsubmittask' data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        รับงาน
+                                        อัพเดต
                                     </button>
                                     <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog">
                                             <div className="modal-content">
                                                 <div className="modal-header">
-                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะรับงานนี้จริงๆ ใช่หรือไม่</h1>
+                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">คุณแน่ใจที่จะอัพเดตนี้แล้ว ใช่หรือไม่</h1>
                                                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div id='footermodal'>
                                                     <div className='row'>
                                                         <div className='col'>
-                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter'>รับงาน</button>
+                                                            <button type="submit" className="btn btn-success" id='modalbuttonletter' data-bs-dismiss="modal">อัพเดต</button>
                                                         </div>
                                                         <div className='col'>
                                                             <button type="button" className="btn btn-danger" data-bs-dismiss="modal" id='modalbuttonletter'>ยกเลิก</button>

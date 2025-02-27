@@ -77,8 +77,8 @@ nav {
 .navroom {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* ทำให้ปุ่มและข้อความอยู่แนวเดียวกัน */
-    width: 100%;  /* ทำให้ navroom กว้างเต็มที่ */
+    align-items: center;
+    width: 100%;
 }
 
 nav .col {
@@ -136,7 +136,6 @@ nav .col {
     font-style: normal;
     padding-top: 2%;
     padding-bottom: 2%;
-
     border-radius: 30px;
 }
 
@@ -148,7 +147,6 @@ nav .col {
     font-style: normal;
     padding-top: 2%;
     margin: 2%;
-
     border-radius: 30px;
 }
 
@@ -226,21 +224,21 @@ nav .col {
     font-family: 'Mitr-Medium', sans-serif;
     background-color: rgba(0, 0, 0, 0.158);
     border-radius: 32px;
-    padding: 2% 2% ;
+    padding: 2% 2%;
 }
 
 #navlinksidebar3 {
     font-family: 'Mitr-Medium', sans-serif;
     background-color: rgba(50, 50, 50, 0.05);
     border-radius: 32px;
-    padding: 2% 2% ;
+    padding: 2% 2%;
 }
 
 #navprofile {
     font-family: 'Mitr-Medium', sans-serif;
     background-color: rgba(231, 231, 231, 0.05);
     border-radius: 32px;
-    padding: 2% 2% ;
+    padding: 2% 2%;
 }
 
 #linavlink {
@@ -288,19 +286,18 @@ nav .col {
     color: white;
     font-family: 'Mitr-Light', sans-serif;
     font-weight: 200;
-    
+
 }
 
 .nav-link {
     transition: transform 0.2s ease, background-color 0.3s ease;
-  }
-  
-  .nav-link:active {
+}
+
+.nav-link:active {
     transform: scale(0.9);
-  }
-  
-  .nav-link:hover {
+}
+
+.nav-link:hover {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-  }
-  
+}

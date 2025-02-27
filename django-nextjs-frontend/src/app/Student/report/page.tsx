@@ -1,4 +1,3 @@
-// app/nontakorn/page.tsx
 'use client'
 import './studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';

@@ -1,4 +1,3 @@
-// pages/register.tsx
 "use client";
 
 import '../registertechnician/registertechnician.css';
@@ -30,7 +29,6 @@ const RegisterPage = () => {
         try {
             // ส่งข้อมูลไปยัง Django backend สำหรับการลงทะเบียน
             const response = await axios.post('http://localhost:8080/auth/api/register/technician/', formData);
-            console.log('Register success:', response.data);
             router.push('/login'); // หลังจากลงทะเบียนเสร็จให้ไปที่หน้า login
         } catch (error) {
             console.error('Register error:', error);
@@ -39,7 +37,7 @@ const RegisterPage = () => {
     };
 
     return (
-        <div id='content'>
+        <div className='content'>
             <div className='container' id='pagecon'>
                 <div className='card' id='registerarea'>
                     <div id='register-title-area'>

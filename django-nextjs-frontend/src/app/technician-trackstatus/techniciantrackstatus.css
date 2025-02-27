@@ -1,15 +1,9 @@
-
-
 @font-face {
     font-family: 'Nunito';
     src: url('/fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
-
-
-
-
 
 @font-face {
     font-family: 'Nunito';
@@ -284,7 +278,7 @@ nav .col {
 }
 
 .taskarea {
-    height: calc(100vh - 200px); /* Adjust height dynamically */
+    height: calc(100vh - 200px);
     overflow-y: auto;
     overflow-x: hidden;
 }

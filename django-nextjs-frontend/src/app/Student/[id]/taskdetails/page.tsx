@@ -1,13 +1,13 @@
-
 'use client'
 import './studentreport.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from "react";
 import { getProfile } from "@/utils/auth"; // Import ฟังก์ชัน getProfile
 import axios from 'axios';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 export default function StudentReportPage() {
+    const router = useRouter();
 
     //สร้างตัวแปล Profile เก็บ ข้อมูล user setProfile คือตัวใส่ค่าเก็นใน profile
     const [profile, setProfile] = useState<any>(null);
@@ -39,7 +39,6 @@ export default function StudentReportPage() {
         try {
             const response = await axios.get(`http://localhost:8080/api/repair-requests/${id}/`);
             setRepairRequest(response.data); // ตั้งค่า repairRequest แล้วให้ useEffect ดึงไปใช้
-            console.log("Fetched repair request:", response.data);
         } catch (error) {
             console.error("Error fetching repair request:", error);
         }
@@ -104,9 +103,6 @@ export default function StudentReportPage() {
     //ฟังก์ชัน handleSubmit สำหรับส่งข้อมูลไปที่ Django API
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        console.log("Form Data before submit:", formData); // ✅ ตรวจสอบค่าก่อนส่ง
-    
         try {
             const response = await fetch("http://localhost:8080/api/repair-requests-edit/", {
                 method: "POST",
@@ -115,8 +111,9 @@ export default function StudentReportPage() {
             });
     
             if (response.ok) {
-                alert("ส่งคำร้องขอแก้ไขการซ่อมแล้ว!");
+                // alert("ส่งคำร้องขอแก้ไขการซ่อมแล้ว!");
                 await fetchRepairRequest(); // ดึงข้อมูลใหม่ให้แน่ใจว่า UI อัปเดต
+                router.push("/student")
             } else {
                 alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
             }

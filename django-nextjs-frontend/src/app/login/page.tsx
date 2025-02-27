@@ -24,28 +24,17 @@ export default function LoginPage() {
 
             if (studentId) {
                 localStorage.setItem("student_id", studentId);
-            }
-            if (technicianId) {
-                localStorage.setItem("technician_id", technicianId);
-            }
-            // if (role) {
-            //     localStorage.setItem("is_staff", role);
-            // }
-
-            alert(`เข้าสู่ระบบสำเร็จ! Role: ${role} ${studentId ? "Student ID: " + studentId : ""} ${technicianId ? "Technician ID: " + technicianId : ""}`);
-            // alert("เข้าสู่ระบบสำเร็จ! Student ID: " + data.student_id);
-            if (studentId) {
-                // localStorage.setItem("student_id", studentId);
                 router.push("/student");
             }
             if (technicianId) {
                 localStorage.setItem("technician_id", technicianId);
                 router.push("/technician");
             }
-            // if (role) {
-            //     router.push("/staff");
-            // }
-            // router.push("/dashboard"); // นำทางไปหน้า Dashboard
+            if (role == "Staff") {
+                localStorage.setItem("is_staff", role);
+                router.push("/staff");
+            }
+
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 // ตรวจสอบว่า error เป็น AxiosError หรือไม่
@@ -79,7 +68,9 @@ export default function LoginPage() {
                             <div id='button-area'>
                                 <button type="submit" id='login-button-submit' className="btn btn-primary">เข้าสู่ระบบ</button>
                             </div>
-
+                            <div id='toregisterlink'>
+                                Student don't have account? <a href='/register' id='toregisterlinkletter'>Student Register Here</a>
+                            </div>
                         </form>
                     </div>
                 </center>

@@ -1,4 +1,3 @@
-// app/nontakorn/page.tsx
 'use client'
 import './studentindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,7 +14,6 @@ export default function StudentIndexPage() {
     const fetchRepairRequest = async (student_id: string) => {
         try {
             const token = localStorage.getItem("accessToken");
-            console.log("Token ที่ใช้:", token); // ตรวจสอบ token
 
             if (!token) throw new Error("No token found");
 

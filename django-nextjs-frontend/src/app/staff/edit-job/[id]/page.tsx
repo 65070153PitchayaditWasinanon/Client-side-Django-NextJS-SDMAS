@@ -5,11 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 
 export default function StaffEditJobPage() {
     const { id } = useParams();
+    const router = useRouter();
 
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
@@ -60,7 +61,15 @@ export default function StaffEditJobPage() {
         if (id) {
             const fetchRepairRequest = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/repair-requests-staff/${id}/`);
+                    const token = localStorage.getItem("accessToken");
+
+                    if (!token) throw new Error("No token found");
+                    const response = await axios.get(`http://localhost:8080/api/repair-requests-staff/${id}/`
+                    , {
+                        headers: {
+                            Authorization: `Bearer ${token}` // ใส่ Token ด้วย
+                        }
+                    });
                     setRepairRequest(response.data);
                 } catch (error) {
                     console.error('Error fetching repair request:', error);
@@ -129,6 +138,7 @@ export default function StaffEditJobPage() {
         });
 
         if (response.ok) {
+            router.push("/staff");
         } else {
             const errorData = await response.json();
             console.error("API error:", errorData);
@@ -136,6 +146,14 @@ export default function StaffEditJobPage() {
         }
 
         const responseData = await response.json();
+    };
+
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+        window.location.href = '/login';
     };
 
     return (
@@ -157,7 +175,16 @@ export default function StaffEditJobPage() {
                     )} */}
                     <div>
                         <nav>
-                            <span id='roompara'>Staff Site</span>
+                            <div className='row'>
+                                <div className='col-6 float-start'>
+                                    <span id='roompara'>Staff Site</span>
+                                </div>
+                                <div className='col-6'>
+                                    <button type="button" className="btn btn-danger float-end" onClick={logout}>
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
                         </nav>
                     </div>
                 </header>
@@ -322,7 +349,7 @@ export default function StaffEditJobPage() {
                                 <div className='col-4'>
                                     <div>
                                         <center>
-                                            <button type="submit" className="btn btn-success" id='assignjobbutton' onClick={() => window.location.reload()}>
+                                            <button type="submit" className="btn btn-success" id='assignjobbutton'>
                                                 มอบหมายงาน
                                             </button>
                                         </center>
@@ -459,7 +486,7 @@ export default function StaffEditJobPage() {
                                 <div className='col-12'>
                                     <div>
                                         <center>
-                                            <button type="submit" className="btn btn-success" id='assignjobbutton' onClick={() => window.location.reload()}>
+                                            <button type="submit" className="btn btn-success" id='assignjobbutton'>
                                                 มอบหมายงาน
                                             </button>
                                         </center>

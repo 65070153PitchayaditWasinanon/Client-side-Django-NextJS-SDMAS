@@ -1,6 +1,3 @@
-import axios from "axios";
-
-
 export async function login(username: string, password: string) {
     const response = await fetch("http://localhost:8080/auth/api/login/", {
         method: "POST",
@@ -43,26 +40,3 @@ export async function getProfile() {
 export function getAccessToken() {
     return localStorage.getItem("accessToken");
 }
-
-
-// export async function refreshToken() {
-//     const refresh = localStorage.getItem("refreshToken");
-//     if (!refresh) {
-//         throw new Error("No refresh token found");
-//     }
-
-//     const response = await fetch("http://localhost:8080/auth/api/token/refresh/", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ refresh }),
-//     });
-
-//     if (!response.ok) {
-//         throw new Error("Failed to refresh token");
-//     }
-
-//     const data = await response.json();
-//     localStorage.setItem("accessToken", data.access);
-//     return data.access;
-// }
-

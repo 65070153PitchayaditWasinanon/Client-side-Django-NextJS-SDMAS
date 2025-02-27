@@ -13,7 +13,6 @@ export default function TechnicianIndexPage() {
     const fetchRepairAssignment = async (technician_id: string) => {
         try {
             const token = localStorage.getItem("accessToken");
-            console.log("Token ที่ใช้:", token); // ตรวจสอบ token
             if (!token) throw new Error("No token found");
             const response = await axios.get(
                 `http://localhost:8080/api/requests-asignment-views/?technician_id=${technician_id}`,

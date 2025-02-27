@@ -1,9 +1,8 @@
-// app/nontakorn/page.tsx
 'use client'
 import '../staff/staffindex.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-// import { getProfile } from "@/utils/auth";
+import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";
 
 
@@ -11,12 +10,11 @@ export default function StaffIndexPage() {
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
-        // 
         async function fetchProfile() {
             try {
                 // getProfile ดึงข้อมูลมาจาก django ใส่ data
                 const data = await getProfile();
-                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile 
+                //Profile ถูก set จาก setProfile ด้วยข้อมูล data ที่ได้มาจาก getProfile
                 setProfile(data);
 
             } catch (err) {
@@ -38,12 +36,13 @@ export default function StaffIndexPage() {
                 const response = await axios.get('http://localhost:8080/api/repair-requests-views-staff/',
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`, // ส่ง JWT Token
+                            Authorization: `Bearer ${token}`,
                         }
                     }
                 );
                 const sortedData = response.data.sort((a, b) => a.id - b.id);
-                setRepairRequest(sortedData);
+                const filteredData = sortedData.filter((request: any) => request.status === "Reported"); // กรองเฉพาะ status = "reported"
+                setRepairRequest(filteredData);
             } catch (err) {
                 console.error("Error fetching repair requests:", err);
             }
@@ -52,26 +51,30 @@ export default function StaffIndexPage() {
         fetchRepairRequest();
     }, []);
 
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+        window.location.href = '/login';
+    };
+
     return (
         <>
             <div id="nav">
                 <header>
-                    {/* {profile ? (
-                        <div>
-                            <nav>
-                                <span id='roompara'>Room:{profile.room}</span>
-                            </nav>
-                        </div>
-                    ) : (
-                        <div>
-                            <nav>
-                                <span id='roompara'>Room: Loading ...</span>
-                            </nav>
-                        </div>
-                    )} */}
                     <div>
                         <nav>
-                            <span id='roompara'>Staff Site</span>
+                            <div className='row'>
+                                <div className='col-6 float-start'>
+                                    <span id='roompara'>Staff Site</span>
+                                </div>
+                                <div className='col-6'>
+                                    <button type="button" className="btn btn-danger float-end" onClick={logout}>
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
                         </nav>
                     </div>
                 </header>
@@ -86,21 +89,6 @@ export default function StaffIndexPage() {
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </div>
-                        {/* <div className='col-3'>
-                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
-                                <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
-                            </a>
-                        </div>
-                        <div className='col-3'>
-                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการช่าง</center>
-                            </a>
-                        </div>
-                        <div className='col-3'>
-                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
-                            </a>
-                        </div> */}
                     </div>
                 </div>
             </nav>
@@ -118,21 +106,6 @@ export default function StaffIndexPage() {
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </li>
-                        {/* <li id='linavlink'>
-                            <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
-                                <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
-                            </a>
-                        </li>
-                        <li id='linavlink'>
-                            <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการช่าง</center>
-                            </a>
-                        </li>
-                        <li id='linavlink'>
-                            <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
-                            </a>
-                        </li> */}
                     </ul>
                 </div>
 

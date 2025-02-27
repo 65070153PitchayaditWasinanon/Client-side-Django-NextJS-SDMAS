@@ -5,11 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { getProfile } from "@/utils/auth";
 import { useState, useEffect } from "react";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 
 export default function StaffAssignJobPage() {
     const { id } = useParams(); //การดึง id มาจาก URL
+    const router = useRouter();
 
     const [profile, setProfile] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
@@ -57,7 +58,15 @@ export default function StaffAssignJobPage() {
         if (id) {
             const fetchRepairRequest = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/repair-requests-staff/${id}/`);
+                    const token = localStorage.getItem("accessToken"); // Get Token มาเพื่อส่งคำขอ
+
+                    if (!token) throw new Error("No token found");
+                    const response = await axios.get(`http://localhost:8080/api/repair-requests-staff/${id}/`
+                    , {
+                        headers: {
+                            Authorization: `Bearer ${token}` // ใส่ Token ด้วย
+                        }
+                    });
                     setRepairRequest(response.data);
                 } catch (error) {
                     console.error('Error fetching repair request:', error);
@@ -99,6 +108,7 @@ export default function StaffAssignJobPage() {
 
         if (response.ok) {
             // alert("ส่งคำร้องขอซ่อมแล้ว!");
+            router.push("/staff");
         } else {
             const errorData = await response.json();
             console.error("API error:", errorData);
@@ -112,31 +122,35 @@ export default function StaffAssignJobPage() {
         if (repairRequest) {
             setFormData((prevData) => ({
                 ...prevData,
-                repair_request: repairRequest.id, // ตั้งค่า ID ของ repair request
+                repair_request: repairRequest.id,
             }));
         }
     }, [repairRequest]);
+
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("student_id");
+        localStorage.removeItem("technician_id");
+        window.location.href = '/login';
+    };
 
     return (
         <>
             <div id="nav">
                 <header>
-                    {/* {profile ? (
-                        <div>
-                            <nav>
-                                <span id='roompara'>Room:{profile.room}</span>
-                            </nav>
-                        </div>
-                    ) : (
-                        <div>
-                            <nav>
-                                <span id='roompara'>Room: Loading ...</span>
-                            </nav>
-                        </div>
-                    )} */}
                     <div>
                         <nav>
-                            <span id='roompara'>Staff Site</span>
+                            <div className='row'>
+                                <div className='col-6 float-start'>
+                                    <span id='roompara'>Staff Site</span>
+                                </div>
+                                <div className='col-6'>
+                                    <button type="button" className="btn btn-danger float-end" onClick={logout}>
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
                         </nav>
                     </div>
                 </header>
@@ -151,21 +165,6 @@ export default function StaffAssignJobPage() {
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </div>
-                        {/* <div className='col-3'>
-                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
-                                <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
-                            </a>
-                        </div>
-                        <div className='col-3'>
-                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการช่าง</center>
-                            </a>
-                        </div>
-                        <div className='col-3'>
-                            <a href="/staff" className="nav-link link-dark" id='response-navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
-                            </a>
-                        </div> */}
                     </div>
                 </div>
             </nav>
@@ -183,21 +182,6 @@ export default function StaffAssignJobPage() {
                                 <center id='sidebarlinkmenu'>มอบหมายงาน</center>
                             </a>
                         </li>
-                        {/* <li id='linavlink'>
-                            <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
-                                <center id='sidebarlinkmenu'>ประวัติการซ่อม</center>
-                            </a>
-                        </li>
-                        <li id='linavlink'>
-                            <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการช่าง</center>
-                            </a>
-                        </li>
-                        <li id='linavlink'>
-                            <a href="/staff" className="nav-link link-dark" id='navlinksidebar'>
-                                <center id='sidebarlinkmenu'>จัดการนักศึกษา</center>
-                            </a>
-                        </li> */}
                     </ul>
                 </div>
 
@@ -222,7 +206,6 @@ export default function StaffAssignJobPage() {
                                 type="text"
                                 name="remarks"
                                 className="form-control"
-                                // value={formData?.description}
                                 value={repairRequest?.description || "Loading ..."}
                                 onChange={handleChange}
                                 id='remarks-show'
@@ -240,11 +223,9 @@ export default function StaffAssignJobPage() {
                                         type="text"
                                         name="status"
                                         className="form-control"
-                                        // value={formData.remarks}
                                         value={repairRequest?.status
                                             ? repairRequest.status.charAt(0).toUpperCase() + repairRequest.status.slice(1)
                                             : "Loading ..."}
-                                        // onChange={handleChange}
                                         id='status-show'
                                         readOnly
                                         required>
@@ -260,11 +241,9 @@ export default function StaffAssignJobPage() {
                                         type="text"
                                         name="status"
                                         className="form-control"
-                                        // value={formData.remarks}
                                         value={repairRequest?.urgency
                                             ? repairRequest.urgency.charAt(0).toUpperCase() + repairRequest.urgency.slice(1)
                                             : "Loading ..."}
-                                        // onChange={handleChange}
                                         id='urgency-show'
                                         readOnly
                                         required>
@@ -286,7 +265,7 @@ export default function StaffAssignJobPage() {
                                             const selectedTechnicianId = Number(e.target.value);
                                             setFormData((prevData) => ({
                                                 ...prevData,
-                                                technician: [selectedTechnicianId],  // ✅ ควรเป็นอาร์เรย์ของตัวเลข
+                                                technician: [selectedTechnicianId],
                                             }));
                                         }}
                                         required
@@ -336,7 +315,6 @@ export default function StaffAssignJobPage() {
                                 type="text"
                                 name="remarks"
                                 className="form-control"
-                                // value={formData?.description}
                                 value={repairRequest?.description || "Loading ..."}
                                 onChange={handleChange}
                                 id='remarks-show'
@@ -354,11 +332,9 @@ export default function StaffAssignJobPage() {
                                         type="text"
                                         name="status"
                                         className="form-control"
-                                        // value={formData.remarks}
                                         value={repairRequest?.status
                                             ? repairRequest.status.charAt(0).toUpperCase() + repairRequest.status.slice(1)
                                             : "Loading ..."}
-                                        // onChange={handleChange}
                                         id='status-show'
                                         readOnly
                                         required>
@@ -376,11 +352,9 @@ export default function StaffAssignJobPage() {
                                         type="text"
                                         name="status"
                                         className="form-control"
-                                        // value={formData.remarks}
                                         value={repairRequest?.urgency
                                             ? repairRequest.urgency.charAt(0).toUpperCase() + repairRequest.urgency.slice(1)
                                             : "Loading ..."}
-                                        // onChange={handleChange}
                                         id='urgency-show'
                                         readOnly
                                         required>
@@ -402,7 +376,7 @@ export default function StaffAssignJobPage() {
                                             const selectedTechnicianId = Number(e.target.value);
                                             setFormData((prevData) => ({
                                                 ...prevData,
-                                                technician: [selectedTechnicianId],  // ✅ ควรเป็นอาร์เรย์ของตัวเลข
+                                                technician: [selectedTechnicianId],
                                             }));
                                         }}
                                         required

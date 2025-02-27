@@ -15,7 +15,6 @@ export default function TechnicianTrackstatusPage() {
     const fetchRepairStatusUpdate = async (technician_id: string) => {
         try {
             const token = localStorage.getItem("accessToken");
-            console.log("Token ที่ใช้:", token); // ตรวจสอบ token
 
             if (!token) throw new Error("No token found");
 
@@ -40,7 +39,7 @@ export default function TechnicianTrackstatusPage() {
                 setProfile(data);
 
                 if (data?.technician_id) {
-                    fetchRepairStatusUpdate(data.technician_id); 
+                    fetchRepairStatusUpdate(data.technician_id);
                 }
 
             } catch (err) {
@@ -56,7 +55,7 @@ export default function TechnicianTrackstatusPage() {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("student_id");
         localStorage.removeItem("technician_id");
-        window.location.href = '/login';  
+        window.location.href = '/login';
     };
 
 
@@ -226,24 +225,16 @@ export default function TechnicianTrackstatusPage() {
                                             </a>
                                         </div>
                                         <div className='col-3' id='clickfordetailsarea'>
-                                            <button type="button" className="btn btn-success w-100 h-100" data-bs-toggle="modal" data-bs-target="#exampleModal" id='clickforaccepttaskmodalbutton'>
-                                                รับงาน
+                                            <button type="button" className={`btn w-100 h-100 d-flex align-items-center justify-content-center ${RepairStatusUpdateView?.repair_request.urgency === "low" ? "btn-success" :
+                                                RepairStatusUpdateView?.repair_request.urgency === "medium" ? "btn-warning" :
+                                                    RepairStatusUpdateView?.repair_request.urgency === "high" ? "btn-danger" :
+                                                        "btn-secondary" // กรณีไม่มีค่า urgency
+                                                }`}
+                                                id='clickforaccepttaskmodalbutton'>
+                                                    {RepairStatusUpdateView?.repair_request.urgency
+                                                    ? RepairStatusUpdateView.repair_request.urgency.charAt(0).toUpperCase() + RepairStatusUpdateView.repair_request.urgency.slice(1)
+                                                    : "Loading ..."}
                                             </button>
-                                            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div className="modal-dialog">
-                                                    <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h1 className="modal-title fs-5" id="modaltitletter">คุณแน่ใจที่จะรับงานนี้หรือไม่?</h1>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div className="modal-footer" id='modalfooterbutton'>
-                                                            <center>
-                                                                <button type="button" className="btn btn-success w-100" id='buttoninmodalletter'>รับงาน</button>
-                                                            </center>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -269,7 +260,7 @@ export default function TechnicianTrackstatusPage() {
 
                                     <div className="d-flex justify-content-end gap-1">
                                         <a href={`technician-trackstatus/${request.id}/taskdetails`}>
-                                            <button type="button" className="btn btn-warning fs-6 px-4 py-2" style={{color: "#fff" }}>
+                                            <button type="button" className="btn btn-warning fs-6 px-4 py-2" style={{ color: "#fff" }}>
                                                 อัพเดพสถานะ
                                             </button>
                                         </a>

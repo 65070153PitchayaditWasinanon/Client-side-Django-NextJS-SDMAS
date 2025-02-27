@@ -125,3 +125,12 @@ html:lang(th) {
 #button-area {
     padding: 5% 0% 0% 0%;
 }
+
+#toregisterlink {
+    padding: 5% 0% 0% 0%;
+    color: white;
+}
+
+#toregisterlinkletter {
+    color: green;
+}

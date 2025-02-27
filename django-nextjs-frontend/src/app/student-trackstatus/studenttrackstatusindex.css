@@ -77,8 +77,8 @@ nav {
 .navroom {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* ทำให้ปุ่มและข้อความอยู่แนวเดียวกัน */
-    width: 100%;  /* ทำให้ navroom กว้างเต็มที่ */
+    align-items: center;
+    width: 100%;
 }
 
 nav .col {

@@ -1,14 +1,6 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.db.models import *
-
-# Create your models here.
-
 from django.contrib.auth.models import User
-
-#เพิ่มตัวระบุ โดยการเลือกห้อง
 
 class Room(models.Model):
     room_number = models.CharField(max_length=100, unique=True)
@@ -25,13 +17,13 @@ class Student(models.Model):
 class Technician(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     technician_id = models.CharField(max_length=20, unique=True)
-    expertise = models.CharField(max_length=100) #อาจจะปรับเปลี่ยน
+    expertise = models.CharField(max_length=100)
 
     def __str__(self): 
         return (self.user.first_name+" "+self.user.last_name)
 
-# คำขอจากนศ
-class RepairRequest(models.Model): 
+# Request จาก Student
+class RepairRequest(models.Model):
     STATUS_CHOICES = [
         ('reported', 'Reported'),
         ('assigned', 'Assigned'),
@@ -48,8 +40,8 @@ class RepairRequest(models.Model):
     urgency = models.CharField(max_length=10, choices=URGENCY_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='reported')
     repair_appointment_time = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True) 
-    updated_at = models.DateTimeField(auto_now=True) 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self): 
         return f"RepairRequest {self.id} by {self.student.user.username}"
 
